@@ -1,13 +1,8 @@
 package com.example.demo;
 
 import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,24 +11,24 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
+@RequestMapping(value = "/")
 public class IndexController {
 
     static String confirmationResponse = "960cb2e7";
 
     static String key = "c18a7cce50b4402109ccd85e0e17eb48e70e1029e857540ef3420ee4a1ed86bcd0defbce4af107112800b";
 
-    @PostMapping(value = "/")
-    public String index(@RequestBody JSONObject request) {
-        /*if(request.get("type").equals("confirmation"))
-            return confirmationResponse;
-        if(request.get("type").equals("new_message"))
-            return "ok";*/
-        return request.toString();
+
+    @PostMapping("/{type}")
+    public String type(@PathVariable String type) {
+        if(type.equals("confirmation")) {
+            return key;
+        }
+        if (type.equals("message_new")) {
+            return "ok";
+        }
+        return null;
     }
 
     public void send(String url) {
