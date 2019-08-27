@@ -29,11 +29,11 @@ public class IndexController {
 
     @PostMapping(value = "/")
     public String index(@RequestBody JSONObject request) {
-        if(request.get("type").equals("confirmation"))
+        /*if(request.get("type").equals("confirmation"))
             return confirmationResponse;
         if(request.get("type").equals("new_message"))
-            return "ok";
-        return null;
+            return "ok";*/
+        return request.toString();
     }
 
     public void send(String url) {
