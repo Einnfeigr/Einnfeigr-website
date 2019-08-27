@@ -29,9 +29,9 @@ public class IndexController {
 
     @PostMapping(value = "/")
     public String index(@RequestBody JSONObject request) {
-        if(request.getString("type").equals("confirmation"))
+        if(request.get("type").equals("confirmation"))
             return confirmationResponse;
-        if(request.getString("type").equals("new_message"))
+        if(request.get("type").equals("new_message"))
             return "ok";
         return null;
     }
