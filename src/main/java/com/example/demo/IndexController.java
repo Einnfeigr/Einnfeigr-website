@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,10 +28,10 @@ public class IndexController {
     static String key = "c18a7cce50b4402109ccd85e0e17eb48e70e1029e857540ef3420ee4a1ed86bcd0defbce4af107112800b";
 
     @PostMapping(value = "/")
-    public String index(@RequestBody Request request) {
-        if(request.getType().equals("confirmation"))
+    public String index(@RequestBody JSONObject request) {
+        if(request.getString("type").equals("confirmation"))
             return confirmationResponse;
-        if(request.getType().equals("new_message"))
+        if(request.getString("type").equals("new_message"))
             return "ok";
         return null;
     }
