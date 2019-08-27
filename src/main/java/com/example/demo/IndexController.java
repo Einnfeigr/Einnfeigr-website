@@ -21,7 +21,7 @@ public class IndexController {
 
 
     @PostMapping("/{type}")
-    public String type(@PathVariable String type) {
+    public String type(@PathVariable("type") String type) {
         if(type.equals("confirmation")) {
             return key;
         }
