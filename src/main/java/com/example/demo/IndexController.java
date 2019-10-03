@@ -21,11 +21,12 @@ public class IndexController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public String type(@RequestBody Request request) {
-        if(request.getType().equals("confirmation")) {
+    public String type(@RequestBody String req) {
+        JSONObject jsonObject = new JSONObject(req);
+        if(jsonObject.get("type").equals("confirmation")) {
             return key;
         }
-        if (request.getType().equals("message_new")) {
+        if (jsonObject.get("type").equals("message_new")) {
             return "ok";
         }
         return null;
