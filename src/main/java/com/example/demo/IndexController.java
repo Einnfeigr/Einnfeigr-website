@@ -17,7 +17,7 @@ public class IndexController {
 
     static String confirmationResponse = "960cb2e7";
 
-    static String key = "c18a7cce50b4402109ccd85e0e17eb48e70e1029e857540ef3420ee4a1ed86bcd0defbce4af107112800b";
+    static String accessToken = "c18a7cce50b4402109ccd85e0e17eb48e70e1029e857540ef3420ee4a1ed86bcd0defbce4af107112800b";
 
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -27,6 +27,10 @@ public class IndexController {
             return confirmationResponse;
         }
         if (jsonObject.get("type").equals("message_new")) {
+            send("https://api.vk.com/method/messages.send?user_id="
+                    +jsonObject.getJSONObject("object").getInt("user_id")+
+                    "&message="+jsonObject.getJSONObject("object").getString("body")
+                    +"&access_token="+accessToken+"&v=5.101");
             return "ok";
         }
         return null;
@@ -54,3 +58,4 @@ public class IndexController {
         }
     }
 }
+
