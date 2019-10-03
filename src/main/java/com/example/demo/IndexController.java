@@ -12,7 +12,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 @RestController
-@RequestMapping(value = "/")
+
 public class IndexController {
 
     static String confirmationResponse = "960cb2e7";
@@ -20,12 +20,12 @@ public class IndexController {
     static String key = "c18a7cce50b4402109ccd85e0e17eb48e70e1029e857540ef3420ee4a1ed86bcd0defbce4af107112800b";
 
 
-    @PostMapping("/{type}")
-    public String type(@PathVariable("type") String type) {
-        if(type.equals("confirmation")) {
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public String type(@RequestBody Request request) {
+        if(request.getType().equals("confirmation")) {
             return key;
         }
-        if (type.equals("message_new")) {
+        if (request.getType().equals("message_new")) {
             return "ok";
         }
         return null;
