@@ -24,7 +24,7 @@ public class IndexController {
     public String type(@RequestBody String req) {
         JSONObject jsonObject = new JSONObject(req);
         if(jsonObject.get("type").equals("confirmation")) {
-            return key;
+            return confirmationResponse;
         }
         if (jsonObject.get("type").equals("message_new")) {
             return "ok";
