@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,10 @@ public class IndexController {
             return confirmationResponse;
         }
         if (jsonObject.get("type").equals("message_new")) {
+            JSONObject object = new JSONObject(jsonObject.getJSONObject("object"));
             send("https://api.vk.com/method/messages.send?user_id="
-                    +jsonObject.getJSONObject("object").getInt("user_id")+
-                    "&message="+jsonObject.getJSONObject("object").getString("body")
+                    +object.getInt("user_id")+
+                    "&message="+object.getString("body")
                     +"&access_token="+accessToken+"&v=5.101");
             return "ok";
         }
@@ -58,4 +60,3 @@ public class IndexController {
         }
     }
 }
-
