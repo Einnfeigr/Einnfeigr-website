@@ -31,8 +31,8 @@ public class IndexController {
             JSONObject object = new JSONObject(jsonObject.getJSONObject("object"));
                         System.out.println(jsonObject.toString());
             send("https://api.vk.com/method/messages.send?user_id="
-                    +object.get("user_id")+
-                    "&message="+object.get("body")
+                    +object.get("from_id")+
+                    "&message="+object.get("text")
                     +"&access_token="+accessToken+"&v=5.101");
             return "ok";
         }
