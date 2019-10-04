@@ -29,7 +29,7 @@ public class IndexController {
         }
         if (jsonObject.get("type").equals("message_new")) {
             JSONObject object = new JSONObject(jsonObject.getJSONObject("object"));
-                        System.out.println(object.toString());
+                        System.out.println(jsonObject.toString());
             send("https://api.vk.com/method/messages.send?user_id="
                     +object.get("user_id")+
                     "&message="+object.get("body")
