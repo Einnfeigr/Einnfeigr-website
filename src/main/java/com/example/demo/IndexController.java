@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class IndexController {
 
-    @RequestMapping(value= "/", method= RequestMethod.GET)
-    String main() {
-        return "templates/index.mustache";
+    @RequestMapping("/")
+    String welcome() {
+        return "index";
     }
 
     @RequestMapping(value= "/error", method= RequestMethod.GET) 
