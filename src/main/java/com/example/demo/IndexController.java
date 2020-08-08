@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 public class IndexController {
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String type(@RequestBody String req) {
         return "hello world!";
     }
