@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 public class IndexController {
 
     @RequestMapping(value= "/", method= RequestMethod.GET)
-    ResponseEntity<String> main() {
-        return new ResponseEntity<>("hello world!", HttpStatus.OK);
+    String main() {
+        return "templates/index.mustache";
     }
 
     @RequestMapping(value= "/error", method= RequestMethod.GET) 
