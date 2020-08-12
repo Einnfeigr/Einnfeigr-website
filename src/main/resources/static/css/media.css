@@ -1,0 +1,47 @@
+@media(orientation: portrait), (max-width: 500px) {
+	
+	.header .buttons {
+		grid-template-columns: 1fr;
+		grid-template-rows: repeat(6, auto);
+	}
+	
+	.header .buttons a {
+		font-size: 200%;
+		line-height: 150%;
+	}
+	
+	.wrapper {
+		grid-template-rows: 50vh minmax(100px, auto);
+	}
+	
+	.header {
+		grid-template-columns: 1fr;
+		height: auto;
+	}
+	
+	.hidden {
+		height: 100px;
+	}
+	
+	.hidden .buttons {
+		position: relative;
+		top: -100vh;
+	}
+	
+	.expandWrapper {
+		display: block;
+	}
+	
+	.textDiv h4 {
+		width: 90%;
+		margin: auto;
+	}
+	
+	.textDiv .imageNote {
+		margin: 0px auto 14vw auto;
+	}
+	
+	.textDiv .images {
+		flex-wrap: wrap;
+	}
+}
