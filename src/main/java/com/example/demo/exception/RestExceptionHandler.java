@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -24,10 +23,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			String bodyOfResponse;
 			String templatePath;
 			PageTemplateData pageData = new PageTemplateData();
-			if(request.getAttribute("path", RequestAttributes.SCOPE_REQUEST) == null) { 
+			if(ex instanceof TemplateException) { 
+				pageData.setPath(((TemplateException) ex).getPath());
+			} else {
 				throw new IOException();
 			}
-			pageData.setPath(request.getAttribute("path", RequestAttributes.SCOPE_REQUEST).toString());
 			if(request.getParameter("path") == null) {
 				templatePath = Util.toAbsoluteUrl("templates/index.mustache");
 			} else {
@@ -42,7 +42,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			};
 			bodyOfResponse = Util.compileTemplate(templatePath, data);
 		    return handleExceptionInternal(ex, bodyOfResponse, 
-		  	      new HttpHeaders(), HttpStatus.CONFLICT, request);
+		  	      new HttpHeaders(), HttpStatus.OK, request);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

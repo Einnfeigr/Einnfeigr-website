@@ -1,6 +1,7 @@
 package com.example.demo.section;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,16 +20,16 @@ public class Section {
 			throw new IOException(directory.getAbsolutePath()+" is not a directory");
 		}
 		if(!directory.exists()) {
-			throw new IOException(directory.getAbsolutePath()+" does not exists");
+			throw new FileNotFoundException(directory.getAbsolutePath()+" does not exists");
 		}
 		images = new ArrayList<>();
 		sections = new HashMap<>();
 		for(File file : directory.listFiles()) {
 			if(file.isDirectory()) {
 				sections.put(Util.toRelativeUrl(file.getAbsolutePath()), new Section(file));
-			} else if(file.getName().split(".").length > 1) {
+			} else {
 				try {
-					String extension = file.getName().split(".")[1];
+					String extension = file.getName().split("\\.")[1];
 					switch(extension) {
 						case("jpeg"):
 						case("jpg"):

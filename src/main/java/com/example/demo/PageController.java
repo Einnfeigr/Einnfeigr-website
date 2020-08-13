@@ -37,30 +37,42 @@ public class PageController {
       		if(requestUrl.endsWith("/") && requestUrl.length() > 1) {
       			requestUrl = requestUrl.substring(0, requestUrl.length()-1);
       		}
-	    	switch(requestUrl) {
+      		switch(requestUrl) {
 	    		case("/"):
 	    			path = "./";
+		        	if(data.getPath() == null) {
+		            	data.setPath(path);
+		            }
 	    			data = loadPage(data, "static/text/ru/main.mustache", 
-	    					"templates/pages/main.mustache", path);
+	    					"templates/pages/main.mustache");
     				data.setTitle("Главная");	
 	    			break;
 	    		case("/portfolio"):	    
 	    			path = "../";
+		        	if(data.getPath() == null) {
+		            	data.setPath(path);
+		            }
+	    			data.setText(SectionsController.compileSection(SectionsController.getSection("ретушь"), path));
     				data = loadPage(data, null, 
-    						"templates/pages/portfolio.mustache", path);
-    				data.setText(SectionsController.getSection("ретушь").getPath());
+    						"templates/pages/portfolio.mustache");
     				data.setTitle("Портфолио");
 	    			break;
 	    		case("/retouch"):
-	    			path = "../";
+	    			path = "../";		       
+	    			if(data.getPath() == null) {
+		            	data.setPath(path);
+		            }
 	    			data = loadPage(data, "static/text/ru/retouch.mustache", 
-	    					"templates/pages/retouch.mustache", path);
+	    					"templates/pages/retouch.mustache");
     				data.setTitle("Ретушь");
 	    			break;
 	    		case("/about"):
 	    			path = "../";
+		        	if(data.getPath() == null) {
+		            	data.setPath(path);
+		            }
 	    			data = loadPage(data, "static/text/ru/about.mustache", 
-	    					"templates/pages/about.mustache", path);
+	    					"templates/pages/about.mustache");
     				data.setTitle("Обо всем");
 	    			break;
 	    		default: 
@@ -71,18 +83,16 @@ public class PageController {
 			mav.getModel().put("page", data.getPage());
 		} catch (IOException e) {
 			e.printStackTrace();
-			request.setAttribute("path", data.getPath());
-			throw new TemplateException(e.getMessage());
+			TemplateException exception = new TemplateException(e.getMessage());
+			exception.setPath(data.getPath());
+			throw exception;
 		}
         return mav;	
     }
     
-    private PageTemplateData loadPage(PageTemplateData data, String textPath, String pagePath, String path) throws IOException {
-        if(data == null || pagePath == null || path == null) {
+    private PageTemplateData loadPage(PageTemplateData data, String textPath, String pagePath) throws IOException {
+        if(data == null || pagePath == null) {
         	throw new NullPointerException("Null passed as argument");
-        }
-    	if(data.getPath() == null) {
-        	data.setPath(path);
         }
     	if(textPath != null) {
     		textPath = Util.toAbsoluteUrl(textPath);

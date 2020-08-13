@@ -30,6 +30,6 @@ public class Util {
     }
     
     public static String toRelativeUrl(String url) throws FileNotFoundException {
-    	return url.replace(ResourceUtils.getURL("classpath:").getFile(), "");
+    	return url.replace(ResourceUtils.getURL("classpath:").getFile().substring(1).replace("/", "\\"), "");
     }
 }

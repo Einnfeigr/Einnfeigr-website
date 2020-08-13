@@ -2,10 +2,21 @@
 
 <html lang="en">
     <head>
-        <script type="text/javascript" src="js/main.js"></script>
+    	<script>
+    		var path = '{{ path }}';
+    	</script>
+    	{{> head }}
     </head>
     <body>
-        <h1>Welcome to Spring, {{ name }}</h1>
-        <ul id="visits"></ul>
+    	{{> header }}
+    	{{> preloader }}
+        <div class="scrollPane">
+        	<div class="pageWrapper">
+				<div class="pageArea">
+					{{{ page }}}
+				</div>
+				{{> footer }}
+        	</div>
+        </div>
     </body>
 </html>
