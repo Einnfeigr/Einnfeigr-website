@@ -1,9 +1,11 @@
 package com.example.demo.section;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.example.demo.Util;
 import com.example.demo.pojo.TemplateData;
@@ -68,6 +70,28 @@ public class SectionsController {
 				e.printStackTrace();
 			}
 		});
+		return text.toString();
+	}
+
+	public static String compileSections(String path) throws IOException {
+		StringBuilder text = new StringBuilder("");
+		StringBuilder previewText = new StringBuilder("");
+		for(Entry<String, Section> entry : sections.entrySet()) {
+			Section section = entry.getValue();
+			for(int x = 0; x < 3; x++) {
+				final int i = x;
+				TemplateData data = new TextTemplateData() {
+					@SuppressWarnings("unused")
+					String imgPath = path+Util.toRelativeUrl(section.getImages().get(i).getAbsolutePath()).replace("static", "");
+				};
+				previewText.append(Util.compileTemplate(Util.toAbsoluteUrl("templates/misc/sections/preview.mustache"), data));
+			}
+		}
+		@SuppressWarnings("unused")
+		TemplateData data = new TemplateData() {
+			String previews = previewText.toString();
+		};
+		text.append(Util.compileTemplate(Util.toAbsoluteUrl("templates/misc/sections/sections.mustache"), data));
 		return text.toString();
 	}
 }
