@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.example.demo.Util;
 import com.example.demo.pojo.PageTemplateData;
 import com.example.demo.pojo.TemplateData;
+import com.samskivert.mustache.MustacheException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -26,7 +27,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			if(ex instanceof TemplateException) { 
 				pageData.setPath(((TemplateException) ex).getPath());
 			} else {
-				throw new IOException();
+				throw new IOException(ex);
 			}
 			if(request.getParameter("path") == null) {
 				templatePath = Util.toAbsoluteUrl("templates/index.mustache");
@@ -43,7 +44,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			bodyOfResponse = Util.compileTemplate(templatePath, data);
 		    return handleExceptionInternal(ex, bodyOfResponse, 
 		  	      new HttpHeaders(), HttpStatus.OK, request);
-		} catch (IOException e) {
+		} catch (IOException | MustacheException e) {
 			e.printStackTrace();
 		}
 		return null;

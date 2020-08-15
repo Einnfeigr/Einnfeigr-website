@@ -1,3 +1,15 @@
-<div class="section">
-	{{{ images }}}
+{{#images}}
+	<div class="page {{name}}">
+{{/images}}
+<div class="section {{^images}} {{name}} {{/images}}" {{#previews}}onclick="showPage('{{name}}', '', '{{name}}', 'portfolio/sections/{{name}}/', '../../../')"{{/previews}} >
+	{{#images}}
+		{{{images}}}	
+	{{/images}}
+	{{#previews}}
+		<div class="previews">{{{previews}}}</div>
+		<div class="name">{{name}}</div>
+	{{/previews}}
 </div>
+{{#images}}
+	</div>
+{{/images}}

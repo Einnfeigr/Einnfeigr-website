@@ -18,7 +18,7 @@ public class PageTemplateData implements TemplateData {
 		return title;
 	}
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = title.trim();
 	}
 	public String getText() {
 		return text;

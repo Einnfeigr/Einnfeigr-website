@@ -10,6 +10,10 @@ public class TemplateException extends RuntimeException {
 		super();
 	}
 	
+	public TemplateException(Throwable t) {
+		super(t);
+	}
+	
 	public TemplateException(String message) {
 		super(message);
 	}

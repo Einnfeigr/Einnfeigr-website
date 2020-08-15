@@ -14,6 +14,7 @@ public class Section {
 	private List<File> images;
 	private HashMap<String, Section> sections;
 	private String path;
+	private String name;
 
 	public Section(File directory) throws IOException {
 		if(!directory.isDirectory()) {
@@ -44,6 +45,7 @@ public class Section {
 			}
 		}
 		path = Util.toRelativeUrl(directory.getAbsolutePath());
+		setName(path.replace("\\", "/").replace("static/img/sections/", ""));
 	}
 	
 	public List<File> getImages() {
@@ -56,5 +58,13 @@ public class Section {
 
 	public String getPath() {
 		return path;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -45,7 +45,7 @@ function hideAll() {
 }
 
 function showPage(name, secondName, title, address, addressPath) {
-	if(!$('.'+name).length) {
+	if(!$('.'+name+'.page').length) {
 		$('.loading').show();
 		$.ajax({
 			url: path+address,

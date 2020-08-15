@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.exception.TemplateException;
 import com.example.demo.pojo.PageTemplateData;
 import com.example.demo.pojo.TextTemplateData;
+import com.example.demo.section.Section;
 import com.example.demo.section.SectionsController;
 
 @RestController
@@ -22,19 +24,13 @@ public class PageController {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
   		String path;
-  		if(request.getParameter("target") != null) {
-    		if(request.getParameter("target").equals("body")) {
-    			mav = new ModelAndView("placeholder");
-    		}
-        	if(request.getParameter("path") != null ) {
-        		data.setPath(request.getParameter("path"));
-        	}
-    	} else {
-    		mav = new ModelAndView("index");
+  		mav = createModelAndView(request);
+    	if(request.getParameter("path") != null ) {
+    		data.setPath(request.getParameter("path"));
     	}
     	try {  
       		String requestUrl = request.getRequestURI();
-      		if(requestUrl.endsWith("/") && requestUrl.length() > 1) {
+      		while(requestUrl.endsWith("/") && requestUrl.length() > 1) {
       			requestUrl = requestUrl.substring(0, requestUrl.length()-1);
       		}
       		switch(requestUrl) {
@@ -52,8 +48,9 @@ public class PageController {
 		        	if(data.getPath() == null) {
 		            	data.setPath(path);
 		            }
-	    			data.setText(SectionsController.compileSection(SectionsController.getSection("ретушь"), path));
-    				data = loadPage(data, null, 
+		        	SectionsController.loadSections();
+	    			data.setText(SectionsController.compileSections(data.getPath()));
+		        	data = loadPage(data, null, 
     						"templates/pages/portfolio.mustache");
     				data.setTitle("Портфолио");
 	    			break;
@@ -81,13 +78,44 @@ public class PageController {
 	        mav.getModel().put("path", path);
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			TemplateException exception = new TemplateException(e.getMessage());
+			TemplateException exception = new TemplateException(e);
 			exception.setPath(data.getPath());
 			throw exception;
 		}
         return mav;	
+    }
+    
+    @RequestMapping(value= "portfolio/sections/{section}", method= RequestMethod.GET)
+    ModelAndView getSection(@PathVariable("section") String sectionName, HttpServletRequest request) throws TemplateException {
+    	ModelAndView mav = null;
+    	PageTemplateData data = new PageTemplateData();
+  		String path;
+  		//TODO remove
+  		System.out.println("a");
+    	try {
+	  		mav = createModelAndView(request);
+	    	if(request.getParameter("path") != null ) {
+	    		path = request.getParameter("path");
+	    	} else {
+	    		path = "../../../";
+	    	}
+	    	data.setPath(path);
+	    	data.setTitle(sectionName);
+	    	Section section = SectionsController.getSection(sectionName);
+	    	data.setPage(SectionsController.compileSection(section, path));
+	    	mav.getModel().put("name", section.getName());
+	        mav.getModel().put("path", path);
+	        mav.getModel().put("title", data.getTitle());
+			mav.getModel().put("page", data.getPage());
+			return mav;
+    	} catch (Exception e) {
+			e.printStackTrace();
+			TemplateException exception = new TemplateException(e);
+			exception.setPath(data.getPath());
+			throw exception;
+		}
     }
     
     private PageTemplateData loadPage(PageTemplateData data, String textPath, String pagePath) throws IOException {
@@ -104,5 +132,17 @@ public class PageController {
     	pagePath = Util.toAbsoluteUrl(pagePath);
     	data.setPage(Util.compileTemplate(pagePath, data));
         return data;
+    }
+    
+    private ModelAndView createModelAndView(HttpServletRequest request) {
+  		if(request.getParameter("target") != null) {
+    		if(request.getParameter("target").equals("body")) {
+    			return new ModelAndView("placeholder");
+    		} else {
+    			return new ModelAndView("index");
+    		}
+    	} else {
+    		return new ModelAndView("index");
+    	}
     }
 }
