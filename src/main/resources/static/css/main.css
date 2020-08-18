@@ -1,5 +1,6 @@
 .main .title {
 	position: relative;
+	top: calc(100vh / 2 - 90px + 5vh);
 	z-index: 0;
 }
 
@@ -19,4 +20,8 @@
 .main .wrapper {
 	grid-template-rows: 100vh minmax(100px, auto);
 	display: grid;
+}
+
+.main .backgroundImage {
+	min-height: 100vh;
 }

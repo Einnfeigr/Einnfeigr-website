@@ -25,7 +25,7 @@ public class PageController {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
   		String path;
-  		mav = createModelAndView(device, request);
+  		mav = createModelAndView(device, request, data);
     	if(request.getParameter("path") != null ) {
     		data.setPath(request.getParameter("path"));
     	}
@@ -79,6 +79,7 @@ public class PageController {
 	        mav.getModel().put("path", path);
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
+			mav.getModel().put("isMobile", data.getIsMobile());
 		} catch (Exception e) {
 			e.printStackTrace();
 			TemplateException exception = new TemplateException(e);
@@ -95,7 +96,7 @@ public class PageController {
     	PageTemplateData data = new PageTemplateData();
   		String path;
     	try {
-	  		mav = createModelAndView(device, request);
+	  		mav = createModelAndView(device, request, data);
 	    	if(request.getParameter("path") != null ) {
 	    		path = request.getParameter("path");
 	    	} else {
@@ -136,23 +137,22 @@ public class PageController {
     }
     
     private ModelAndView createModelAndView(Device device,
-    		HttpServletRequest request) {
-    	StringBuilder ver = null;
+    		HttpServletRequest request, PageTemplateData data) {
+    	StringBuilder ver = new StringBuilder("");
     	StringBuilder templatePath = new StringBuilder("");
     	if(request.getParameter("ver") != null) {
-    		ver = new StringBuilder("");
     		ver.append(request.getParameter("ver"));
     	}
-    	if(device.isNormal() && ver == null 
+    	if(device.isNormal() && ver.toString().equals("") 
     			|| ver.toString().equals("desktop")) {
-    		templatePath.append("desktop/");
-	  	} else if(device.isMobile() && ver == null 
+    		data.setIsMobile(null);
+	  	} else if((device.isMobile() && ver.toString().equals(""))
+	  			|| (device.isTablet() && ver.toString().equals(""))
     			|| ver.toString().equals("mobile")) {
-    		templatePath.append("mobile/");
-    	} else if(device.isTablet() && ver == null 
-    			|| ver.toString().equals("tablet")) {
-    		templatePath.append("tablet/");
-    	}
+    		data.setIsMobile(true);
+	  	} else {
+	  		throw new NullPointerException("Cannot specify device! ver:"+ver);
+	  	}
     	if(request.getParameter("target") != null) {
     		if(request.getParameter("target").equals("body")) {
     			templatePath.append("placeholder");

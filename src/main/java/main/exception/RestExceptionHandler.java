@@ -31,9 +31,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 				throw new IOException(ex);
 			}
 			if(request.getParameter("path") == null) {
-				templatePath = Util.toAbsoluteUrl("templates/index.mustache");
+				templatePath = Util.toAbsoluteUrl("templates/desktop/index.mustache");
 			} else {
-				templatePath = Util.toAbsoluteUrl("templates/placeholder.mustache");
+				templatePath = Util.toAbsoluteUrl("templates/desktop/placeholder.mustache");
 			}
 			String pagePath = Util.toAbsoluteUrl("templates/pages/error.mustache");
 			@SuppressWarnings("unused")

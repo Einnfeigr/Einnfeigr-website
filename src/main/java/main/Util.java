@@ -21,7 +21,7 @@ public class Util {
     	if(!template.exists()) {
     		throw new FileNotFoundException("File '"+path+"' cannot be found");
     	}
-    	if(template.isFile()) {
+    	if(!template.isFile()) {
     		throw new TemplateException("Template '"+path+"' must be a file");
     	}
     	MustacheFactory factory = new DefaultMustacheFactory();

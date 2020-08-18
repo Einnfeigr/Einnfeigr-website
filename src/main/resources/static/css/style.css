@@ -1,10 +1,3 @@
-@font-face {
-	font-family: 'Fira Sans';
-	src: url('../font/FiraSans-Regular.ttf'),
-		 url('../font/Firasans-Light.ttf'),
-		 url('../font/FiraSans-LightItalic.ttf');
-}
-
 a {
 	cursor: pointer;
 }
@@ -19,6 +12,8 @@ body {
 .backgroundImage {
 	position: fixed;
 	z-index: -1;
+	min-height: 45vh;
+	min-width: 100vw;
 	top: 0;
 }
 
@@ -48,6 +43,7 @@ body {
 }
 
 .wrapper {
+	display: grid;
 	grid-template-rows: 45vh minmax(100px, auto);
 }
 
@@ -61,18 +57,19 @@ body {
 }
 
 .background {
+	position: relative;
 	height: 45vh;
+	width: 100vw;
 	padding-top: 90px;
 	box-sizing: border-box;
-	grid-template-rows: auto 1fr;
-	display: grid;
 }
 
 .title {
 	position: fixed;
+	height: 10vh;
+	top: calc(45vh / 2 - 90px + 5vh);
 	z-index: -1;
 	text-align: center;
-	margin: auto;
 	color: white;
 	grid-row: 2;
 }
@@ -87,75 +84,11 @@ body {
 	margin: 5px;
 }
 
-.portfolio .title {
-	position: relative;
-}
-
-.expandWrapper {
-	position: absolute;
-	display: none;
-	height: 64px;
-	z-index: 11;
-	width: 70px;
-	right: 10px;
-	top: 20px;
-}
-
-.expand {
-	position: absolute;
-	background: white;
-	width: 70px;
-	height: 7px;
-}
-
-.header, .expand, .buttons {
+.header, .buttons {
 	-webkit-transition: all ease-in-out 0.4s;
     -moz-transition: all ease-in-out 0.4s;
     -o-transition: all ease-in-out 0.4s;
     transition: all ease-in-out 0.4s;
-}
-
-.unexpanded:after {
-	background: inherit;
-	position: inherit;
-	height: inherit;
-	width: inherit;
-	content: "";
-	top: 25px;
-	right: 0;
-}
-
-.unexpanded:before {
-	content: "";
-	position: inherit;
-	width: inherit;
-	height: inherit;
-	background: inherit;
-	right: 0;
-	top: 50px;
-}
-
-.expanded {
-	top: 25px;
-	transform: rotate(45deg);
-}
-
-.expanded:after {
-	content: "";
-	position: inherit;
-	width: inherit;
-	height: inherit;
-	background: inherit;
-	transform: rotate(90deg);
-}
-
-.expanded:before {
-	content: "";
-	position: inherit;
-	width: inherit;
-	height: inherit;
-	background: inherit;
-	opacity: 0;
 }
 
 .header {
@@ -230,14 +163,13 @@ body {
 }
 
 .page .textDiv {
+	grid-row: 2;
 	position: relative;
 }
 
 .page .title {
 	left: 0;
 	right: 0;
-	padding: auto;
-	text-align: center;
 }
 
 .retouch .title {
@@ -252,84 +184,4 @@ body {
 	width: 100%;
 	height: 100%;
 	background: rgba(0,0,0,0.1);
-}
-
-.sections {
-	box-sizing: border-box;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	justify-self: center;
-	padding: 135px 40px 35px 40px;
-}
-
-.page .section {
-	cursor: pointer;
-	margin: 25px;
-	position: relative;
-	background: rgba(255,255,255,0.3);
-	border-radius: 4px;
-}
-
-.section .name {
-	position: relative;
-	text-align: center;
-	padding: 10px;
-}
-
-.section .name:after {
-	content: "";
-	position: absolute;
-	width: 70%;
-	height: 1px;
-	background: black;
-	left: 15%;
-	top: 0;
-}
-
-.previews {
-	max-width: 100%;
-	width: 20vw;
-	position: relative;
-	padding: 25px;
-}
-
-.previews img {
-	position: relative;
-	width: inherit;
-	margin: auto;
-}
-
-.previews img:first-child {	
-	position: absolute;
-	top: 15px;
-	left: 15px;
-}
-
-.previews img:last-child {
-	position: absolute;
-	bottom: 15px;
-	right: 15px;
-} 
-
-.pageArea > .section {
-	padding: 135px 25px 0 25px;
-}
-
-.section .back {
-	color: white;
-	line-height: 200%;
-	cursor: pointer;
-	height: 10px;
-}
-
-.section .images {
-	padding: 50px 0 50px 0;
-	display: flex;
-	flex-wrap: wrap;
-	margin: auto;
-}
-
-.section .images img {
-	max-width: 25vw;
 }

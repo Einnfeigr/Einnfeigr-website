@@ -1,0 +1,96 @@
+.portfolio .textDiv {
+	background: none;
+}
+
+.section .page {
+	margin-top: 90px;
+}
+
+.section .images {
+	
+}
+
+.portfolio .title {
+	position: relative;
+}
+
+.sections {
+	box-sizing: border-box;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	justify-self: center;
+	padding: 135px 40px 35px 40px;
+}
+
+.page .section {
+	cursor: pointer;
+	margin: 25px;
+	position: relative;
+	background: rgba(255,255,255,0.3);
+	border-radius: 4px;
+}
+
+.section .name {
+	position: relative;
+	text-align: center;
+	padding: 10px;
+}
+
+.section .name:after {
+	content: "";
+	position: absolute;
+	width: 70%;
+	height: 1px;
+	background: black;
+	left: 15%;
+	top: 0;
+}
+
+.previews {
+	max-width: 100%;
+	width: 20vw;
+	position: relative;
+	padding: 25px;
+}
+
+.previews img {
+	position: relative;
+	width: inherit;
+	margin: auto;
+}
+
+.previews img:first-child {	
+	position: absolute;
+	top: 15px;
+	left: 15px;
+}
+
+.previews img:last-child {
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+} 
+
+.pageArea > .section {
+	padding: 135px 25px 0 25px;
+}
+
+.section .back {
+	color: white;
+	line-height: 200%;
+	cursor: pointer;
+	height: 10px;
+}
+
+.section .images {
+	padding: 50px 0 50px 0;
+	display: flex;
+	flex-wrap: wrap;
+	margin: -0.5rem;
+}
+
+.section .images img {
+	width: calc(100%/3 - 1rem);
+    margin: 0.5rem;
+}

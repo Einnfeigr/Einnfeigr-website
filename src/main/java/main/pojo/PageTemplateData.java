@@ -7,6 +7,7 @@ public class PageTemplateData implements TemplateData {
 	private String text;
 	private String page;
 	private TextTemplateData textData;
+	private Boolean isMobile;
 	
 	public String getPath() {
 		return path;
@@ -37,6 +38,12 @@ public class PageTemplateData implements TemplateData {
 	}
 	public void setTextData(TextTemplateData textData) {
 		this.textData = textData;
+	}
+	public Boolean getIsMobile() {
+		return isMobile;
+	}
+	public void setIsMobile(Boolean isMobile) {
+		this.isMobile = isMobile;
 	}
 	
 }
