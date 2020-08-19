@@ -20,8 +20,10 @@ import main.section.SectionsController;
 @RestController
 public class PageController {
 	
-    @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about"}, method= RequestMethod.GET)
-    ModelAndView getPage(Device device, HttpServletRequest request) throws TemplateException {
+    @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
+    		"/contacts"}, method= RequestMethod.GET)
+    ModelAndView getPage(Device device, HttpServletRequest request) 
+    		throws TemplateException {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
   		String path;
@@ -60,6 +62,12 @@ public class PageController {
 	    			if(data.getPath() == null) {
 		            	data.setPath(path);
 		            }
+	    			final String tPath = data.getPath();
+    				@SuppressWarnings("unused")
+	    			TextTemplateData textData = new TextTemplateData() {
+						String path = tPath;
+	    			};
+	    			data.setTextData(textData);
 	    			data = loadPage(data, "static/text/ru/retouch.mustache", 
 	    					"templates/pages/retouch.mustache");
     				data.setTitle("Ретушь");
@@ -73,10 +81,19 @@ public class PageController {
 	    					"templates/pages/about.mustache");
     				data.setTitle("Обо всем");
 	    			break;
+	    		case("/contacts"):
+	    			path = "../";
+		        	if(data.getPath() == null) {
+		            	data.setPath(path);
+		            }
+	    			data = loadPage(data, "static/text/ru/contacts.mustache", 
+	    					"templates/pages/contacts.mustache");
+    				data.setTitle("Обо всем");
+	    			break;
 	    		default: 
 	    			throw new IOException("URL: "+requestUrl);
 	    	}
-	        mav.getModel().put("path", path);
+	        mav.getModel().put("path", data.getPath());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			mav.getModel().put("isMobile", data.getIsMobile());

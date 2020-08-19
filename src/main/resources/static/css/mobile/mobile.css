@@ -10,6 +10,18 @@ body.expanded .main .title {
 	left: 0;
 }
 
-.background .title h1 {
+.title {
+	width: 100vw;
+}
+
+.title h1 {
 	font-size: 2.5em;
+}
+
+.textDiv {
+	padding: 3px;
+}
+
+.textDiv h4 {
+	width: 100%;
 }

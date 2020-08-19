@@ -1,9 +1,11 @@
 .main .title {
-	display: block;
+	display: flex;
+	flex-flow: column;
+	justify-content: center;
 	text-align: center;
 	position: relative;
-	top: calc(100vh / 2 - 5vh);
 	z-index: 0;
+	height: 100vh;
 }
 
 .main .title h1 {

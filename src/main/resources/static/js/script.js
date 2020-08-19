@@ -17,7 +17,7 @@ $(window).on('load',function() {
 });
 
 
-function showPage(name, secondName, title, address, addressPath) {
+function showPage(title, address, addressPath) {
 	$('.page').remove();
 	$('.loading').show();
 	$.ajax({
@@ -26,9 +26,6 @@ function showPage(name, secondName, title, address, addressPath) {
 		data: 'target=body&path='+path,
 		success: function(a) {
 			$('.pageArea').append(a);
-			if(secondName != '') {
-				$('.'+secondName).show();
-			}
 			var ver = '';
 			var version = checkVersion();
 			if(version != '') {

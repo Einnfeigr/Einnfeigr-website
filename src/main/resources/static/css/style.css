@@ -105,8 +105,12 @@ body {
 	background-size: cover;
 }
 
-.about .title {
+.about .backgroundImage {
 	background-color: blue;
+}
+
+.contacts .backgroundImage {
+	background-color: purple;
 }
 
 .placeholder {

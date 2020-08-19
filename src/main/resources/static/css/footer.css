@@ -11,15 +11,23 @@
 	grid-template-rows: repeat(3, 1fr);
 }
 
+.footer span {
+	display: flex;
+	align-items: flex-end;
+}
+
 .footer h5 {
+	margin: 0;
 	color: rgba(255,255,255,0.4);
 	font-weight: lighter;
 	font-style: italic;
 }
 
 .versw {
+	white-space: nowrap;
 	grid-column: 1;
 	grid-row: 3;
+	justify-content: flex-start;
 }
 
 .versw h5 {
@@ -29,5 +37,6 @@
 .poweredBy {
 	grid-column: 3;
 	grid-row: 3;
+	justify-content: flex-end;
 	text-align: right;
 }
