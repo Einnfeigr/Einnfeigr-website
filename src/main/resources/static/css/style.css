@@ -64,27 +64,6 @@ body {
 	box-sizing: border-box;
 }
 
-.title {
-	position: fixed;
-	height: 10vh;
-	top: calc(45vh / 2 - 90px + 5vh);
-	z-index: -1;
-	text-align: center;
-	color: white;
-	grid-row: 2;
-}
-
-.title .text {
-	margin-top: 25px;
-	display: flex;
-	justify-content: center;
-}
-
-.title .text h3 {
-	margin: 5px;
-}
-
-
 .pageArea {
 	position: relative;
 	height: auto;

@@ -1,6 +1,8 @@
 .main .title {
+	display: block;
+	text-align: center;
 	position: relative;
-	top: calc(100vh / 2 - 90px + 5vh);
+	top: calc(100vh / 2 - 5vh);
 	z-index: 0;
 }
 

@@ -1,12 +1,8 @@
-body, .nav {
+body, .nav, .pageArea .title {
 	-webkit-transition: all ease-in-out 0.4s;
     -moz-transition: all ease-in-out 0.4s;
     -o-transition: all ease-in-out 0.4s;
     transition: all ease-in-out 0.4s;
-}
-
-body.expanded {
-	margin-left: 250px;
 }
 
 .navPlaceholder {
@@ -30,4 +26,62 @@ body.expanded {
 
 .nav.expanded {
 	left: 0;
+}
+
+.nav .buttons {
+	padding: 10px;
+	padding-top: 20px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.nav .button {
+	font-size: 125%;
+	color: white;
+	line-height: 175%;
+	flex: 100%;
+}
+
+.nav .title {
+	width: auto;
+	position: static;
+}
+
+.nav h1 {
+	color: white;
+	font-weight: lighter;
+}
+
+.expandButtonWrapper {
+	width: 50px;
+	height: 50px;
+	padding: 10px 0 10px 0;
+	margin: auto;
+	margin-right: 0;
+}
+
+.expandButton {
+	height: 5px;
+	width: 50px;
+	position: absolute;
+	background: white;
+	margin-top: calc((30px - 5px) /2);
+}
+
+.expandButton::after {
+	content: "";
+	height: inherit;
+	width: inherit;
+	position: inherit;
+	top: calc((30px - 5px)/2);
+	background: inherit;
+}
+
+.expandButton::before {
+	content: "";
+	height: inherit;
+	width: inherit;
+	position: inherit;
+	background: inherit;
+	bottom: calc((30px - 5px)/2);
 }

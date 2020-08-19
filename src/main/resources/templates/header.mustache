@@ -1,31 +1,18 @@
-<div class="header" {{#isMobile}}onclick="expandNav()"{{/isMobile}}>
+<div class="header">
 	<img src="{{path}}img/logo.png" class="logo" />
-	<div class="buttons">
-		{{^isMobile}}
-			<a class="button" onclick="showPage('main', '', 'Главная', '', './')">
-				Главная
-			</a>
-			<!--<a class="button" onclick="showPage('photosets','','Фотосессии','photosets/','../')">
-				Фотосессии 
-			</a>-->
-			<a class="button" onclick="showPage('portfolio','','Портфолио', 'portfolio/','../')">
-				Портфолио  
-			</a>
-			<a class="button" onclick="showPage('retouch',  '','Ретушь',	'retouch/',  '../')">
-				Ретушь		
-			</a>
-			<!--<a class="button" onclick="showPage('contacts', '','Контакты',  'contacts/', '../')">
-				Контакты	
-			</a>-->
-			<a class="button" onclick="showPage('about',    '','О сайте',   'about/',    '../')">
-				О сайте	
-			</a>
-		{{/isMobile}}
-	</div>
+	{{^isMobile}}
+		{{>misc/navButtons}}
+	{{/isMobile}}
+	{{#isMobile}}
+		<div class="expandButtonWrapper" onclick="expandNav()">
+		<div class="expandButton"></div>
+		</div>
+	{{/isMobile}}
 </div>
 {{#isMobile}}
 	<div class="navPlaceholder" onclick="expandNav()"></div>
 	<div class="nav">
-			
+		<div class="title"><h1>Разделы</h1></div>
+		{{>misc/navButtons}}
 	</div>
 {{/isMobile}}

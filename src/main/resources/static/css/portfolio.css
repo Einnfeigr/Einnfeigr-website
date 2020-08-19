@@ -1,3 +1,14 @@
+.portfolio .backgroundImageWrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.portfolio .backgroundImage {
+	min-height: 100vh;
+	height: auto;
+}
+
 .portfolio .textDiv {
 	background: none;
 }

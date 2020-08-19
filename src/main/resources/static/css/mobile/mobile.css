@@ -1,0 +1,15 @@
+body.expanded {
+	margin-left: 250px;
+}
+
+body.expanded .title {
+	left: 250px;
+}
+
+body.expanded .main .title {
+	left: 0;
+}
+
+.background .title h1 {
+	font-size: 2.5em;
+}

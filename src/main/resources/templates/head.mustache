@@ -8,10 +8,14 @@
 <link rel="stylesheet" href="{{path}}css/footer.css">
 <link rel="stylesheet" href="{{path}}css/header.css">
 {{#isMobile}}
+	<link rel="stylesheet" href="{{path}}css/mobile/mobile.css">
 	<link rel="stylesheet" href="{{path}}css/mobile/nav.css">
 {{/isMobile}}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{{ path }}js/script.js"></script>
+{{#isMobile}}
+	<script src="{{ path }}js/mobile.js"></script>
+{{/isMobile}}
 {{#isMobile}}
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
 {{/isMobile}}

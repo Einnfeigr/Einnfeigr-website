@@ -1,6 +1,5 @@
 var path;
 var loaded;
-var expanded;
 
 $(document).ready(function() {
 	$(window).on('popstate', function() {
@@ -17,20 +16,6 @@ $(window).on('load',function() {
 	$('.loading').fadeOut(500);
 });
 
-function expandNav() {
-	if(!expanded) {
-		$('.navPlaceholder').show();
-		$('body').addClass('expanded');
-		$('.nav').addClass('expanded');
-		//setTimeout(function a() {$('.expandWrapper').fadeTo(200, 1);}, 500);
-		expanded = true;
-	} else {
-		$('.navPlaceholder').hide();
-		$('body').removeClass('expanded');
-		$('.nav').removeClass('expanded');
-		expanded = false;
-	}
-}
 
 function showPage(name, secondName, title, address, addressPath) {
 	$('.page').remove();
@@ -44,7 +29,12 @@ function showPage(name, secondName, title, address, addressPath) {
 			if(secondName != '') {
 				$('.'+secondName).show();
 			}
-			window.history.pushState(address, title+" | einnfeigr", path+address);
+			var ver = '';
+			var version = checkVersion();
+			if(version != '') {
+				ver = '?ver='+version;
+			}
+			window.history.pushState(address, title+" | einnfeigr", path+address+ver);
 			document.title = title+' | einnfeigr';
 			path = addressPath;
 			$('.loading').fadeOut(500);
@@ -53,6 +43,17 @@ function showPage(name, secondName, title, address, addressPath) {
 			$('.loading').fadeOut(500);
 		}
 	});
+}
+
+function checkVersion() {
+	if(window.location.href.indexOf('ver=') < 0) {
+		return '';
+	}
+	if($('.nav').length) {
+		return 'mobile';
+	} else {
+		return 'desktop';
+	}
 }
 
 function switchVersion(ver) {
