@@ -1,0 +1,33 @@
+body, .nav {
+	-webkit-transition: all ease-in-out 0.4s;
+    -moz-transition: all ease-in-out 0.4s;
+    -o-transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.4s;
+}
+
+body.expanded {
+	margin-left: 250px;
+}
+
+.navPlaceholder {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 10;
+}
+
+.nav {
+	background-color: rgb(125,125,125);
+	width: 250px;
+	height: 100vh;
+	left: -250px;
+	position: absolute;
+	z-index: 11;
+}
+
+.nav.expanded {
+	left: 0;
+}

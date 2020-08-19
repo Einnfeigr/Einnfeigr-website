@@ -1,7 +1,5 @@
-<div class="header">
-	<div class="logoDiv">
-		<img src="{{ path }}img/logo.png"/>
-	</div>
+<div class="header" {{#isMobile}}onclick="expandNav()"{{/isMobile}}>
+	<img src="{{path}}img/logo.png" class="logo" />
 	<div class="buttons">
 		{{^isMobile}}
 			<a class="button" onclick="showPage('main', '', 'Главная', '', './')">
@@ -26,7 +24,8 @@
 	</div>
 </div>
 {{#isMobile}}
-	<div class="expand">
-		
+	<div class="navPlaceholder" onclick="expandNav()"></div>
+	<div class="nav">
+			
 	</div>
 {{/isMobile}}

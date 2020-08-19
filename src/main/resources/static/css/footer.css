@@ -1,0 +1,33 @@
+.footer {
+	box-sizing: border-box;
+	padding: 15px;
+	color: white;
+	position: relative;
+	height: 130px;
+	width: 100vw;
+	background-color: rgb(35,35,35);
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+}
+
+.footer h5 {
+	color: rgba(255,255,255,0.4);
+	font-weight: lighter;
+	font-style: italic;
+}
+
+.versw {
+	grid-column: 1;
+	grid-row: 3;
+}
+
+.versw h5 {
+	color: white;
+}
+
+.poweredBy {
+	grid-column: 3;
+	grid-row: 3;
+	text-align: right;
+}
