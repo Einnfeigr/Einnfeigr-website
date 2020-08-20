@@ -1,18 +1,29 @@
 package main.img;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+
+import main.Util;
 
 public class ImageData implements Comparable<ImageData> {
 
-	private File file;
+	private String path;
 	private Long indexingTime;
 	
-	public File getFile() {
-		return file;
+	public String getPath() {
+		return path;
 	}
-	public void setFile(File file) {
-		this.file = file;
+	public void setPath(String path) {
+		this.path = path;
 	}
+
+	public File getFile() throws FileNotFoundException {
+		return new File(Util.toAbsoluteUrl(path));
+	}
+	public void setFile(File file) throws FileNotFoundException {
+		this.path = Util.toRelativeUrl(file);
+	}
+	
 	public Long getIndexingTime() {
 		return indexingTime;
 	}
@@ -24,29 +35,30 @@ public class ImageData implements Comparable<ImageData> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((file == null) ? 0 : file.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((indexingTime == null) ? 0 : indexingTime.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ImageData other = (ImageData) obj;
-		if (file == null) {
-			if (other.file != null)
+		if (path == null) {
+			if (other.path != null) {
 				return false;
-		} else if (!file.equals(other.file))
+			}
+		} else if (!path.equals(other.path)) {
 			return false;
-		if (indexingTime == null) {
-			if (other.indexingTime != null)
-				return false;
-		} else if (!indexingTime.equals(other.indexingTime))
-			return false;
+		}
 		return true;
 	}
 	

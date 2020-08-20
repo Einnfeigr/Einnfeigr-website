@@ -1,6 +1,7 @@
 package main.img;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -35,36 +36,50 @@ public class ImageInfoController {
 		return images;
 	}
 	
-	public void loadImages() throws IOException {
+	public void loadImages() throws IOException { 
+		List<ImageData> indexedImages;
 		File file = new File(Util.toAbsoluteUrl("static/img/portfolio/sections"));
-		appendImages(file);
+		indexedImages = appendImages(file);
+		merge(images, indexedImages);
 		Comparator<ImageData> comparator = (d1, d2) -> d1.compareTo(d2);
 		images.sort(comparator);
 		dao.save(images);
 	}
 
-	private void appendImages(File file) {
+	private List<ImageData> appendImages(File file) {
 		if(!file.isDirectory()) {
-			return;
+			return null;
 		} 
+		List<ImageData> dataList = new ArrayList<>();
 		for(File cFile : file.listFiles()) {
-			if(Util.isImage(cFile) && !isIndexed(file)) {				
-				ImageData data = new ImageData();
-				data.setFile(cFile);
-				data.setIndexingTime(System.currentTimeMillis());
-				images.add(data);
-			} else if(cFile.isDirectory()) {
-				appendImages(cFile);
+			try {
+				if(Util.isImage(cFile)) {				
+					ImageData data = new ImageData();
+					data.setFile(cFile);
+					data.setIndexingTime(System.currentTimeMillis());
+					dataList.add(data);
+				} else if(cFile.isDirectory()) {
+					dataList.addAll(appendImages(cFile));
+				}
+			} catch(FileNotFoundException e) {
+				e.printStackTrace();
 			}
-		}
+		} 
+		return dataList;
 	}
 	
-	private boolean isIndexed(File file) {
+	private void merge(List<ImageData> images, List<ImageData> indexedImages) {
+		//clean of unindexed images
 		for(ImageData data : images) {
-			if(data.getFile().getAbsolutePath().equals(file.getAbsolutePath())) {
-				return true;
+			if(!indexedImages.contains(data)) {
+				images.remove(data);
 			}
 		}
-		return false;
+		//append new indexed images
+		for(ImageData data : indexedImages) {
+			if(!images.contains(data)) {
+				images.add(data);
+			}
+		}
 	}
 }

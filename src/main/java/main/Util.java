@@ -45,6 +45,10 @@ public class Util {
     	return url.replace(ResourceUtils.getURL("classpath:").getFile().substring(1).replace("/", "\\"), "");
     }
     
+    public static String toRelativeUrl(File file) throws FileNotFoundException {
+    	return toRelativeUrl(file.getAbsolutePath());
+    }
+    
     public static void createFile(String relativeUrl) throws IOException {
     	new File(ResourceUtils.getURL("classpath:").getPath()+relativeUrl).createNewFile();
     }
