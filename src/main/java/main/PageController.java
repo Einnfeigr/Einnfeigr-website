@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,13 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.TemplateException;
+import main.img.ImageDataController;
+import main.misc.Util;
 import main.pojo.PageTemplateData;
+import main.pojo.TemplateData;
 import main.pojo.TextTemplateData;
 import main.section.Section;
 import main.section.SectionsController;
 
 @RestController
 public class PageController {
+	
+	private ImageDataController imageDataController;
+	
+	public PageController(ImageDataController imageDataController) {
+		this.imageDataController = imageDataController;
+	}
 	
     @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
     		"/contacts"}, method= RequestMethod.GET)
@@ -42,7 +52,17 @@ public class PageController {
 		        	if(data.getPath() == null) {
 		            	data.setPath(path);
 		            }
-	    			data = loadPage(data, "static/text/ru/main.mustache", 
+		        	try {
+		        		List<String> paths = imageDataController.getImagePaths(path);
+			        	@SuppressWarnings("unused")
+			        	TextTemplateData mainTextData = new TextTemplateData() {
+			        		String latestLoaded = compileLatestLoaded(paths);
+			        	};
+			        	data.setTextData(mainTextData);
+		        	} catch(IOException e) {
+		        		e.printStackTrace();
+		        	}
+		        	data = loadPage(data, "static/text/ru/main.mustache", 
 	    					"templates/pages/main.mustache");
     				data.setTitle("Главная");	
 	    			break;
@@ -64,10 +84,10 @@ public class PageController {
 		            }
 	    			final String tPath = data.getPath();
     				@SuppressWarnings("unused")
-	    			TextTemplateData textData = new TextTemplateData() {
+	    			TextTemplateData retouchTextData = new TextTemplateData() {
 						String path = tPath;
 	    			};
-	    			data.setTextData(textData);
+	    			data.setTextData(retouchTextData);
 	    			data = loadPage(data, "static/text/ru/retouch.mustache", 
 	    					"templates/pages/retouch.mustache");
     				data.setTitle("Ретушь");
@@ -135,6 +155,18 @@ public class PageController {
 			exception.setPath(data.getPath());
 			throw exception;
 		}
+    }
+    
+    private String compileLatestLoaded(List<String> images) throws IOException {
+    	StringBuilder sb = new StringBuilder();
+    	for(String image : images) {
+    		@SuppressWarnings("unused")
+    		TemplateData data = new TemplateData() {
+    			String imgPath = image;
+    		};
+    		sb.append(Util.compileTemplate("templates/misc/img/image.mustache", data));
+    	}
+    	return sb.toString();
     }
     
     private PageTemplateData loadPage(PageTemplateData data, String textPath, String pagePath) throws IOException {

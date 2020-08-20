@@ -3,7 +3,7 @@ package main.img;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import main.Util;
+import main.misc.Util;
 
 public class ImageData implements Comparable<ImageData> {
 
@@ -11,7 +11,7 @@ public class ImageData implements Comparable<ImageData> {
 	private Long indexingTime;
 	
 	public String getPath() {
-		return path;
+		return path.replace("\\", "/").replace("static", "");
 	}
 	public void setPath(String path) {
 		this.path = path;

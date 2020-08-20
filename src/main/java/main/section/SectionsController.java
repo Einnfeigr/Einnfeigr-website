@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import main.Util;
+import main.misc.Util;
 import main.pojo.TemplateData;
 import main.pojo.TextTemplateData;
 
@@ -28,7 +28,8 @@ public class SectionsController {
 	}
 	
 	public static void loadSections() throws IOException {
-		Section main = new Section(new File(Util.toAbsoluteUrl("static/img/portfolio/sections/")));
+		Section main = new Section(new File(Util.toAbsoluteUrl(
+				"static/img/portfolio/sections/")));
 		sections = new HashMap<>();
 		addSections(main);
 	}
@@ -43,7 +44,8 @@ public class SectionsController {
 		});
 	}
 	
-	public static String compileSection(Section section, String path) throws IOException {
+	public static String compileSection(Section section, String path)
+			throws IOException {
 		if(section == null) {
 			return null;
 		}
@@ -53,7 +55,8 @@ public class SectionsController {
 			String images = imagesText;
 			String name = section.getName();
 		};
-		return Util.compileTemplate(Util.toAbsoluteUrl("templates/misc/sections/section.mustache"), data);
+		return Util.compileTemplate(Util.toAbsoluteUrl(
+				"templates/misc/sections/section.mustache"), data);
 	}
 	
 	private static String compileImages(List<File> images, String path) {
@@ -62,9 +65,12 @@ public class SectionsController {
 			try {
 				TemplateData data = new TextTemplateData() {
 					@SuppressWarnings("unused")
-					String imgPath = path+Util.toRelativeUrl(i.getAbsolutePath()).replace("static", "");
+					String imgPath = path+Util.toRelativeUrl(i.getAbsolutePath())
+					.replace("static", "");
 				};
-				text.append(Util.compileTemplate(Util.toAbsoluteUrl("templates/misc/sections/image.mustache"), data));
+				text.append(Util.compileTemplate(
+						Util.toAbsoluteUrl("templates/misc/img/image.mustache"),
+						data));
 			} catch(IOException e) {
 				text.append("something went wrong");
 				e.printStackTrace();
@@ -88,10 +94,12 @@ public class SectionsController {
 					@SuppressWarnings("unused")
 					String imgPath = (path+Util.toRelativeUrl(
 							section.getImages().get(i).getAbsolutePath())
-							.replace("static", "")).replace("\\", "/").replace("//", "/");
+							.replace("static", ""))
+							.replace("\\", "/")
+							.replace("//", "/");
 				};
-				previewText.append(Util.compileTemplate(
-						Util.toAbsoluteUrl("templates/misc/sections/preview.mustache"), data));
+				previewText.append(Util.compileTemplate(Util.toAbsoluteUrl(
+						"templates/misc/sections/preview.mustache"), data));
 			}
 			@SuppressWarnings("unused")
 			TemplateData data = new TemplateData() {
@@ -99,14 +107,16 @@ public class SectionsController {
 				String previews = previewText.toString();
 				String title = Util.UrlToUpperCase(section.getName());
 			};
-			sectionsText.append(Util.compileTemplate(Util.toAbsoluteUrl("templates/misc/sections/section.mustache"), data));
+			sectionsText.append(Util.compileTemplate(Util.toAbsoluteUrl(
+					"templates/misc/sections/section.mustache"), data));
 			previewText.delete(0, previewText.length());
 		}
 		@SuppressWarnings("unused")
 		TemplateData data = new TemplateData() {
 			String sections = sectionsText.toString();
 		};
-		text.append(Util.compileTemplate(Util.toAbsoluteUrl("templates/misc/sections/sections.mustache"), data));
+		text.append(Util.compileTemplate(Util.toAbsoluteUrl(
+				"templates/misc/sections/sections.mustache"), data));
 		return text.toString();
 	}
 	

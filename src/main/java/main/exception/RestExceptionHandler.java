@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.samskivert.mustache.MustacheException;
 
-import main.Util;
+import main.misc.Util;
 import main.pojo.PageTemplateData;
 import main.pojo.TemplateData;
 
