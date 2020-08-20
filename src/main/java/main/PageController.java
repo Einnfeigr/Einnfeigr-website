@@ -93,7 +93,7 @@ public class PageController {
 	    		default: 
 	    			throw new IOException("URL: "+requestUrl);
 	    	}
-	        mav.getModel().put("path", data.getPath());
+	        mav.getModel().put("path", path);
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			mav.getModel().put("isMobile", data.getIsMobile());

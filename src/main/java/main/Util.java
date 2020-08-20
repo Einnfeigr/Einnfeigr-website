@@ -1,8 +1,14 @@
 package main;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 
 import org.springframework.util.ResourceUtils;
@@ -39,6 +45,27 @@ public class Util {
     	return url.replace(ResourceUtils.getURL("classpath:").getFile().substring(1).replace("/", "\\"), "");
     }
     
+    public static void createFile(String relativeUrl) throws IOException {
+    	new File(ResourceUtils.getURL("classpath:").getPath()+relativeUrl).createNewFile();
+    }
+    
+    public static boolean isImage(File file) {
+    	String[] sp = file.getName().split("\\.");
+    	if(sp.length < 2) {
+    		return false;
+    	}
+    	switch(sp[sp.length-1]) {
+    		case("jpg"):
+    		case("jpeg"):
+    		case("png"):
+    		case("gif"):
+    		case("webp"):
+    			return true;
+    		default:
+    			return false;
+    	}
+    }
+    
     public static String UrlToUpperCase(String url) {
     	String separator;
     	StringBuilder sb;
@@ -55,5 +82,32 @@ public class Util {
     		sb.append(string+separator);
     	}
     	return sb.toString();
+    }
+    
+    public static String readFile(File file) throws IOException {
+    	StringBuilder content = new StringBuilder("");
+    	if(!file.exists()) {
+    		throw new FileNotFoundException();
+    	}
+    	try(BufferedReader br = new BufferedReader(new InputStreamReader(
+    			new FileInputStream(file)))) {
+    		while(br.ready()) {
+    			content.append(br.readLine());
+    		}
+    	}
+    	return content.toString();
+    }
+    
+    public static void writeFile(File file, String content) throws IOException {
+    	if(!file.exists()) {
+    		throw new FileNotFoundException();
+    	}
+    	if(content == null) {
+    		throw new NullPointerException();
+    	}
+    	try(BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+    			new FileOutputStream(file)))) {
+    		bw.write(content);
+    	}
     }
 }
