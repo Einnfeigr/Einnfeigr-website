@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -41,7 +44,7 @@ public class Util {
     }
     
     public static String toAbsoluteUrl(String url) throws FileNotFoundException {
-    	return ResourceUtils.getURL("classpath:"+url).getPath();
+    	return ResourceUtils.getURL("classpath:").getPath()+url;
     }
     
     public static String toRelativeUrl(String url) throws FileNotFoundException {
@@ -91,13 +94,24 @@ public class Util {
     	return sb.toString();
     }
     
-    public static String readFile(File file) throws IOException {
+    public static String readFile(MultipartFile file) throws IOException {
     	StringBuilder content = new StringBuilder("");
+    	try(BufferedReader br = new BufferedReader(new InputStreamReader(
+    			file.getInputStream(), "UTF-8"))) {
+    		while(br.ready()) {
+    			content.append(br.readLine());
+    		}
+    	}
+    	return content.toString();
+    }
+    
+    public static String readFile(File file) throws IOException {
     	if(!file.exists()) {
     		throw new FileNotFoundException();
     	}
+    	StringBuilder content = new StringBuilder("");
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(
-    			new FileInputStream(file)))) {
+    			new FileInputStream(file), "UTF-8"))) {
     		while(br.ready()) {
     			content.append(br.readLine());
     		}
@@ -113,8 +127,22 @@ public class Util {
     		throw new NullPointerException();
     	}
     	try(BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-    			new FileOutputStream(file)))) {
+    			new FileOutputStream(file), "UTF-8"))) {
     		bw.write(content);
     	}
+    }
+    
+    public static List<String> parseNames(File file, File baseFile) {
+    	if(!file.exists() || !file.isDirectory()) {
+    		return null;
+    	}
+    	List<String> names = new ArrayList<>();
+    	for(File cFile : file.listFiles()) {
+    		if(cFile.isDirectory()) {
+    			names.addAll(parseNames(cFile, baseFile));
+    		}
+    		names.add(file.getAbsolutePath().replace(baseFile.getAbsolutePath(), ""));
+    	}
+    	return names;
     }
 }

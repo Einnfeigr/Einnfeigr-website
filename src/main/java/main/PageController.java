@@ -126,7 +126,7 @@ public class PageController {
         return mav;	
     }
     
-    @RequestMapping(value= "portfolio/sections/{section}", method= RequestMethod.GET)
+    @RequestMapping(value= "/portfolio/sections/{section}", method= RequestMethod.GET)
     ModelAndView getSection(@PathVariable("section") String sectionName,
     		Device device, HttpServletRequest request) throws TemplateException {
     	ModelAndView mav = null;

@@ -13,6 +13,8 @@
     http://www.springframework.org/schema/aop 
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 ">
+	<bean id="dashboardController" class="main.dashboard.DashboardController" autowire="byType" />
+	<bean id="zipImageStorageService" class="main.dashboard.ZipImageStorageService" />
 	<bean id="imageDataController" class="main.img.ImageDataController">
 		<constructor-arg ref="imageDataDao" />
 	</bean>
