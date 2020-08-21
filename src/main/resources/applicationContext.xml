@@ -21,6 +21,7 @@
 	<bean id="initializator" class="main.misc.Initializator">
 		<constructor-arg ref="imageDataController" />
 	</bean>
+	<bean id="testController" class="testController" autowire="byType" />
 	<bean id="imageDataDao" class="main.img.ImageDataDao" />
 	<task:scheduled-tasks scheduler="scheduler">
     	<task:scheduled ref="imageDataController" method="loadImages" fixed-delay="${IMAGE_UPDATE_DELAY}"/>

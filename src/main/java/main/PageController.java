@@ -26,14 +26,20 @@ public class PageController {
 	
 	private ImageDataController imageDataController;
 	
+	public PageController() {}
+	
 	public PageController(ImageDataController imageDataController) {
+		//TODO remove
+    	System.out.println("a");
 		this.imageDataController = imageDataController;
 	}
 	
     @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
     		"/contacts"}, method= RequestMethod.GET)
-    ModelAndView getPage(Device device, HttpServletRequest request) 
+    public ModelAndView getPage(Device device, HttpServletRequest request) 
     		throws TemplateException {
+    	//TODO remove
+    	System.out.println("a");
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
   		String path;
@@ -127,7 +133,7 @@ public class PageController {
     }
     
     @RequestMapping(value= "/portfolio/sections/{section}", method= RequestMethod.GET)
-    ModelAndView getSection(@PathVariable("section") String sectionName,
+    public ModelAndView getSection(@PathVariable("section") String sectionName,
     		Device device, HttpServletRequest request) throws TemplateException {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
