@@ -22,7 +22,7 @@ function showPage(title, address, addressPath) {
 	$.ajax({
 		url: path+address,
 		type: 'GET',
-		data: 'target=body&path='+path,
+		data: 'target=body&path='+addressPath,
 		success: function(a) {
 			$(window).scrollTop(0);
 			$('.page').remove();
