@@ -1,8 +1,10 @@
 # Einnfeigr website
-This is a simple project of my website called 'Einnfeigr'
+This is a simple project of my website called 'Einnfeigr' <br />
+Main goal is to represent info about my services related to photography, examples of work <br />
+I also wanted to have some practise in spring framework <br />
 
 ## Contributions
-Contribute anything you consider important  <br />
+Contribute whatever you see fit <br />
 You can choose [issue](https://github.com/Studiedlist/Einnfeigr-website/issues) or [project](https://github.com/Studiedlist/Einnfeigr-website/projects) and help me with realization
 
 *looking for talented frontend developer*
