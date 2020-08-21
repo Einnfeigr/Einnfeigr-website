@@ -8,8 +8,12 @@ You can choose [issue](https://github.com/Studiedlist/Einnfeigr-website/issues) 
 *looking for talented frontend developer*
 
 ## Release
-Terms of the first release are: 
+Terms of the first release are:
+### Overall
 * [ ] all pages filled with content
-* [ ] dashboard is ready
 * [ ] all current units are tested
-* [ ] 
+* [ ] refactoring completed
+* [ ] dashboard is ready
+* [ ] images previews
+### Sections
+* [ ] uploading/downloading sections
