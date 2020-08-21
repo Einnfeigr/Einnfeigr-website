@@ -10,6 +10,7 @@ You can choose [issue](https://github.com/Studiedlist/Einnfeigr-website/issues) 
 ## Release
 Terms of the first release are:
 #### Overall
+* [x] latest downloads on main page
 * [ ] all pages filled with content
 * [ ] all current units are tested
 * [ ] refactoring completed
