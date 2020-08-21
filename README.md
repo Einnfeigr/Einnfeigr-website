@@ -9,11 +9,11 @@ You can choose [issue](https://github.com/Studiedlist/Einnfeigr-website/issues) 
 
 ## Release
 Terms of the first release are:
-### Overall
+#### Overall
 * [ ] all pages filled with content
 * [ ] all current units are tested
 * [ ] refactoring completed
 * [ ] dashboard is ready
 * [ ] images previews
-### Sections
+#### Sections
 * [ ] uploading/downloading sections
