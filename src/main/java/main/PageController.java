@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,22 +25,15 @@ import main.section.SectionsController;
 @RestController
 public class PageController {
 	
+	@Autowired
 	private ImageDataController imageDataController;
 	
 	public PageController() {}
-	
-	public PageController(ImageDataController imageDataController) {
-		//TODO remove
-    	System.out.println("a");
-		this.imageDataController = imageDataController;
-	}
 	
     @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
     		"/contacts"}, method= RequestMethod.GET)
     public ModelAndView getPage(Device device, HttpServletRequest request) 
     		throws TemplateException {
-    	//TODO remove
-    	System.out.println("a");
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
   		String path;

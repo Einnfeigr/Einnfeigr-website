@@ -13,7 +13,8 @@
     http://www.springframework.org/schema/aop 
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 ">
-	<bean id="dashboardController" class="main.dashboard.DashboardController" autowire="byType" />
+	<bean id="dashboardController" class="main.dashboard.DashboardController" />
+	<bean id="pageController" class="main.PageController" />
 	<bean id="zipImageStorageService" class="main.dashboard.ZipImageStorageService" />
 	<bean id="imageDataController" class="main.img.ImageDataController">
 		<constructor-arg ref="imageDataDao" />
@@ -21,13 +22,11 @@
 	<bean id="initializator" class="main.misc.Initializator">
 		<constructor-arg ref="imageDataController" />
 	</bean>
-	<bean id="testController" class="testController" autowire="byType" />
 	<bean id="imageDataDao" class="main.img.ImageDataDao" />
 	<task:scheduled-tasks scheduler="scheduler">
-    	<task:scheduled ref="imageDataController" method="loadImages" fixed-delay="${IMAGE_UPDATE_DELAY}"/>
+    	<task:scheduled ref="imageDataController" method="loadImages" fixed-delay="1800000"/>
 	</task:scheduled-tasks>
 	<task:scheduler id="scheduler" pool-size="1"/>
 
 	<context:annotation-config />
-	<context:property-placeholder />
 </beans>
