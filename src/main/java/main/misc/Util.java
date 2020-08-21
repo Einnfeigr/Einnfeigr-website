@@ -26,7 +26,7 @@ import main.pojo.TemplateData;
 public class Util {
     
     public static String compileTemplate(String path, TemplateData data) throws IOException {
-    	File template = new File(path);
+    	File template = new File(path+".mustache");
     	if(!template.exists()) {
     		template = new File(Util.toAbsoluteUrl(path));
     		if(!template.exists()) {

@@ -18,13 +18,13 @@ $(window).on('load',function() {
 
 
 function showPage(title, address, addressPath) {
-	$('.page').remove();
 	$('.loading').show();
 	$.ajax({
 		url: path+address,
 		type: 'GET',
 		data: 'target=body&path='+addressPath,
 		success: function(a) {
+			$('.page').remove();
 			$('.pageArea').append(a);
 			var ver = '';
 			var version = checkVersion();

@@ -55,8 +55,8 @@ public class SectionsController {
 			String images = imagesText;
 			String name = section.getName();
 		};
-		return Util.compileTemplate(Util.toAbsoluteUrl(
-				"templates/misc/sections/section.mustache"), data);
+		return Util.compileTemplate(
+				"templates/misc/sections/section", data);
 	}
 	
 	private static String compileImages(List<File> images, String path) {
@@ -68,9 +68,7 @@ public class SectionsController {
 					String imgPath = path+Util.toRelativeUrl(i.getAbsolutePath())
 					.replace("static", "");
 				};
-				text.append(Util.compileTemplate(
-						Util.toAbsoluteUrl("templates/misc/img/image.mustache"),
-						data));
+				text.append(Util.compileTemplate("templates/misc/img/image", data));
 			} catch(IOException e) {
 				text.append("something went wrong");
 				e.printStackTrace();
@@ -98,8 +96,8 @@ public class SectionsController {
 							.replace("\\", "/")
 							.replace("//", "/");
 				};
-				previewText.append(Util.compileTemplate(Util.toAbsoluteUrl(
-						"templates/misc/sections/preview.mustache"), data));
+				previewText.append(Util.compileTemplate("templates/misc/sections/preview",
+						data));
 			}
 			@SuppressWarnings("unused")
 			TemplateData data = new TemplateData() {
@@ -107,16 +105,14 @@ public class SectionsController {
 				String previews = previewText.toString();
 				String title = Util.UrlToUpperCase(section.getName());
 			};
-			sectionsText.append(Util.compileTemplate(Util.toAbsoluteUrl(
-					"templates/misc/sections/section.mustache"), data));
+			sectionsText.append(Util.compileTemplate("templates/misc/sections/section", data));
 			previewText.delete(0, previewText.length());
 		}
 		@SuppressWarnings("unused")
 		TemplateData data = new TemplateData() {
 			String sections = sectionsText.toString();
 		};
-		text.append(Util.compileTemplate(Util.toAbsoluteUrl(
-				"templates/misc/sections/sections.mustache"), data));
+		text.append(Util.compileTemplate("templates/misc/sections/sections", data));
 		return text.toString();
 	}
 	

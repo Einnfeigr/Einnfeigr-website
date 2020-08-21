@@ -1,18 +1,18 @@
 package main.exception;
 
-public class TemplateException extends RuntimeException {
+public class ControllerException extends RuntimeException {
 	
 	private String path;
 	
-	public TemplateException() {
+	public ControllerException() {
 		super();
 	}
 	
-	public TemplateException(Throwable t) {
+	public ControllerException(Throwable t) {
 		super(t);
 	}
 	
-	public TemplateException(String message) {
+	public ControllerException(String message) {
 		super(message);
 	}
 

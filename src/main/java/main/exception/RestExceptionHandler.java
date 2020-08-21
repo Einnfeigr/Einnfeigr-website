@@ -1,7 +1,5 @@
 package main.exception;
 
-import java.io.IOException;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,32 +8,31 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.samskivert.mustache.MustacheException;
-
 import main.misc.Util;
 import main.pojo.PageTemplateData;
 import main.pojo.TemplateData;
+import main.pojo.TextTemplateData;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(value = {TemplateException.class, IllegalArgumentException.class, IllegalStateException.class })
+	@ExceptionHandler(value = {ControllerException.class, IllegalArgumentException.class, IllegalStateException.class })
 	protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
 		try {
 			String bodyOfResponse;
 			String templatePath;
 			PageTemplateData pageData = new PageTemplateData();
-			if(ex instanceof TemplateException) { 
-				pageData.setPath(((TemplateException) ex).getPath());
-			} else {
-				throw new IOException(ex);
+			if(ex instanceof ControllerException) {
+				pageData.setText(Util.compileTemplate("static/text/ru/error",
+						new TextTemplateData() {}));
+				pageData.setPath(((ControllerException) ex).getPath());
 			}
 			if(request.getParameter("path") == null) {
-				templatePath = Util.toAbsoluteUrl("templates/desktop/index.mustache");
+				templatePath = "templates/index";
 			} else {
-				templatePath = Util.toAbsoluteUrl("templates/desktop/placeholder.mustache");
+				templatePath = "templates/placeholder";
 			}
-			String pagePath = Util.toAbsoluteUrl("templates/pages/error.mustache");
+			String pagePath = "templates/pages/error";
 			@SuppressWarnings("unused")
 			TemplateData data = new TemplateData() {
 				String title = "Ошибка";
@@ -45,9 +42,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			bodyOfResponse = Util.compileTemplate(templatePath, data);
 		    return handleExceptionInternal(ex, bodyOfResponse, 
 		  	      new HttpHeaders(), HttpStatus.OK, request);
-		} catch (IOException | MustacheException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			return handleExceptionInternal(ex, "что-то пошло не так", 
+			  	      new HttpHeaders(), HttpStatus.OK, request);
 		}
-		return null;
 	}
 }
