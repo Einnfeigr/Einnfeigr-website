@@ -48,6 +48,7 @@
 .textDiv {
 	box-sizing: border-box;
 	background: white;
+	width: 100%;
 	min-height: 100vh;
 	color: #303032;
 	padding: 35px;

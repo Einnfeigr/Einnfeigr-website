@@ -29,3 +29,23 @@
 .main .backgroundImage {
 	min-height: 100vh;
 }
+
+.latest {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: space-between;
+	width: 65%;
+	margin: auto;
+}
+
+.latest img {
+	margin: 10px;
+ 	object-fit: cover;
+ 	height: 25vw;
+ 	width: 27vw;
+ 	max-height: 250px;
+ 	max-width: 270px;
+ 	cursor: pointer;
+ 	box-shadow: 1px 1px 10px rgba(0,0,0,0.3);
+}

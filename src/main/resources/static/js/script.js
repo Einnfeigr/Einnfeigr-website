@@ -22,8 +22,9 @@ function showPage(title, address, addressPath) {
 	$.ajax({
 		url: path+address,
 		type: 'GET',
-		data: 'target=body&path='+addressPath,
+		data: 'target=body&path='+path,
 		success: function(a) {
+			$(window).scrollTop(0);
 			$('.page').remove();
 			$('.pageArea').append(a);
 			var ver = '';

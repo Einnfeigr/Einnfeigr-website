@@ -54,7 +54,8 @@ public class PageController {
 		            	data.setPath(path);
 		            }
 		        	try {
-		        		List<String> paths = imageDataController.getImagePaths(path);
+		        		List<String> paths = imageDataController.getImagePaths(
+		        				data.getPath());
 			        	@SuppressWarnings("unused")
 			        	TextTemplateData mainTextData = new TextTemplateData() {
 			        		String latestLoaded = compileLatestLoaded(paths);
@@ -73,7 +74,8 @@ public class PageController {
 		            	data.setPath(path);
 		            }
 		        	SectionsController.loadSections();
-	    			data.setText(SectionsController.compileSections(data.getPath()));
+	    			data.setText(SectionsController.compileSections(
+	    					data.getPath()));
 		        	data = loadPage(data, null, 
     						"templates/pages/portfolio");
     				data.setTitle("Портфолио");
@@ -114,7 +116,7 @@ public class PageController {
 	    		default: 
 	    			throw new IOException("URL: "+requestUrl);
 	    	}
-	        mav.getModel().put("path", path);
+	        mav.getModel().put("path", data.getPath());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			mav.getModel().put("isMobile", data.getIsMobile());
