@@ -14,7 +14,7 @@ Terms of the first release are:
 * [ ] all pages filled with content
 * [ ] all current units are tested
 * [ ] refactoring completed
-* [ ] dashboard is ready
+* [ ] dashboard
 * [ ] images previews
 #### Sections
 * [ ] uploading/downloading sections
