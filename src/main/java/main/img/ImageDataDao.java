@@ -24,7 +24,7 @@ public class ImageDataDao {
 			if(!jsonFile.exists()) {
 				jsonFile.createNewFile();
 			}
-		} catch(FileNotFoundException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 			Util.createFile(relativePath);
 			jsonFile = new File(Util.toAbsoluteUrl(relativePath));

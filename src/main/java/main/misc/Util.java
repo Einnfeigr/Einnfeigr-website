@@ -56,7 +56,13 @@ public class Util {
     }
     
     public static void createFile(String relativeUrl) throws IOException {
-    	new File(ResourceUtils.getURL("classpath:").getPath()+relativeUrl).createNewFile();
+    	File file = new File(ResourceUtils.getURL("classpath:").getPath()+relativeUrl);
+    	if(file.isDirectory()) {
+    		file.mkdirs();
+    	} else {
+    		file.getParentFile().mkdirs();
+    		file.createNewFile();
+    	}
     }
     
     public static boolean isImage(File file) {

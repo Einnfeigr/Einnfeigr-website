@@ -41,9 +41,17 @@ public class ImageDataController {
 	}
 	
 	public void loadImages() throws IOException { 
+		//TODO refactor
+		if(images == null) {
+			images = new ArrayList<>();
+		}
 		List<ImageData> indexedImages;
 		File file = new File(Util.toAbsoluteUrl("static/img/portfolio/sections"));
 		indexedImages = appendImages(file);
+		if(indexedImages == null) {
+			//TODO refactor
+			return;
+		}
 		merge(images, indexedImages);
 		Comparator<ImageData> comparator = (d1, d2) -> d1.compareTo(d2);
 		images.sort(comparator);

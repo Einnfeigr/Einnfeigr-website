@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import main.Util;
+import main.misc.Util;
 
 @Component
 public class ImageInfoController {

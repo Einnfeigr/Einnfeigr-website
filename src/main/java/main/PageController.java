@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,15 +25,14 @@ import main.section.SectionsController;
 @RestController
 public class PageController {
 	
+	@Autowired
 	private ImageDataController imageDataController;
 	
-	public PageController(ImageDataController imageDataController) {
-		this.imageDataController = imageDataController;
-	}
+	public PageController() {}
 	
     @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
     		"/contacts"}, method= RequestMethod.GET)
-    ModelAndView getPage(Device device, HttpServletRequest request) 
+    public ModelAndView getPage(Device device, HttpServletRequest request) 
     		throws TemplateException {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
@@ -127,7 +127,7 @@ public class PageController {
     }
     
     @RequestMapping(value= "/portfolio/sections/{section}", method= RequestMethod.GET)
-    ModelAndView getSection(@PathVariable("section") String sectionName,
+    public ModelAndView getSection(@PathVariable("section") String sectionName,
     		Device device, HttpServletRequest request) throws TemplateException {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
