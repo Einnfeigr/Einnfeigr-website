@@ -1,11 +1,11 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +25,6 @@ import main.section.SectionsController;
 
 @RestController
 public class PageController {
-	
-	@Autowired
-	private ImageDataController imageDataController;
 	
 	public PageController() {}
 	
@@ -54,11 +51,10 @@ public class PageController {
 		            	data.setPath(path);
 		            }
 		        	try {
-		        		List<String> paths = imageDataController.getImagePaths(
-		        				data.getPath());
+		        		final String tPath = data.getPath();
 			        	@SuppressWarnings("unused")
 			        	TextTemplateData mainTextData = new TextTemplateData() {
-			        		String latestLoaded = compileLatestLoaded(paths);
+			        		String latestLoaded = compileLatestLoaded(tPath);
 			        	};
 			        	data.setTextData(mainTextData);
 		        	} catch(IOException e) {
@@ -164,12 +160,17 @@ public class PageController {
 		}
     }
     
-    private String compileLatestLoaded(List<String> images) throws IOException {
+    private String compileLatestLoaded(String path) throws IOException {
     	StringBuilder sb = new StringBuilder();
-    	for(String image : images) {
+    	List<File> files = ImageDataController.getLatestImages();
+    	for(File file : files) {
+    		if(file.isDirectory() || !file.exists()) {
+    			continue;
+    		}
     		@SuppressWarnings("unused")
     		TemplateData data = new TemplateData() {
-    			String imgPath = image;
+    			String imgPath = path+Util.toRelativeUrl(file)
+    					.replace("\\", "/").replace("static/", "");
     		};
     		sb.append(Util.compileTemplate("templates/misc/img/image", data));
     	}

@@ -1,7 +1,6 @@
 package main.img;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,6 +13,8 @@ public class ImageDataController {
 	List<ImageData> images;
 
 	private ImageDataDao dao;
+
+	private static final String PREVIEW_PATH = "static/img/preview/latest/";
 	
 	public ImageDataController(ImageDataDao dao) {
 		this.dao = dao;
@@ -27,17 +28,9 @@ public class ImageDataController {
 			}
 		}
 	}
-	
-	public List<ImageData> getImages() {
-		return images;
-	}
-	
-	public List<String> getImagePaths(String path) throws FileNotFoundException {
-		List<String> paths = new ArrayList<>();
-		for(ImageData data : images) {
-			paths.add(path+data.getPath());
-		}
-		return paths;
+
+	public static List<File> getLatestImages() {
+		return Util.parseFiles(Util.getFile(PREVIEW_PATH), true);
 	}
 	
 	public void loadImages() throws IOException { 
@@ -47,7 +40,7 @@ public class ImageDataController {
 		}
 		List<ImageData> indexedImages;
 		File file = new File(Util.toAbsoluteUrl("static/img/portfolio/sections"));
-		indexedImages = appendImages(file);
+		indexedImages = parseImagesData(file);
 		if(indexedImages == null) {
 			//TODO refactor
 			return;
@@ -56,25 +49,30 @@ public class ImageDataController {
 		Comparator<ImageData> comparator = (d1, d2) -> d1.compareTo(d2);
 		images.sort(comparator);
 		dao.save(images);
+		saveImages(images);
 	}
 	
-	private List<ImageData> appendImages(File file) {
+	private void saveImages(List<ImageData> images) {
+		images.forEach(i -> {
+			File file = new File(Util.toAbsoluteUrl(PREVIEW_PATH+i.getName()));
+			Util.createFile(file);
+			Util.copyImage(i.getFile(), file);
+		});
+	}
+	
+	private List<ImageData> parseImagesData(File file) {
 		if(!file.isDirectory()) {
 			return null;
 		} 
 		List<ImageData> dataList = new ArrayList<>();
 		for(File cFile : file.listFiles()) {
-			try {
-				if(Util.isImage(cFile)) {				
-					ImageData data = new ImageData();
-					data.setFile(cFile);
-					data.setIndexingTime(System.currentTimeMillis());
-					dataList.add(data);
-				} else if(cFile.isDirectory()) {
-					dataList.addAll(appendImages(cFile));
-				}
-			} catch(FileNotFoundException e) {
-				e.printStackTrace();
+			if(Util.isImage(cFile)) {				
+				ImageData data = new ImageData();
+				data.setFile(cFile);
+				data.setIndexingTime(System.currentTimeMillis());
+				dataList.add(data);
+			} else if(cFile.isDirectory()) {
+				dataList.addAll(parseImagesData(cFile));
 			}
 		} 
 		return dataList;

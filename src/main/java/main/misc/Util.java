@@ -1,5 +1,6 @@
 package main.misc;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,8 +11,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,26 +49,74 @@ public class Util {
     	return writer.toString();
     }
     
-    public static String toAbsoluteUrl(String url) throws FileNotFoundException {
-    	return ResourceUtils.getURL("classpath:").getPath()+url;
+    public static String toAbsoluteUrl(String url) {
+    	try {
+    		return ResourceUtils.getURL("classpath:").getPath()+url;
+    	} catch(IOException e) {
+    		e.printStackTrace();
+    		return null;
+    	}
     }
     
-    public static String toRelativeUrl(String url) throws FileNotFoundException {
-    	return url.replace(ResourceUtils.getURL("classpath:").getFile().substring(1).replace("/", "\\"), "");
+    public static String toRelativeUrl(String url) {
+    	try {
+    		return url.replace(ResourceUtils.getURL("classpath:").getFile()
+    				.substring(1).replace("/", "\\"), "");
+    	} catch(IOException e) {
+    		e.printStackTrace();
+    		return null;
+    	}
     }
     
-    public static String toRelativeUrl(File file) throws FileNotFoundException {
+    public static List<File> parseFiles(File file, boolean parseSubdirectories) {
+    	if(!file.isDirectory() || !file.exists()) {
+    		return null;
+    	}
+    	List<File> files = new ArrayList<>();
+    	files.add(file);
+    	for(File cFile : file.listFiles()) {
+    		if(cFile.isDirectory()) {
+    			if(!parseSubdirectories) {
+    				continue;
+    			}
+    			List<File> cFiles = parseFiles(cFile, parseSubdirectories);
+    			if(cFiles != null) {
+    				files.addAll(cFiles);
+    			}
+    		} else {
+    			files.add(cFile);
+    		}
+    	}
+    	return files;
+    }
+    
+    public static String toRelativeUrl(File file) {
     	return toRelativeUrl(file.getAbsolutePath());
     }
     
-    public static void createFile(String relativeUrl) throws IOException {
-    	File file = new File(ResourceUtils.getURL("classpath:").getPath()+relativeUrl);
-    	if(file.isDirectory()) {
-    		file.mkdirs();
-    	} else {
-    		file.getParentFile().mkdirs();
-    		file.createNewFile();
+    public static File getFile(String path) {
+    	return new File(toAbsoluteUrl(path));
+    }
+    
+    public static File createFile(File file) {
+    	try {
+    		if(file.exists()) {
+    			file.delete();
+    		}
+	    	if(file.isDirectory()) {
+	    		file.mkdirs();
+	    	} else {
+	    		file.getParentFile().mkdirs();
+	    		file.createNewFile();
+	    	}
+    	} catch(IOException e) {
+    		e.printStackTrace();
     	}
+    	return file;
+    }
+    
+    public static File createFile(String relativeUrl) {
+    	return createFile(new File(toAbsoluteUrl(relativeUrl)));
     }
     
     public static boolean isImage(File file) {
@@ -101,10 +154,40 @@ public class Util {
     	return sb.toString();
     }
     
+    public static void copyFile(File src, File dest) throws IOException {
+    	if(Util.isImage(src) && Util.isImage(dest)) {
+    		copyImage(src, dest);
+    		return;
+    	}
+		Files.copy(src.toPath(), dest.toPath(), 
+				StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+    }
+    
+    public static void copyImage(File src, File dest) {
+    	if(!Util.isImage(src) || !Util.isImage(dest)) {
+    		throw new IllegalArgumentException("One or both passed files are not images");
+    	}
+    	BufferedImage image = null;
+    	try {
+	        image = ImageIO.read(src);
+	    	ImageIO.write(image, getExtension(src), dest);
+    	} catch(IOException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    public static String getExtension(File file) {
+    	String[] spl = file.getName().split("\\.");
+    	if(spl.length < 2) {
+    		return null;
+    	}
+    	return spl[spl.length-1];
+    }
+    
     public static String readFile(MultipartFile file) throws IOException {
     	StringBuilder content = new StringBuilder("");
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(
-    			file.getInputStream(), "UTF-8"))) {
+    			file.getInputStream()))) {
     		while(br.ready()) {
     			content.append(br.readLine());
     		}
@@ -118,7 +201,7 @@ public class Util {
     	}
     	StringBuilder content = new StringBuilder("");
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(
-    			new FileInputStream(file), "UTF-8"))) {
+    			new FileInputStream(file)))) {
     		while(br.ready()) {
     			content.append(br.readLine());
     		}
@@ -134,7 +217,7 @@ public class Util {
     		throw new NullPointerException();
     	}
     	try(BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-    			new FileOutputStream(file), "UTF-8"))) {
+    			new FileOutputStream(file)))) {
     		bw.write(content);
     	}
     }

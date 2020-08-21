@@ -1,26 +1,32 @@
 package main.img;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import main.misc.Util;
 
+//TODO refactor
 public class ImageData implements Comparable<ImageData> {
 
 	private String path;
 	private Long indexingTime;
-	
+
 	public String getPath() {
 		return path.replace("\\", "/").replace("static", "");
 	}
-	public void setPath(String path) {
-		this.path = path;
+	
+	public String getName() {
+		return new File(Util.toAbsoluteUrl(path)).getName();
 	}
 
-	public File getFile() throws FileNotFoundException {
+	public File createFile() {
+		return Util.createFile(path);
+	}
+	
+	public File getFile() {
 		return new File(Util.toAbsoluteUrl(path));
 	}
-	public void setFile(File file) throws FileNotFoundException {
+	
+	public void setFile(File file) {
 		this.path = Util.toRelativeUrl(file);
 	}
 	
