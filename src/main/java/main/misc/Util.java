@@ -22,8 +22,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class Util {
     
+    public static boolean isAbsolute(File file) throws FileNotFoundException {
+    	return isAbsolute(file.getAbsolutePath());
+    }
+    
+    public static boolean isAbsolute(String url) throws FileNotFoundException {
+		return url.replace("\\", "/").contains(ResourceUtils.getURL("classpath:").getPath());
+    }
+    
     public static String toAbsoluteUrl(String url) {
     	try {
+        	if(isAbsolute(url)) {
+        		return url;
+        	}
     		return ResourceUtils.getURL("classpath:").getPath()+url;
     	} catch(IOException e) {
     		e.printStackTrace();
@@ -33,12 +44,21 @@ public class Util {
     
     public static String toRelativeUrl(String url) {
     	try {
+    		if(!isAbsolute(url)) {
+    			System.out.println("absolute | "+url);
+    			System.out.println(ResourceUtils.getURL("classpath:").getPath());
+    			return url;
+    		}
     		return url.replace(ResourceUtils.getURL("classpath:").getFile()
     				.substring(1).replace("/", "\\"), "");
     	} catch(IOException e) {
     		e.printStackTrace();
     		return null;
     	}
+    }
+
+    public static String toRelativeUrl(File file) {
+    	return toRelativeUrl(file.getAbsolutePath().replace("\\", "/"));
     }
     
     public static List<File> parseFiles(File file, boolean parseSubdirectories) {
@@ -61,10 +81,6 @@ public class Util {
     		}
     	}
     	return files;
-    }
-    
-    public static String toRelativeUrl(File file) {
-    	return toRelativeUrl(file.getAbsolutePath());
     }
     
     public static File getFile(String path) {
@@ -145,6 +161,10 @@ public class Util {
     	if(!Util.isImage(src) || !Util.isImage(dest)) {
     		throw new IllegalArgumentException("One or both passed files are not images");
     	}
+    	if(!src.exists()) {
+    		throw new NullPointerException(
+    				"Couldn't find file '"+src.getAbsolutePath()+"'");
+    	}
     	BufferedImage image = null;
     	try {
 	        image = ImageIO.read(src);
@@ -212,13 +232,5 @@ public class Util {
     		names.add(file.getAbsolutePath().replace(baseFile.getAbsolutePath(), ""));
     	}
     	return names;
-    }
-    
-    public static boolean isAbsolute(File file) throws FileNotFoundException {
-    	return isAbsolute(file.getAbsolutePath());
-    }
-    
-    public static boolean isAbsolute(String url) throws FileNotFoundException {
-		return url.contains(ResourceUtils.getURL("classpath:").getPath());
     }
 }

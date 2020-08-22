@@ -50,7 +50,7 @@ public class ImageDataController {
 		images.forEach(i -> {
 			File file = new File(Util.toAbsoluteUrl(PREVIEW_PATH+i.getName()));
 			Util.createFile(file);
-			Util.copyImage(i.getFile(), file);
+ 			Util.copyImage(i.getFile(), file);
 		});
 	}
 	
@@ -73,11 +73,15 @@ public class ImageDataController {
 	}
 	
 	private void merge(List<ImageData> images, List<ImageData> indexedImages) {
+		List<Integer> toRemove = new ArrayList<>();
 		//clean of unindexed images
 		for(ImageData data : images) {
 			if(!indexedImages.contains(data)) {
-				images.remove(data);
+				toRemove.add(images.indexOf(data));
 			}
+		}
+		for(Integer i : toRemove) {
+			images.remove(i);
 		}
 		//append new indexed images
 		for(ImageData data : indexedImages) {
