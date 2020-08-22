@@ -1,8 +1,6 @@
 package main;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,104 +8,66 @@ import org.springframework.mobile.device.Device;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.exception.TemplateException;
-import main.img.ImageDataController;
 import main.misc.Util;
 import main.pojo.PageTemplateData;
-import main.pojo.TemplateData;
 import main.pojo.TextTemplateData;
 import main.section.Section;
 import main.section.SectionsController;
+import main.template.TemplateController;
 
 @RestController
 public class PageController {
 	
-	public PageController() {}
-	
     @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
     		"/contacts"}, method= RequestMethod.GET)
-    public ModelAndView getPage(Device device, HttpServletRequest request) 
-    		throws ControllerException {
-    	ModelAndView mav = null;
+    public ModelAndView getPage(@RequestParam(required=false) String path,
+    		Device device, HttpServletRequest request) 
+    				throws ControllerException {
+    	ModelAndView mav;
     	PageTemplateData data = new PageTemplateData();
-  		String path;
+  		String requestUrl = request.getRequestURI();
+  		while(requestUrl.endsWith("/") && requestUrl.length() > 1) {
+  			requestUrl = requestUrl.substring(0, requestUrl.length()-1);
+  		}
+  		if(path == null) {
+  			path = getPath(requestUrl);
+  		}
     	try {
 	  		mav = createModelAndView(device, request, data);
-	    	if(request.getParameter("path") != null ) {
-	    		data.setPath(request.getParameter("path"));
-	    	}
-      		String requestUrl = request.getRequestURI();
-      		while(requestUrl.endsWith("/") && requestUrl.length() > 1) {
-      			requestUrl = requestUrl.substring(0, requestUrl.length()-1);
-      		}
+      		data.setPath(path);
       		switch(requestUrl) {
 	    		case("/"):
-	    			path = "./";
-		        	if(data.getPath() == null) {
-		            	data.setPath(path);
-		            }
-		        	try {
-		        		final String tPath = data.getPath();
-			        	@SuppressWarnings("unused")
-			        	TextTemplateData mainTextData = new TextTemplateData() {
-			        		String latestLoaded = compileLatestLoaded(tPath);
-			        	};
-			        	data.setTextData(mainTextData);
-		        	} catch(IOException e) {
-		        		e.printStackTrace();
-		        	}
-		        	data = loadPage(data, "static/text/ru/main", 
+		        	data = loadPage(compileMain(data), "static/text/ru/main", 
 	    					"templates/pages/main");
     				data.setTitle("Главная");	
 	    			break;
 	    		case("/portfolio"):	    
-	    			path = "../";
-		        	if(data.getPath() == null) {
-		            	data.setPath(path);
-		            }
-		        	SectionsController.loadSections();
-	    			data.setText(SectionsController.compileSections(
-	    					data.getPath()));
+	    			data.setText(TemplateController.compileSections(
+	    					SectionsController.getSections(), data.getPath()));
 		        	data = loadPage(data, null, 
     						"templates/pages/portfolio");
     				data.setTitle("Портфолио");
 	    			break;
 	    		case("/retouch"):
-	    			path = "../";		       
-	    			if(data.getPath() == null) {
-		            	data.setPath(path);
-		            }
-	    			final String tPath = data.getPath();
-    				@SuppressWarnings("unused")
-	    			TextTemplateData retouchTextData = new TextTemplateData() {
-						String path = tPath;
-	    			};
-	    			data.setTextData(retouchTextData);
-	    			data = loadPage(data, "static/text/ru/retouch", 
-	    					"templates/pages/retouch");
+	    			data = loadPage(compileRetouch(data),
+	    					"static/text/ru/retouch", "templates/pages/retouch");
     				data.setTitle("Ретушь");
 	    			break;
 	    		case("/about"):
-	    			path = "../";
-		        	if(data.getPath() == null) {
-		            	data.setPath(path);
-		            }
 	    			data = loadPage(data, "static/text/ru/about", 
 	    					"templates/pages/about");
     				data.setTitle("Обо всем");
 	    			break;
 	    		case("/contacts"):
-	    			path = "../";
-		        	if(data.getPath() == null) {
-		            	data.setPath(path);
-		            }
 	    			data = loadPage(data, "static/text/ru/contacts", 
 	    					"templates/pages/contacts");
-    				data.setTitle("Обо всем");
+    				data.setTitle("Контакты");
 	    			break;
 	    		default: 
 	    			throw new IOException("URL: "+requestUrl);
@@ -122,9 +82,8 @@ public class PageController {
 			ControllerException exception = new ControllerException(e);
 			if(data != null) {
 				exception.setPath(data.getPath());
-			} else {
-				//TODO refactor | getPath method 
-				exception.setPath("./");
+			} else { 
+				exception.setPath(getPath(path));
 			}
 			throw exception;
 		}
@@ -147,7 +106,7 @@ public class PageController {
 	    	data.setTitle(sectionName);
 	        String title = Util.UrlToUpperCase(data.getTitle());
 	    	Section section = SectionsController.getSection(sectionName);
-	    	data.setPage(SectionsController.compileSection(section, path));
+	    	data.setPage(TemplateController.compileSection(section, path));
 	    	mav.getModel().put("name", section.getName());
 	        mav.getModel().put("path", path);
 	        mav.getModel().put("title", title);
@@ -160,24 +119,40 @@ public class PageController {
 		}
     }
     
-    private String compileLatestLoaded(String path) throws IOException {
-    	StringBuilder sb = new StringBuilder();
-    	List<File> files = ImageDataController.getLatestImages();
-    	for(File file : files) {
-    		if(file.isDirectory() || !file.exists()) {
-    			continue;
-    		}
-    		@SuppressWarnings("unused")
-    		TemplateData data = new TemplateData() {
-    			String imgPath = path+Util.toRelativeUrl(file)
-    					.replace("\\", "/").replace("static/", "");
-    		};
-    		sb.append(Util.compileTemplate("templates/misc/img/image", data));
+    private PageTemplateData compileMain(PageTemplateData data) {
+    	try {
+    		final String tPath = data.getPath();
+        	@SuppressWarnings("unused")
+        	TextTemplateData mainTextData = new TextTemplateData() {
+        		String latestLoaded = TemplateController.compileLatestLoaded(tPath);
+        	};
+        	data.setTextData(mainTextData);
+    	} catch(IOException e) {
+    		e.printStackTrace();
     	}
-    	return sb.toString();
+    	return data;
     }
     
-    private PageTemplateData loadPage(PageTemplateData data, String textPath, String pagePath) throws IOException {
+    private PageTemplateData compileRetouch(PageTemplateData data) {
+    	final String tPath = data.getPath();
+		@SuppressWarnings("unused")
+		TextTemplateData retouchTextData = new TextTemplateData() {
+			String path = tPath;
+		};
+		data.setTextData(retouchTextData);
+		return data;
+    }
+    
+    private String getPath(String url) {
+    	if(url.length() == 1 && url.contains("/")) {
+    		return "./";
+    	} else {
+    		return "../";
+    	}
+    }
+    
+    private PageTemplateData loadPage(PageTemplateData data, String textPath, 
+    		String pagePath) throws IOException {
         if(data == null || pagePath == null) {
         	throw new NullPointerException("Null passed as argument");
         }
@@ -185,9 +160,10 @@ public class PageController {
     		if(data.getTextData() == null) {
     			data.setTextData(new TextTemplateData() {});
     		}
-    		data.setText(Util.compileTemplate(textPath, data.getTextData()));
+    		data.setText(TemplateController.compileTemplate(textPath,
+    				data.getTextData()));
     	}
-    	data.setPage(Util.compileTemplate(pagePath, data));
+    	data.setPage(TemplateController.compileTemplate(pagePath, data));
         return data;
     }
     
@@ -219,4 +195,5 @@ public class PageController {
     	}
     	return new ModelAndView(templatePath.toString());
     }
+    
 }

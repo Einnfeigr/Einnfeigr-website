@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -21,33 +20,7 @@ import javax.imageio.ImageIO;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-
-import main.exception.TemplateException;
-import main.pojo.TemplateData;
-
 public class Util {
-    
-    public static String compileTemplate(String path, TemplateData data) throws IOException {
-    	path += ".mustache";
-    	File template = new File(path);
-    	if(!template.exists()) {
-    		template = new File(Util.toAbsoluteUrl(path));
-    		if(!template.exists()) {
-    			throw new FileNotFoundException("File '"+path+"' cannot be found");
-    		}
-    	}
-    	if(!template.isFile()) {
-    		throw new TemplateException("Template '"+path+"' must be a file");
-    	}
-    	MustacheFactory factory = new DefaultMustacheFactory();
-    	Mustache mustache = factory.compile(path);
-    	StringWriter writer = new StringWriter();
-    	mustache.execute(writer, data).flush();
-    	return writer.toString();
-    }
     
     public static String toAbsoluteUrl(String url) {
     	try {

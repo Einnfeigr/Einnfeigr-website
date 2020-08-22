@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import main.misc.Util;
 import main.pojo.PageTemplateData;
 import main.pojo.TemplateData;
 import main.pojo.TextTemplateData;
+import main.template.TemplateController;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -23,7 +23,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			String templatePath;
 			PageTemplateData pageData = new PageTemplateData();
 			if(ex instanceof ControllerException) {
-				pageData.setText(Util.compileTemplate("static/text/ru/error",
+				pageData.setText(TemplateController.compileTemplate("static/text/ru/error",
 						new TextTemplateData() {}));
 				pageData.setPath(((ControllerException) ex).getPath());
 			}
@@ -37,9 +37,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			TemplateData data = new TemplateData() {
 				String title = "Ошибка";
 				String path = pageData.getPath();
-				String page = Util.compileTemplate(pagePath, pageData);
+				String page = TemplateController.compileTemplate(pagePath, pageData);
 			};
-			bodyOfResponse = Util.compileTemplate(templatePath, data);
+			bodyOfResponse = TemplateController.compileTemplate(templatePath, data);
 		    return handleExceptionInternal(ex, bodyOfResponse, 
 		  	      new HttpHeaders(), HttpStatus.OK, request);
 		} catch (Exception e) {

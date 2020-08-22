@@ -4,6 +4,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import main.img.ImageDataController;
+import main.section.SectionsController;
 
 @Component
 public class Initializator implements InitializingBean {
@@ -17,5 +18,6 @@ public class Initializator implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		imageController.loadImages();
+    	SectionsController.loadSections();
 	}	
 }

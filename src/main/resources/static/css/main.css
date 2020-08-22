@@ -33,17 +33,17 @@
 .latest {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	justify-content: space-around;
 	align-content: space-between;
-	width: 65%;
+	width: 75%;
 	margin: auto;
 }
 
 .latest img {
 	margin: 10px;
  	object-fit: cover;
- 	height: 25vw;
- 	width: 27vw;
+ 	height: auto;
+ 	width: auto;
  	max-height: 250px;
  	max-width: 270px;
  	cursor: pointer;
