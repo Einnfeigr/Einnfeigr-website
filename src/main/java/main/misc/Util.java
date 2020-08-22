@@ -109,18 +109,23 @@ public class Util {
     	}
     }
     
-    public static String UrlToUpperCase(String url) {
+    public static String toUpperCase(String text) {
     	String separator;
     	StringBuilder sb;
-    	if(url.contains("/")) {
+    	if(text.contains("/")) {
     		separator = "/";
-    	} else if(url.contains("\\")) {
+    	} else if(text.contains("\\")) {
     		separator = "\\";
+    	} else if(text.contains(".")) {
+    		separator = ".";
     	} else {
-    		 return Character.toUpperCase(url.charAt(0))+url.substring(1);
+    		 return Character.toUpperCase(text.charAt(0))+text.substring(1);
     	}
     	sb = new StringBuilder("");
-    	for(String string : url.split(separator)) {
+    	for(String string : text.split(separator)) {
+    		if(string.length() < 1) {
+    			continue;
+    		}
     		string = Character.toUpperCase(string.charAt(0))+string.substring(1);
     		sb.append(string+separator);
     	}
@@ -207,5 +212,13 @@ public class Util {
     		names.add(file.getAbsolutePath().replace(baseFile.getAbsolutePath(), ""));
     	}
     	return names;
+    }
+    
+    public static boolean isAbsolute(File file) throws FileNotFoundException {
+    	return isAbsolute(file.getAbsolutePath());
+    }
+    
+    public static boolean isAbsolute(String url) throws FileNotFoundException {
+		return url.contains(ResourceUtils.getURL("classpath:").getPath());
     }
 }

@@ -1,21 +1,25 @@
 package main.img;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import main.misc.Util;
 
-//TODO refactor
 public class ImageData implements Comparable<ImageData> {
 
 	private String path;
 	private Long indexingTime;
+	private File file;
 
 	public String getPath() {
 		return path.replace("\\", "/").replace("static", "");
 	}
 	
 	public String getName() {
-		return new File(Util.toAbsoluteUrl(path)).getName();
+		if(file == null) {
+			file = new File(Util.toAbsoluteUrl(path));
+		}
+		return file.getName();
 	}
 
 	public File createFile() {
@@ -23,11 +27,22 @@ public class ImageData implements Comparable<ImageData> {
 	}
 	
 	public File getFile() {
-		return new File(Util.toAbsoluteUrl(path));
+		if(file == null) {
+			file = new File(Util.toAbsoluteUrl(path));
+		}
+		return file;
 	}
 	
 	public void setFile(File file) {
 		this.path = Util.toRelativeUrl(file);
+		try {
+			if(!Util.isAbsolute(file)) {
+				file = Util.getFile(file.getAbsolutePath());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		this.file = file;
 	}
 	
 	public Long getIndexingTime() {

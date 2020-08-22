@@ -104,7 +104,7 @@ public class PageController {
 	    	}
 	    	data.setPath(path);
 	    	data.setTitle(sectionName);
-	        String title = Util.UrlToUpperCase(data.getTitle());
+	        String title = Util.toUpperCase(data.getTitle());
 	    	Section section = SectionsController.getSection(sectionName);
 	    	data.setPage(TemplateController.compileSection(section, path));
 	    	mav.getModel().put("name", section.getName());

@@ -54,8 +54,6 @@ public class ZipController {
 				if(!entryFile.exists()) {
 					entryFile.createNewFile();
 				}
-				//TODO remove
-				System.out.println(zipFile.getAbsolutePath());
 				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(entryFile), "UTF-8"));
 					for(int c = zis.read(); c != -1; c = zis.read()) {

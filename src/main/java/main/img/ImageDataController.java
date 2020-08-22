@@ -34,22 +34,16 @@ public class ImageDataController {
 	}
 	
 	public void loadImages() throws IOException { 
-		//TODO refactor
-		if(images == null) {
-			images = new ArrayList<>();
-		}
 		List<ImageData> indexedImages;
 		File file = new File(Util.toAbsoluteUrl("static/img/portfolio/sections"));
 		indexedImages = parseImagesData(file);
-		if(indexedImages == null) {
-			//TODO refactor
-			return;
+		if(indexedImages != null) {
+			merge(images, indexedImages);
+			Comparator<ImageData> comparator = (d1, d2) -> d1.compareTo(d2);
+			images.sort(comparator);
+			dao.save(images);
+			saveImages(images);
 		}
-		merge(images, indexedImages);
-		Comparator<ImageData> comparator = (d1, d2) -> d1.compareTo(d2);
-		images.sort(comparator);
-		dao.save(images);
-		saveImages(images);
 	}
 	
 	private void saveImages(List<ImageData> images) {

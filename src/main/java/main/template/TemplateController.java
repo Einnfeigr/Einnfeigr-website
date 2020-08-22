@@ -118,7 +118,7 @@ public class TemplateController {
 			TemplateData data = new TemplateData() {
 				String name = section.getName();
 				String previews = previewText.toString();
-				String title = Util.UrlToUpperCase(section.getName());
+				String title = Util.toUpperCase(section.getName());
 			};
 			sectionsText.append(
 					compileTemplate("templates/misc/sections/section", data));
