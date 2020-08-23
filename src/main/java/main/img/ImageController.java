@@ -11,7 +11,6 @@ public class ImageController {
 
 	@RequestMapping(value="/image", method= RequestMethod.GET)
 	public ModelAndView showPreview(@RequestParam String imgPath) {
-		System.out.println("a");
 		ModelAndView mav = new ModelAndView("misc/img/preview");
 		mav.getModel().put("imagePath", imgPath);
 		return mav;

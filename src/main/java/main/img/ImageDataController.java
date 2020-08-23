@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import main.misc.Util;
+import main.misc.filter.ImagePreviewFileFilter;
 
 public class ImageDataController {
 
@@ -30,7 +31,7 @@ public class ImageDataController {
 	}
 
 	public static List<File> getLatestImages() {
-		return Util.parseFiles(Util.getFile(PREVIEW_PATH), true);
+		return Util.parseFiles(Util.getFile(PREVIEW_PATH), true, new ImagePreviewFileFilter());
 	}
 	
 	public void loadImages() throws IOException { 
@@ -80,7 +81,7 @@ public class ImageDataController {
 				toRemove.add(images.indexOf(data));
 			}
 		}
-		for(Integer i : toRemove) {
+		for(int i : toRemove) {
 			images.remove(i);
 		}
 		//append new indexed images

@@ -21,8 +21,12 @@ public class SectionsController {
 		if(sections == null) {
 			loadSections();
 		}
-		name = "static\\img\\portfolio\\sections\\"+name;
+		name = "static/img/portfolio/sections/"+name;
 		if(!sections.containsKey(name)) {
+			//TODO remove
+			sections.forEach((str, sec) -> {
+				System.out.println(str+" | "+sec.getPath());
+			});
 			throw new IOException(name+" section can't be found");
 		}
 		return sections.get(name);
