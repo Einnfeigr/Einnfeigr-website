@@ -29,7 +29,6 @@ public class ZipImageStorageService implements StorageService {
 			}
 		}
 		File zipFile = new File(Util.toAbsoluteUrl("static/temp/"+filename));
-		System.out.println(zipFile.getAbsolutePath());
 		if(zipFile.exists()) {
 			zipFile.delete();
 		}

@@ -8,11 +8,24 @@ import main.misc.Util;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UtilTestController {
+	
+	@Test
+	public void testIsAbsolute() throws FileNotFoundException {
+		assertThat(!Util.isAbsolute("test"));
+		assertThat(Util.isAbsolute(Util.toAbsoluteUrl("test")));
+		assertThat(!Util.isAbsolute("test.jpg"));
+		assertThat(Util.isAbsolute(Util.toAbsoluteUrl("test.jpg")));
+		assertThat(!Util.isAbsolute(new File("test")));
+		assertThat(Util.isAbsolute(new File(Util.toAbsoluteUrl("test"))));
+		assertThat(!Util.isAbsolute(new File("test.jpg")));
+		assertThat(Util.isAbsolute(new File(Util.toAbsoluteUrl("test.jpg"))));		
+	}
 	
 	@Test
 	public void testCreateFile() {

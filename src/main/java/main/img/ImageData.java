@@ -1,7 +1,6 @@
 package main.img;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import main.misc.Util;
 
@@ -35,13 +34,6 @@ public class ImageData implements Comparable<ImageData> {
 	
 	public void setFile(File file) {
 		this.path = Util.toRelativeUrl(file);
-		try {
-			if(!Util.isAbsolute(file)) {
-				file = Util.getFile(file.getAbsolutePath());
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.file = file;
 	}
 	
