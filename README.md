@@ -14,9 +14,14 @@ Terms of the first release are:
 #### Overall
 * [x] latest downloads on main page
 * [ ] all pages filled with content
-* [ ] all current units are tested
-* [ ] refactoring completed
+* [ ] all main units covered with tests
+  * [ ] util
+  * [ ] mvc controllers
+  * [ ] image data and preview controllers
 * [ ] dashboard
-* [ ] images previews
-#### Sections
+* [x] images previews
+* [ ] logging
+#### Dashboard
+* [ ] authentication and autorization
+* [ ] frontend
 * [ ] uploading/downloading sections
