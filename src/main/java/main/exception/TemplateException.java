@@ -1,9 +1,8 @@
 package main.exception;
 
+@SuppressWarnings("serial")
 public class TemplateException extends RuntimeException {
-	
-	private String path;
-	
+
 	public TemplateException() {
 		super();
 	}
@@ -16,11 +15,4 @@ public class TemplateException extends RuntimeException {
 		super(message);
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
 }

@@ -1,5 +1,6 @@
 package main.exception;
 
+@SuppressWarnings("serial")
 public class ControllerException extends RuntimeException {
 	
 	private String path;

@@ -1,5 +1,8 @@
 package main.misc;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,6 +23,9 @@ import javax.imageio.ImageIO;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import main.misc.filter.SimpleFileFilter;
+import main.misc.filter.FileFilter;
+
 public class Util {
     
     public static boolean isAbsolute(File file) throws FileNotFoundException {
@@ -27,7 +33,8 @@ public class Util {
     }
     
     public static boolean isAbsolute(String url) throws FileNotFoundException {
-		return url.replace("\\", "/").contains(ResourceUtils.getURL("classpath:").getPath());
+		return url.replace("\\", "/").contains(ResourceUtils.getURL("classpath:")
+				.getPath().substring(1).replace("\\", "/"));
     }
     
     public static String toAbsoluteUrl(String url) {
@@ -45,12 +52,10 @@ public class Util {
     public static String toRelativeUrl(String url) {
     	try {
     		if(!isAbsolute(url)) {
-    			System.out.println("absolute | "+url);
-    			System.out.println(ResourceUtils.getURL("classpath:").getPath());
     			return url;
     		}
-    		return url.replace(ResourceUtils.getURL("classpath:").getFile()
-    				.substring(1).replace("/", "\\"), "");
+    		return url.replace("\\", "/").replace(ResourceUtils.getURL("classpath:").getFile()
+    				.substring(1).replace("\\", "/"), "");
     	} catch(IOException e) {
     		e.printStackTrace();
     		return null;
@@ -61,23 +66,34 @@ public class Util {
     	return toRelativeUrl(file.getAbsolutePath().replace("\\", "/"));
     }
     
+    public static List<File> parseFiles(File file) {
+    	return parseFiles(file, true, new SimpleFileFilter());
+    }
+    
     public static List<File> parseFiles(File file, boolean parseSubdirectories) {
+    	return parseFiles(file, parseSubdirectories, new SimpleFileFilter());
+    }
+    
+    public static List<File> parseFiles(File file, boolean parseSubdirectories,
+    		FileFilter filter) {
     	if(!file.isDirectory() || !file.exists()) {
     		return null;
     	}
     	List<File> files = new ArrayList<>();
-    	files.add(file);
+    	if(filter.isValid(file)) {
+    		files.add(file);
+    	}
     	for(File cFile : file.listFiles()) {
     		if(cFile.isDirectory()) {
     			if(!parseSubdirectories) {
     				continue;
     			}
-    			List<File> cFiles = parseFiles(cFile, parseSubdirectories);
+    			List<File> cFiles = parseFiles(cFile, parseSubdirectories, filter);
     			if(cFiles != null) {
     				files.addAll(cFiles);
     			}
-    		} else {
-    			files.add(cFile);
+    		} else if(filter.isValid(cFile)) {
+    			files.add(cFile);	
     		}
     	}
     	return files;
@@ -233,4 +249,21 @@ public class Util {
     	}
     	return names;
     }
+    
+	public static BufferedImage resize(BufferedImage image, int width, int height) { 
+	    int w = image.getWidth(), h = image.getHeight();
+	    int type = image.getType() == 0? BufferedImage.TYPE_INT_ARGB : image.getType();
+	    BufferedImage resizedImage = new BufferedImage(width, height, type);
+	    Graphics2D g = resizedImage.createGraphics();
+	    g.setComposite(AlphaComposite.Src);
+	    g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+	    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+	    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+	    //g.drawImage(image, 0, 0, width, height, null);
+	    g.scale((double)width/w,(double)height/h);
+	    g.drawRenderedImage(image, null);
+	    g.dispose();
+	    return resizedImage; 
+	}   
 }

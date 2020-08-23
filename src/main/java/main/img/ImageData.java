@@ -1,7 +1,6 @@
 package main.img;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import main.misc.Util;
 

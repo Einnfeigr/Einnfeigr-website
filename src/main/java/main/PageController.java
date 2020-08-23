@@ -113,7 +113,7 @@ public class PageController {
 			mav.getModel().put("page", data.getPage());
 			return mav;
     	} catch (Exception e) {
-			TemplateException exception = new TemplateException(e);
+			ControllerException exception = new ControllerException(e);
 			exception.setPath(data.getPath());
 			throw exception;
 		}
