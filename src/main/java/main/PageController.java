@@ -2,8 +2,6 @@ package main;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mobile.device.Device;
@@ -29,55 +27,56 @@ public class PageController {
 	
 	private Logger logger = LoggerFactory.getLogger(ImageController.class);
 	
-    @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
-    		"/contacts"}, method= RequestMethod.GET)
-    public ModelAndView getPage(@RequestParam(required=false) String path,
-    		Device device, HttpServletRequest request) 
+    @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET)
+    public ModelAndView getPage(Device device, 
+    		@RequestParam(required=false) String path,
+    		@RequestParam(required=false) String ver, 
+    		@RequestParam(required=false) String target,
+    		@PathVariable(required=false) String page) 
     				throws ControllerException {
     	ModelAndView mav;
     	PageTemplateData data = new PageTemplateData();
-  		String requestUrl = request.getRequestURI();
-  		while(requestUrl.endsWith("/") && requestUrl.length() > 1) {
-  			requestUrl = requestUrl.substring(0, requestUrl.length()-1);
+  		if(page == null) {
+  			page = "main";
   		}
   		if(path == null) {
-  			path = getPath(requestUrl);
+  			path = getPath(page);
   		}
     	try {
-	  		mav = createModelAndView(device, request, data);
+	  		mav = createModelAndView(device, ver, target, data);
       		data.setPath(path);
-      		switch(requestUrl) {
-	    		case("/"):
+      		switch(page) {
+	    		case("main"):
 		        	data = loadPage(compileMain(data), "static/text/ru/main", 
 	    					"templates/pages/main");
     				data.setTitle("Главная");	
 	    			break;
-	    		case("/portfolio"):	    
+	    		case("portfolio"):	    
 	    			data.setText(TemplateController.compileSections(
 	    					SectionsController.getSections(), data.getPath()));
 		        	data = loadPage(data, null, 
     						"templates/pages/portfolio");
     				data.setTitle("Портфолио");
 	    			break;
-	    		case("/retouch"):
+	    		case("retouch"):
 	    			data = loadPage(compileRetouch(data), 
 	    					"static/text/ru/retouch", 
 	    					"templates/pages/retouch");
     				data.setTitle("Ретушь");
 	    			break;
-	    		case("/about"):
+	    		case("about"):
 	    			data = loadPage(data, "static/text/ru/about", 
 	    					"templates/pages/about");
     				data.setTitle("Обо всем");
 	    			break;
-	    		case("/contacts"):
+	    		case("contacts"):
 	    			data = loadPage(data, "static/text/ru/contacts", 
 	    					"templates/pages/contacts");
     				data.setTitle("Контакты");
 	    			break;
 	    		default: 
-	    			logger.error("page loading error: "+requestUrl);
-	    			throw new IOException("URL: "+requestUrl);
+	    			logger.error("Invalid page address: "+page);
+	    			throw new IOException("Invalid page address: "+page);
 	    	}
 	        mav.getModel().put("path", data.getPath());
 	        mav.getModel().put("title", data.getTitle());
@@ -98,13 +97,16 @@ public class PageController {
     
     @RequestMapping(value= "/portfolio/sections/{section}", 
     		method= RequestMethod.GET)
-    public ModelAndView getSection(@PathVariable("section") String sectionName,
-    		@RequestParam(required=false) String path, Device device,
-    		HttpServletRequest request) throws TemplateException {
+    public ModelAndView getSection( Device device,
+    		@PathVariable("section") String sectionName,
+    		@RequestParam(required=false) String ver,
+    		@RequestParam(required=false) String target,
+    		@RequestParam(required=false) String path
+    		) throws TemplateException {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
     	try {
-	  		mav = createModelAndView(device, request, data);
+	  		mav = createModelAndView(device, ver, target, data);
 	  		if(path == null) {
 	    		path = "../../../";
 	    	}
@@ -152,10 +154,10 @@ public class PageController {
     }
     
     private String getPath(String url) {
-    	if(url.length() == 1 && url.contains("/")) {
-    		return "./";
-    	} else {
+    	if(url.equals("main")) {
     		return "../";
+    	} else {
+    		return "./";
     	}
     }
     
@@ -176,14 +178,13 @@ public class PageController {
     }
     
     private ModelAndView createModelAndView(Device device,
-    		HttpServletRequest request, PageTemplateData data) {
-    	StringBuilder ver = new StringBuilder("");
-    	StringBuilder templatePath = new StringBuilder("");
-    	if(request.getParameter("ver") != null) {
-    		ver.append(request.getParameter("ver"));
+    		String ver, String target, PageTemplateData data) {
+    	if(ver == null) {
+    		ver = "";
     	}
+    	StringBuilder templatePath = new StringBuilder("");
     	if(device.isNormal() && ver.toString().equals("") 
-    			|| ver.toString().equals("desktop")) {
+    			|| ver.equals("desktop")) {
     		data.setIsMobile(null);
 	  	} else if((device.isMobile() && ver.toString().equals(""))
 	  			|| (device.isTablet() && ver.toString().equals(""))
@@ -192,12 +193,11 @@ public class PageController {
 	  	} else {
 	  		throw new NullPointerException("Cannot specify device! ver:"+ver);
 	  	}
-    	if(request.getParameter("target") != null) {
-    		if(request.getParameter("target").equals("body")) {
-    			templatePath.append("placeholder");
-    		} else {
-    			templatePath.append("index");
-    		}
+    	if(target == null) {
+    		target = "";
+    	}
+    	if(target.equals("body")) {
+    		templatePath.append("placeholder");
     	} else {
     		templatePath.append("index");
     	}

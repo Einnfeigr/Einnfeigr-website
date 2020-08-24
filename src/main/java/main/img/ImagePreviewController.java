@@ -24,6 +24,9 @@ public class ImagePreviewController {
 			if(image.isDirectory()) {
 				logger.warn("previewController tried to parse a directory | "+image);
 				continue;
+			} 
+			if(image.getAbsolutePath().contains("preview")) {
+				continue;
 			}
 			try {
 				File output = Util.createFile(image.getAbsolutePath()
@@ -42,7 +45,7 @@ public class ImagePreviewController {
 		logger.info("created "+count+" previews of "+images.size()+" files");
 	}
 
-	public static void resetPreviews() {
+	public static void deletePreviews() {
 		File file = Util.getFile("static/img/preview/");
 		for(File folder : file.listFiles()) {
 			folder.delete();

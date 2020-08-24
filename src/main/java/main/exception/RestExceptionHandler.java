@@ -16,15 +16,25 @@ import main.template.TemplateController;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(value = {ControllerException.class, IllegalArgumentException.class, IllegalStateException.class })
-	protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
+	@ExceptionHandler(value = {
+			ControllerException.class,
+			IllegalArgumentException.class,
+			IllegalStateException.class })
+	protected ResponseEntity<Object> handleConflict(RuntimeException ex,
+			WebRequest request) {
 		try {
 			String bodyOfResponse;
 			String templatePath;
 			PageTemplateData pageData = new PageTemplateData();
+			TextTemplateData textData = new TextTemplateData() {};
 			if(ex instanceof ControllerException) {
-				pageData.setText(TemplateController.compileTemplate("static/text/ru/error",
-						new TextTemplateData() {}));
+				if(ex instanceof NotFoundException) {
+					pageData.setText(TemplateController.compileTemplate(
+							"static/text/ru/error/notFound", textData));
+				} else {
+					pageData.setText(TemplateController.compileTemplate(
+							"static/text/ru/error/error", textData));
+				}
 				pageData.setPath(((ControllerException) ex).getPath());
 			}
 			if(request.getParameter("path") == null) {
@@ -32,7 +42,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			} else {
 				templatePath = "templates/placeholder";
 			}
-			String pagePath = "templates/pages/error";
+			String pagePath;
+			if(ex instanceof NotFoundException) {
+				pagePath = "templates/pages/error/notFound";
+			} else {
+				pagePath = "templates/pages/error/error";
+			}
 			@SuppressWarnings("unused")
 			TemplateData data = new TemplateData() {
 				String title = "Ошибка";
