@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mobile.device.Device;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.exception.TemplateException;
+import main.img.ImageController;
 import main.misc.Util;
 import main.pojo.PageTemplateData;
 import main.pojo.TextTemplateData;
@@ -23,6 +26,8 @@ import main.template.TemplateController;
 
 @RestController
 public class PageController {
+	
+	private Logger logger = LoggerFactory.getLogger(ImageController.class);
 	
     @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
     		"/contacts"}, method= RequestMethod.GET)
@@ -55,8 +60,9 @@ public class PageController {
     				data.setTitle("Портфолио");
 	    			break;
 	    		case("/retouch"):
-	    			data = loadPage(compileRetouch(data),
-	    					"static/text/ru/retouch", "templates/pages/retouch");
+	    			data = loadPage(compileRetouch(data), 
+	    					"static/text/ru/retouch", 
+	    					"templates/pages/retouch");
     				data.setTitle("Ретушь");
 	    			break;
 	    		case("/about"):
@@ -70,6 +76,7 @@ public class PageController {
     				data.setTitle("Контакты");
 	    			break;
 	    		default: 
+	    			logger.error("page loading error: "+requestUrl);
 	    			throw new IOException("URL: "+requestUrl);
 	    	}
 	        mav.getModel().put("path", data.getPath());
@@ -78,7 +85,7 @@ public class PageController {
 			mav.getModel().put("isMobile", data.getIsMobile());
 	    	return mav;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
 			if(data != null) {
 				exception.setPath(data.getPath());
@@ -89,17 +96,16 @@ public class PageController {
 		}
     }
     
-    @RequestMapping(value= "/portfolio/sections/{section}", method= RequestMethod.GET)
+    @RequestMapping(value= "/portfolio/sections/{section}", 
+    		method= RequestMethod.GET)
     public ModelAndView getSection(@PathVariable("section") String sectionName,
-    		Device device, HttpServletRequest request) throws TemplateException {
+    		@RequestParam(required=false) String path, Device device,
+    		HttpServletRequest request) throws TemplateException {
     	ModelAndView mav = null;
     	PageTemplateData data = new PageTemplateData();
-  		String path;
     	try {
 	  		mav = createModelAndView(device, request, data);
-	    	if(request.getParameter("path") != null ) {
-	    		path = request.getParameter("path");
-	    	} else {
+	  		if(path == null) {
 	    		path = "../../../";
 	    	}
 	    	data.setPath(path);
@@ -113,6 +119,7 @@ public class PageController {
 			mav.getModel().put("page", data.getPage());
 			return mav;
     	} catch (Exception e) {
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
 			exception.setPath(data.getPath());
 			throw exception;
@@ -124,11 +131,12 @@ public class PageController {
     		final String tPath = data.getPath();
         	@SuppressWarnings("unused")
         	TextTemplateData mainTextData = new TextTemplateData() {
-        		String latestLoaded = TemplateController.compileLatestLoaded(tPath);
+        		String latestLoaded = TemplateController
+        				.compileLatestLoaded(tPath);
         	};
         	data.setTextData(mainTextData);
     	} catch(IOException e) {
-    		e.printStackTrace();
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
     	}
     	return data;
     }

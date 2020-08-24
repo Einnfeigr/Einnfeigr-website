@@ -6,11 +6,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import main.misc.Util;
 import main.misc.filter.ImagePreviewFileFilter;
 
 public class ImageDataController {
-
+	
+	private static Logger logger = LoggerFactory.getLogger(ImageController.class);
+	
 	List<ImageData> images;
 
 	private ImageDataDao dao;
@@ -22,7 +27,7 @@ public class ImageDataController {
 		try {
 			images = dao.getAll();
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		} finally {
 			if(images == null) {
 				images = new ArrayList<>();
@@ -39,11 +44,14 @@ public class ImageDataController {
 		File file = new File(Util.toAbsoluteUrl("static/img/portfolio/sections"));
 		indexedImages = parseImagesData(file);
 		if(indexedImages != null) {
+			logger.info("indexed "+indexedImages.size()+" images");
 			merge(images, indexedImages);
 			Comparator<ImageData> comparator = (d1, d2) -> d1.compareTo(d2);
 			images.sort(comparator);
 			dao.save(images);
 			saveImages(images);
+		} else {
+			logger.warn("indexed 0 images");
 		}
 	}
 	

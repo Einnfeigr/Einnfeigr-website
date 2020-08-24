@@ -1,22 +1,28 @@
 package main.img;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import main.misc.Util;
 import main.misc.filter.ImagePreviewFileFilter;
 
 public class ImagePreviewController {
-
+	
+	private static Logger logger = LoggerFactory.getLogger(ImageController.class);
+	
 	public static void generatePreviews() {
 		File file = Util.getFile("static/img/");
 		List<File> images = Util.parseFiles(file, true, new ImagePreviewFileFilter());
+		int count = 0;
 		for(File image : images) {
 			if(image.isDirectory()) {
+				logger.warn("previewController tried to parse a directory | "+image);
 				continue;
 			}
 			try {
@@ -26,15 +32,14 @@ public class ImagePreviewController {
 				if(output.exists()) {
 					continue;
 				}
-				BufferedImage bufferedImage = ImageIO.read(image);
-				double ratio = (double)bufferedImage.getHeight()/
-						(double)bufferedImage.getWidth();
-				ImageIO.write(Util.resize(bufferedImage, 300, (int)(300*ratio)),
+				ImageIO.write(Util.resizeBySmaller(ImageIO.read(image), 300),
 						Util.getExtension(image), output);
+				count++;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			}
 		}
+		logger.info("created "+count+" previews of "+images.size()+" files");
 	}
 
 	public static void resetPreviews() {

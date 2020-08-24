@@ -7,6 +7,7 @@ import main.misc.Util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,6 +15,66 @@ import java.nio.file.Files;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UtilTestController {
+	
+	@Test
+	public void testResize() {
+		BufferedImage image;
+		BufferedImage resized;
+		image = new BufferedImage(200, 400, BufferedImage.TYPE_INT_RGB);
+		//resizeByLarger tesing
+		resized = Util.resizeByLarger(image, 200);
+		assertThat(resized.getHeight() == 200 && resized.getWidth() == 100);
+		resized = Util.resizeByLarger(image, 800);
+		assertThat(resized.getHeight() == 800 && resized.getWidth() == 400);
+		resized = Util.resizeByLarger(image, 350);
+		assertThat(resized.getHeight() == 350 && resized.getWidth() == 175);
+		//resizeBySmaller testing
+		resized = Util.resizeBySmaller(image, 400);
+		assertThat(resized.getHeight() == 800 && resized.getWidth() == 400);
+		resized = Util.resizeBySmaller(image, 100);
+		assertThat(resized.getHeight() == 200 && resized.getWidth() == 100);
+		resized = Util.resizeBySmaller(image, 150);
+		assertThat(resized.getHeight() == 300 && resized.getWidth() == 150);
+		//resize testing
+		resized = Util.resize(image, 250, 500);
+		assertThat(resized.getWidth() == 250 && resized.getHeight() == 500);
+		image = new BufferedImage(400, 200, BufferedImage.TYPE_INT_RGB);
+		//resizeByLarger tesing
+		resized = Util.resizeByLarger(image, 200);
+		assertThat(resized.getHeight() == 100 && resized.getWidth() == 200);
+		resized = Util.resizeByLarger(image, 800);
+		assertThat(resized.getHeight() == 400 && resized.getWidth() == 800);
+		resized = Util.resizeByLarger(image, 350);
+		assertThat(resized.getHeight() == 175 && resized.getWidth() == 350);
+		//resizeBySmaller testing
+		resized = Util.resizeBySmaller(image, 400);
+		assertThat(resized.getHeight() == 400 && resized.getWidth() == 800);
+		resized = Util.resizeBySmaller(image, 100);
+		assertThat(resized.getHeight() == 100 && resized.getWidth() == 200);
+		resized = Util.resizeBySmaller(image, 150);
+		assertThat(resized.getHeight() == 150 && resized.getWidth() == 300);
+		//resize testing
+		resized = Util.resize(image, 250, 500);
+		assertThat(resized.getWidth() == 250 && resized.getHeight() == 500);
+		image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+		//resizeByLarger tesing
+		resized = Util.resizeByLarger(image, 200);
+		assertThat(resized.getHeight() == 200 && resized.getWidth() == 200);
+		resized = Util.resizeByLarger(image, 800);
+		assertThat(resized.getHeight() == 800 && resized.getWidth() == 800);
+		resized = Util.resizeByLarger(image, 350);
+		assertThat(resized.getHeight() == 350 && resized.getWidth() == 350);
+		//resizeBySmaller testing
+		resized = Util.resizeBySmaller(image, 400);
+		assertThat(resized.getHeight() == 400 && resized.getWidth() == 400);
+		resized = Util.resizeBySmaller(image, 100);
+		assertThat(resized.getHeight() == 100 && resized.getWidth() == 100);
+		resized = Util.resizeBySmaller(image, 150);
+		assertThat(resized.getHeight() == 150 && resized.getWidth() == 150);
+		//resize testing
+		resized = Util.resize(image, 250, 500);
+		assertThat(resized.getWidth() == 250 && resized.getHeight() == 500);		
+	}
 	
 	@Test
 	public void testIsAbsolute() throws FileNotFoundException {
@@ -31,7 +92,8 @@ public class UtilTestController {
 	public void testCreateFile() {
 		File unexistingFile = new File("test/file.txt");
 		File unexistingDirectory = new File("test/directory");
-		File directoryWithUnexistingParent = new File("test/unexisting/directory");
+		File directoryWithUnexistingParent = new File(
+				"test/unexisting/directory");
 		File unexistingParent = directoryWithUnexistingParent.getParentFile();
 		try {
 			Util.createFile(unexistingFile);
@@ -68,8 +130,10 @@ public class UtilTestController {
 	@Test
 	public void testCopy() throws IOException {
 		File srcFile = Util.createFile("static/test/test.txt");
-		Files.write(srcFile.toPath(), "Testing with кириллица characters".getBytes());
-		File destFile = new File(Util.toAbsoluteUrl("static/test/copyTest.txt"));
+		Files.write(srcFile.toPath(), "Testing with кириллица characters"
+				.getBytes());
+		File destFile = new File(Util.toAbsoluteUrl(
+				"static/test/copyTest.txt"));
 		if(destFile.exists()) {
 			destFile.delete();
 		}
