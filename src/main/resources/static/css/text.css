@@ -1,3 +1,12 @@
+.textDiv {
+	box-sizing: border-box;
+	background: white;
+	width: 100%;
+	min-height: 100vh;
+	color: #303032;
+	padding: 35px;
+}
+
 .textDiv h1 {
 	font-weight: normal;
 	text-align: left;
@@ -19,7 +28,7 @@
 	color: rgba(0,0,0,0.6);
 }
 
-.textDiv .imageNote {
+.textDiv .images .imageNote {
 	text-align: center;
 	margin: 0px auto 7vw auto;
 	width: 80%;
@@ -43,15 +52,6 @@
 .textDiv .image h5 {
 	font-weight: normal;
 	text-align: center;
-}
-
-.textDiv {
-	box-sizing: border-box;
-	background: white;
-	width: 100%;
-	min-height: 100vh;
-	color: #303032;
-	padding: 35px;
 }
 
 .title h3 {
@@ -91,6 +91,7 @@ a {
 	color: white;
 	display: flex;
 	justify-content: center;
+	text-shadow: 1px 1px 7px rgba(0,0,0,0.55);
 }
 
 .title .text {
