@@ -15,14 +15,18 @@ import com.github.mustachejava.MustacheFactory;
 import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
-import main.pojo.TemplateData;
-import main.pojo.TextTemplateData;
 import main.section.Section;
+import main.template.pojo.data.TemplateData;
+import main.template.pojo.data.TextTemplateData;
 
 public class TemplateController {
 	
-	 public static String compileTemplate(String path, TemplateData data)
-			 throws IOException {
+	public static String compileTemplate(String path) throws IOException {
+		return compileTemplate(path, new TemplateData() {});
+	}
+	
+	public static String compileTemplate(String path, TemplateData data)
+			throws IOException {
 	   	path += ".mustache";
 	   	File template = new File(path);
 	   	if(!template.exists()) {
@@ -42,8 +46,11 @@ public class TemplateController {
 	 }
 	 
 	 public static String compileLatestLoaded(String path) throws IOException {
-	   	StringBuilder sb = new StringBuilder();
 	   	List<File> files = ImageDataController.getLatestImages();
+	   	if(files == null) {
+	   		return null;
+	   	}
+	   	StringBuilder sb = new StringBuilder();
 	   	for(File file : files) {
 	   		if(file.isDirectory() || !file.exists()) {
 	   			continue;

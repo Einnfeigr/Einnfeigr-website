@@ -14,10 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.exception.TemplateException;
-import main.img.ImageController;
 import main.misc.Util;
-import main.pojo.PageTemplateData;
-import main.pojo.TextTemplateData;
+import main.template.pojo.data.PageTemplateData;
+import main.template.pojo.data.TextTemplateData;
 import main.section.Section;
 import main.section.SectionsController;
 import main.template.TemplateController;
@@ -25,7 +24,8 @@ import main.template.TemplateController;
 @RestController
 public class PageController {
 	
-	private Logger logger = LoggerFactory.getLogger(ImageController.class);
+	private final static Logger logger = 
+			LoggerFactory.getLogger(PageController.class);
 	
     @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET)
     public ModelAndView getPage(Device device, 
@@ -130,12 +130,17 @@ public class PageController {
     
     private PageTemplateData compileMain(PageTemplateData data) {
     	try {
-    		final String tPath = data.getPath();
-        	@SuppressWarnings("unused")
-        	TextTemplateData mainTextData = new TextTemplateData() {
-        		String latestLoaded = TemplateController
-        				.compileLatestLoaded(tPath);
-        	};
+    		String images = TemplateController
+    				.compileLatestLoaded(data.getPath());
+    		TextTemplateData mainTextData;
+    		if(images == null) {
+    			mainTextData = new TextTemplateData() {};
+	    	} else {
+	        	mainTextData = new TextTemplateData() {
+	        		@SuppressWarnings("unused")
+					String latestLoaded = images;
+	        	};
+	    	}
         	data.setTextData(mainTextData);
     	} catch(IOException e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);

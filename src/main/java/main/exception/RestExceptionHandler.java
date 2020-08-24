@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import main.pojo.PageTemplateData;
-import main.pojo.TemplateData;
-import main.pojo.TextTemplateData;
+import main.template.pojo.data.PageTemplateData;
+import main.template.pojo.data.TemplateData;
+import main.template.pojo.data.TextTemplateData;
 import main.template.TemplateController;
 
 @ControllerAdvice
@@ -20,7 +20,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			ControllerException.class,
 			IllegalArgumentException.class,
 			IllegalStateException.class })
-	protected ResponseEntity<Object> handleConflict(RuntimeException ex,
+	public ResponseEntity<Object> handleConflict(RuntimeException ex,
 			WebRequest request) {
 		try {
 			String bodyOfResponse;

@@ -14,7 +14,8 @@ import main.misc.filter.ImagePreviewFileFilter;
 
 public class ImagePreviewController {
 	
-	private static Logger logger = LoggerFactory.getLogger(ImageController.class);
+	private final static Logger logger = 
+			LoggerFactory.getLogger(ImagePreviewController.class);
 	
 	public static void generatePreviews() {
 		File file = Util.getFile("static/img/");

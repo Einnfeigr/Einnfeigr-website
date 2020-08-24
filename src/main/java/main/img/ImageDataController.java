@@ -14,7 +14,8 @@ import main.misc.filter.ImagePreviewFileFilter;
 
 public class ImageDataController {
 	
-	private static Logger logger = LoggerFactory.getLogger(ImageController.class);
+	private final static Logger logger = 
+			LoggerFactory.getLogger(ImageDataController.class);
 	
 	List<ImageData> images;
 
@@ -90,7 +91,9 @@ public class ImageDataController {
 			}
 		}
 		for(int i : toRemove) {
-			images.remove(i);
+			if(i < images.size()) {
+				images.remove(i);
+			}
 		}
 		//append new indexed images
 		for(ImageData data : indexedImages) {

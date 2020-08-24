@@ -14,8 +14,8 @@ import main.exception.ControllerException;
 @RestController
 public class ImageController {
 
-	private static Logger logger = LoggerFactory.getLogger(
-			ImageController.class);
+	private final static Logger logger = 
+			LoggerFactory.getLogger(ImageController.class);
 	
 	@RequestMapping(value="/image", method= RequestMethod.GET)
 	public ModelAndView showPreview(@RequestParam String imgPath) {

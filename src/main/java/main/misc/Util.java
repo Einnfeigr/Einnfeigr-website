@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
@@ -20,14 +21,19 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import main.misc.filter.SimpleFileFilter;
+import main.img.ImagePreviewController;
 import main.misc.filter.FileFilter;
 
 public class Util {
-    
+	
+	private final static Logger logger = 
+			LoggerFactory.getLogger(ImagePreviewController.class);
 	public final static String EXCEPTION_LOG_MESSAGE = 
 			"Exception has been caught";
 	
@@ -184,19 +190,29 @@ public class Util {
 				StandardCopyOption.COPY_ATTRIBUTES);
     }
     
-    public static void copyImage(File src, File dest) {
+    public static void copyImage(File src, File dest) 
+    		throws IllegalArgumentException {
     	if(!Util.isImage(src) || !Util.isImage(dest)) {
     		throw new IllegalArgumentException(
     				"One or both passed files are not images");
     	}
     	if(!src.exists()) {
     		throw new NullPointerException(
-    				"Couldn't find file '"+src.getAbsolutePath()+"'");
+    				"Can't find file '"+src.getAbsolutePath()+"'");
     	}
+    	try(InputStream is = new FileInputStream(src)) {
+    		copyImage(getExtension(src), is, dest);
+    	} catch(Exception e) {
+    		logger.error(EXCEPTION_LOG_MESSAGE, e);
+    		throw new IllegalArgumentException(e);
+		}
+    }
+    
+    public static void copyImage(String extension, InputStream stream, File dest) {
     	BufferedImage image = null;
     	try {
-	        image = ImageIO.read(src);
-	    	ImageIO.write(image, getExtension(src), dest);
+	        image = ImageIO.read(stream);
+	    	ImageIO.write(image, extension, dest);
     	} catch(IOException e) {
     		e.printStackTrace();
     	}

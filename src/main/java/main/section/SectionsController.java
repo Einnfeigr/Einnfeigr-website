@@ -1,6 +1,5 @@
 package main.section;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +28,8 @@ public class SectionsController {
 	}
 	
 	public static void loadSections() throws IOException {
-		Section main = new Section(new File(Util.toAbsoluteUrl(
-				"static/img/portfolio/sections/")));
+		Section main = new Section(Util.createFile(
+				"static/img/portfolio/sections/"));
 		sections = new HashMap<>();
 		addSections(main);
 	}
