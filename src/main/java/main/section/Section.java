@@ -39,7 +39,6 @@ public class Section {
 							images.add(file);
 					}
 				} catch(IndexOutOfBoundsException e) {
-					System.out.println(file.getName());
 					e.printStackTrace();
 				}
 			}

@@ -16,8 +16,8 @@ import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
 import main.section.Section;
-import main.template.pojo.data.TemplateData;
-import main.template.pojo.data.TextTemplateData;
+import main.template.data.TemplateData;
+import main.template.data.text.TextTemplateData;
 
 public class TemplateController {
 	

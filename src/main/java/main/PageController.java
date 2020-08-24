@@ -14,12 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.exception.TemplateException;
+import main.img.ImageDataController;
 import main.misc.Util;
-import main.template.pojo.data.PageTemplateData;
-import main.template.pojo.data.TextTemplateData;
 import main.section.Section;
 import main.section.SectionsController;
+import main.template.ImageListTemplate;
+import main.template.Template;
 import main.template.TemplateController;
+import main.template.data.page.PageTemplateData;
+import main.template.data.page.SectionPageTemplateData;
+import main.template.data.text.MainTextTemplateData;
+import main.template.data.text.TextTemplateData;
 
 @RestController
 public class PageController {
@@ -81,7 +86,7 @@ public class PageController {
 	        mav.getModel().put("path", data.getPath());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
-			mav.getModel().put("isMobile", data.getIsMobile());
+			mav.getModel().put("isMobile", data.isMobile());
 	    	return mav;
 		} catch (Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
@@ -104,20 +109,20 @@ public class PageController {
     		@RequestParam(required=false) String path
     		) throws TemplateException {
     	ModelAndView mav = null;
-    	PageTemplateData data = new PageTemplateData();
-    	try {
-	  		mav = createModelAndView(device, ver, target, data);
+    	SectionPageTemplateData data = new SectionPageTemplateData();
+      	try {
+      		mav = createModelAndView(device, ver, target, data);
 	  		if(path == null) {
 	    		path = "../../../";
 	    	}
 	    	data.setPath(path);
-	    	data.setTitle(sectionName);
-	        String title = Util.toUpperCase(data.getTitle());
+	    	data.setTitle(Util.toUpperCase(sectionName));
 	    	Section section = SectionsController.getSection(sectionName);
 	    	data.setPage(TemplateController.compileSection(section, path));
-	    	mav.getModel().put("name", section.getName());
-	        mav.getModel().put("path", path);
-	        mav.getModel().put("title", title);
+	    	data.setSectionName(section.getName());
+	    	mav.getModel().put("name", data.getSectionName());
+	        mav.getModel().put("path", data.getPath());
+	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			return mav;
     	} catch (Exception e) {
@@ -130,18 +135,12 @@ public class PageController {
     
     private PageTemplateData compileMain(PageTemplateData data) {
     	try {
-    		String images = TemplateController
-    				.compileLatestLoaded(data.getPath());
-    		TextTemplateData mainTextData;
-    		if(images == null) {
-    			mainTextData = new TextTemplateData() {};
-	    	} else {
-	        	mainTextData = new TextTemplateData() {
-	        		@SuppressWarnings("unused")
-					String latestLoaded = images;
-	        	};
-	    	}
-        	data.setTextData(mainTextData);
+    		Template template = new ImageListTemplate(
+    				ImageDataController.getLatestImages());
+    		template.setPath("../");
+    		String images = template.compile();
+    		TextTemplateData mData = new MainTextTemplateData(images);
+        	data.setTextData(mData);
     	} catch(IOException e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
     	}
@@ -149,12 +148,9 @@ public class PageController {
     }
     
     private PageTemplateData compileRetouch(PageTemplateData data) {
-    	final String tPath = data.getPath();
-		@SuppressWarnings("unused")
-		TextTemplateData retouchTextData = new TextTemplateData() {
-			String path = tPath;
-		};
-		data.setTextData(retouchTextData);
+		TextTemplateData rData = new TextTemplateData();
+		rData.setPath(data.getPath());
+		data.setTextData(rData);
 		return data;
     }
     
@@ -190,11 +186,11 @@ public class PageController {
     	StringBuilder templatePath = new StringBuilder("");
     	if(device.isNormal() && ver.toString().equals("") 
     			|| ver.equals("desktop")) {
-    		data.setIsMobile(null);
+    		data.setMobile(null);
 	  	} else if((device.isMobile() && ver.toString().equals(""))
 	  			|| (device.isTablet() && ver.toString().equals(""))
     			|| ver.toString().equals("mobile")) {
-    		data.setIsMobile(true);
+    		data.setMobile(true);
 	  	} else {
 	  		throw new NullPointerException("Cannot specify device! ver:"+ver);
 	  	}
