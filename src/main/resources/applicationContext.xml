@@ -15,7 +15,7 @@
 ">
 	<bean id="dashboardController" class="main.dashboard.DashboardController" />
 	<bean id="pageController" class="main.PageController" />
-	<bean id="zipImageStorageService" class="main.dashboard.ZipImageStorageService" />
+	<bean id="imageStorageService" class="main.dashboard.ImageStorageService" />
 	<bean id="imageDataController" class="main.img.ImageDataController">
 		<constructor-arg ref="imageDataDao" />
 	</bean>
