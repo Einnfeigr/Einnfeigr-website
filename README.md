@@ -20,7 +20,7 @@ Terms of the first release are:
   * [ ] image data and preview controllers
 * [ ] dashboard
 * [x] images previews
-* [ ] logging
+* [x] logging
 #### Dashboard
 * [ ] authentication and autorization
 * [ ] frontend
