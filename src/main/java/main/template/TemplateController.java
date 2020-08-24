@@ -85,9 +85,10 @@ public class TemplateController {
 		images.forEach(i -> {
 			try {
 				TemplateData data = new TextTemplateData() {
-					@SuppressWarnings("unused")
 					String imgPath = path+Util.toRelativeUrl(i.getAbsolutePath())
 					.replace("\\", "/").replace("static/", "");
+					@SuppressWarnings("unused")
+					String previewPath = imgPath.replace("img/", "img/preview/");
 				};
 				text.append(compileTemplate("templates/misc/img/image", data));
 			} catch(IOException e) {
@@ -111,12 +112,13 @@ public class TemplateController {
 					break;
 				}
 				TemplateData data = new TextTemplateData() {
-					@SuppressWarnings("unused")
 					String imgPath = (path+Util.toRelativeUrl(
 							section.getImages().get(i).getAbsolutePath())
 							.replace("static", ""))
 							.replace("\\", "/")
 							.replace("//", "/");
+					@SuppressWarnings("unused")
+					String previewPath = imgPath.replace("img/", "img/preview/");
 				};
 				previewText.append(
 						compileTemplate("templates/misc/sections/preview", data));

@@ -17,6 +17,8 @@ public class ImagePreviewController {
 	private final static Logger logger = 
 			LoggerFactory.getLogger(ImagePreviewController.class);
 	
+	public final static int SMALLER_SIDE = 350;
+	
 	public static void generatePreviews() {
 		File file = Util.getFile("static/img/");
 		List<File> images = Util.parseFiles(file, true, new ImagePreviewFileFilter());
@@ -30,13 +32,14 @@ public class ImagePreviewController {
 				continue;
 			}
 			try {
-				File output = Util.createFile(image.getAbsolutePath()
+				File output = Util.getFile(image.getAbsolutePath()
 						.replace("\\", "/")
 						.replace("static/img/", "static/img/preview/"));
 				if(output.exists()) {
 					continue;
 				}
-				ImageIO.write(Util.resizeBySmaller(ImageIO.read(image), 300),
+				Util.createFile(output);
+				ImageIO.write(Util.resizeBySmaller(ImageIO.read(image), SMALLER_SIDE),
 						Util.getExtension(image), output);
 				count++;
 			} catch (IOException e) {

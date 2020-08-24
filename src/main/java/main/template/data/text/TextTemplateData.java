@@ -7,7 +7,7 @@ public class TextTemplateData implements TemplateData {
 	String path;
 	
 	public void setPath(String path) {
-		
+		this.path = path;
 	}
 	
 }

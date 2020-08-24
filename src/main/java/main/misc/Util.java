@@ -317,7 +317,6 @@ public class Util {
     		height = smaller;
     	}
     	return resize(image, width, height);
-    	 
     }
     
 	public static BufferedImage resize(BufferedImage image, int width,

@@ -42,12 +42,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 			} else {
 				templatePath = "templates/placeholder";
 			}
-			String pagePath;
-			if(ex instanceof NotFoundException) {
-				pagePath = "templates/pages/error/notFound";
-			} else {
-				pagePath = "templates/pages/error/error";
-			}
+			String pagePath = "templates/pages/error/error";
 			@SuppressWarnings("unused")
 			TemplateData data = new TemplateData() {
 				String title = "Ошибка";

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ public class ImageDataController {
 	private ImageDataDao dao;
 
 	private static final String PREVIEW_PATH = "static/img/preview/latest/";
+	private static final String COPY_PATH = "static/img/latest/";
 	
 	public ImageDataController(ImageDataDao dao) {
 		this.dao = dao;
@@ -37,12 +40,18 @@ public class ImageDataController {
 	}
 
 	public static List<File> getLatestImages() {
-		return Util.parseFiles(Util.getFile(PREVIEW_PATH), true, new ImagePreviewFileFilter());
+		List<File> files = Util.parseFiles(Util.getFile(COPY_PATH), true,
+				new ImagePreviewFileFilter());
+		if(files == null || files.size() == 0) {
+			logger.warn("Found 0 files");
+		}
+		return files;
 	}
 	
 	public void loadImages() throws IOException { 
 		List<ImageData> indexedImages;
-		File file = new File(Util.toAbsoluteUrl("static/img/portfolio/sections"));
+		File file = new File(
+				Util.toAbsoluteUrl("static/img/portfolio/sections"));
 		indexedImages = parseImagesData(file);
 		if(indexedImages != null) {
 			logger.info("indexed "+indexedImages.size()+" images");
@@ -58,9 +67,20 @@ public class ImageDataController {
 	
 	private void saveImages(List<ImageData> images) {
 		images.forEach(i -> {
-			File file = new File(Util.toAbsoluteUrl(PREVIEW_PATH+i.getName()));
+			File previewFile = new File(Util.toAbsoluteUrl(
+					PREVIEW_PATH+i.getName()));
+			File file = new File(Util.toAbsoluteUrl(
+					COPY_PATH+i.getName()));
+			Util.createFile(previewFile);	
 			Util.createFile(file);
- 			Util.copyImage(i.getFile(), file);
+			try {
+				Util.copyImage(i.getFile(), file);
+				ImageIO.write(Util.resizeBySmaller(ImageIO.read(i.getFile()),
+						ImagePreviewController.SMALLER_SIDE),
+						Util.getExtension(i.getFile()), previewFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		});
 	}
 	

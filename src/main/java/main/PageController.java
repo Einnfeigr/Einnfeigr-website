@@ -1,6 +1,8 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
+import main.exception.NotFoundException;
 import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
@@ -39,14 +42,14 @@ public class PageController {
     		@RequestParam(required=false) String target,
     		@PathVariable(required=false) String page) 
     				throws ControllerException {
-    	ModelAndView mav;
-    	PageTemplateData data = new PageTemplateData();
   		if(page == null) {
   			page = "main";
   		}
   		if(path == null) {
   			path = getPath(page);
   		}
+    	ModelAndView mav;
+    	PageTemplateData data = new PageTemplateData();
     	try {
 	  		mav = createModelAndView(device, ver, target, data);
       		data.setPath(path);
@@ -56,7 +59,7 @@ public class PageController {
 	    					"templates/pages/main");
     				data.setTitle("Главная");	
 	    			break;
-	    		case("portfolio"):	    
+	    		case("portfolio"):
 	    			data.setText(TemplateController.compileSections(
 	    					SectionsController.getSections(), data.getPath()));
 		        	data = loadPage(data, null, 
@@ -81,14 +84,21 @@ public class PageController {
 	    			break;
 	    		default: 
 	    			logger.error("Invalid page address: "+page);
-	    			throw new IOException("Invalid page address: "+page);
+	    			throw new NotFoundException("Invalid page address: "+page);
 	    	}
 	        mav.getModel().put("path", data.getPath());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			mav.getModel().put("isMobile", data.isMobile());
 	    	return mav;
-		} catch (Exception e) {
+    	} catch(NotFoundException e) {
+			if(data != null) {
+				e.setPath(data.getPath());
+			} else { 
+				e.setPath(getPath(path));
+			}
+    		throw e;
+		} catch(Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
 			if(data != null) {
@@ -135,13 +145,13 @@ public class PageController {
     
     private PageTemplateData compileMain(PageTemplateData data) {
     	try {
-    		Template template = new ImageListTemplate(
-    				ImageDataController.getLatestImages());
-    		template.setPath("../");
+    		List<File> latest = ImageDataController.getLatestImages();
+    		Template template = new ImageListTemplate(latest);
+    		template.setPath("./");
     		String images = template.compile();
     		TextTemplateData mData = new MainTextTemplateData(images);
         	data.setTextData(mData);
-    	} catch(IOException e) {
+    	} catch(IOException | IllegalArgumentException e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
     	}
     	return data;
@@ -156,9 +166,9 @@ public class PageController {
     
     private String getPath(String url) {
     	if(url.equals("main")) {
-    		return "../";
-    	} else {
     		return "./";
+    	} else {
+    		return "../";
     	}
     }
     
