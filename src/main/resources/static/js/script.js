@@ -1,4 +1,3 @@
-var path;
 var loaded;
 
 $(document).ready(function() {
@@ -24,12 +23,12 @@ function removeDiv(cl) {
 	}, 500);
 }
 
-function showPage(title, address, addressPath) {
+function showPage(title, address) {
 	$('.loading').show();
 	$.ajax({
-		url: path+address,
+		url: address,
 		type: 'GET',
-		data: 'target=body&path='+addressPath,
+		data: 'target=body',
 		success: function(a) {
 			$(window).scrollTop(0);
 			if(title != null) {
@@ -39,9 +38,8 @@ function showPage(title, address, addressPath) {
 					ver = '?ver='+version;
 				}
 				$('.page').remove();
-				window.history.pushState(address, title+" | einnfeigr", path+address+ver);
+				window.history.pushState(address, title+" | einnfeigr", address+ver);
 				document.title = title+' | einnfeigr';
-				path = addressPath;
 			}
 			$('.pageArea').append(a);
 			$('.loading').fadeOut(500);
