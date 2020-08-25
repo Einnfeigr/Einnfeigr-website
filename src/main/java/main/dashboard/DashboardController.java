@@ -19,8 +19,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.misc.Util;
+import main.section.SectionsController;
 import main.template.EssentialTemplate;
+import main.template.SectionsTemplate;
 import main.template.Template;
+import main.template.data.SectionsTemplateData;
 
 @RestController
 public class DashboardController {
@@ -28,7 +31,6 @@ public class DashboardController {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(DashboardController.class);
 	
-
 	@Autowired
 	ImageStorageService storageService;
 	
@@ -39,13 +41,11 @@ public class DashboardController {
 			Template template = new EssentialTemplate(
 					"templates/pages/dashboard/main");
 			mav.getModel().put("page", template.compile());
-			mav.getModel().put("path", "../");
 			mav.getModel().put("title", "Панель управления");
 			return mav;
 		} catch (Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
-			exception.setPath("../");
 			throw exception;
 		}
 	}

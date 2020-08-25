@@ -26,10 +26,15 @@ public class ImageStorageService implements StorageService {
 				filename = sp[sp.length-1];
 			}
 		}
-		File localFile = Util.createFile("static/upload/"+path+filename);
+		File localFile = Util.getFile("static/upload/"+path+filename);
 		if(Util.isImage(localFile)) {
+			if(path.contains("portfolio/sections/")) {
+				localFile = Util.getFile("static/"+path+filename);
+			}
+			Util.createFile(localFile);
 			Util.copyImage(Util.getExtension(localFile), file.getInputStream(), localFile);
 		} else {
+			Util.createFile(localFile);
 			Util.writeFile(localFile, Util.readFile(file));
 		}
 	}
