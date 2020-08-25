@@ -202,7 +202,8 @@ public class PageController {
     			|| ver.toString().equals("mobile")) {
     		data.setMobile(true);
 	  	} else {
-	  		throw new NullPointerException("Cannot specify device! ver:"+ver);
+	  		logger.warn("Cannot specify device! ver:"+ver);
+	  		data.setMobile(null);
 	  	}
     	if(target == null) {
     		target = "";

@@ -20,8 +20,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	  	auth
 	  		.inMemoryAuthentication()
-	        .withUser("user")
-	        .password(encoder.encode("password"))
+	  		.withUser("user")
+	  		.password(encoder.encode("password"))
 	        .roles("USER")
 	        .and()
 	        .withUser("admin")
@@ -33,15 +33,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web
 			.ignoring()
-	        .antMatchers("/resources/**"); // #3
+	        .antMatchers("/resources/**");
 	}
 	    
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 	      .authorizeRequests()
-	      .antMatchers("/dashboard*").denyAll()
+	      .antMatchers("/dashboard*").authenticated()
 	      .anyRequest().permitAll()
+	      .and()
+	      .formLogin()
+	      .loginPage("/login")
+	      .loginProcessingUrl("/performLogin")
+	      .defaultSuccessUrl("/dashboard", true)
 	      .and()
 	      .httpBasic();
 	}

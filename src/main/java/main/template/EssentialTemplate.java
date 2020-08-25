@@ -9,7 +9,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-import main.exception.TemplateException;
 import main.misc.Util;
 import main.template.data.TemplateData;
 
@@ -28,7 +27,11 @@ public abstract class EssentialTemplate implements Template {
 	}
 
 	public void setTemplatePath(String templatePath) {
-		this.templatePath = templatePath+".mustache";
+		if(!templatePath.contains(".mustache")) {
+			this.templatePath = templatePath+".mustache";
+		} else {
+			this.templatePath = templatePath;
+		}
 	}
 
 	public String getPath() {
@@ -48,6 +51,10 @@ public abstract class EssentialTemplate implements Template {
 	}
 
 	public String compile() throws IOException {
+		if(templatePath == null) {
+			throw new IllegalArgumentException(
+					"Template path must be not null");
+		}
 	   	File template = new File(templatePath);
 	   	if(data == null) {
 	   		data = new TemplateData() {};
@@ -60,7 +67,7 @@ public abstract class EssentialTemplate implements Template {
 	   		}
 	   	}
 	   	if(!template.isFile()) {
-	   		throw new TemplateException(
+	   		throw new IllegalArgumentException(
 	   				"Template '"+templatePath+"' must be a file");
 	   	}
 	   	MustacheFactory factory = new DefaultMustacheFactory();
