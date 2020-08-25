@@ -68,7 +68,7 @@ public class Util {
     		return url.replace("\\", "/").replace(
     				ResourceUtils.getURL("classpath:").getFile()
     				.substring(1)
-    				.replace("\\", "/"), "");
+    				.replace("\\", "/"), "/");
     	} catch(IOException e) {
     		e.printStackTrace();
     		return null;

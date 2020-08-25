@@ -9,11 +9,11 @@ public class ImageTemplateData implements TemplateData {
 	String imgPath;
 	String previewPath;
 	
-	public ImageTemplateData(File file, String path) {
+	public ImageTemplateData(File file) {
 		if(!file.exists() || file.isDirectory()) {
 			throw new IllegalArgumentException("Given file is invalid | "+file);
 		}
-		imgPath = path+Util.toRelativeUrl(file).replace("static/", "");
+		imgPath = Util.toRelativeUrl(file).replace("static/", "");
 		if(!imgPath.contains("preview")) {
 			previewPath = imgPath.replace("img/", "img/preview/");
 		} else {

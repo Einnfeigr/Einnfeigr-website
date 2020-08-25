@@ -44,7 +44,7 @@ public class Section {
 			}
 		}
 		path = Util.toRelativeUrl(directory.getAbsolutePath());
-		setName(path.replace("\\", "/").replace("static/img/portfolio/sections/", ""));
+		setName(path.replace("/static/img/portfolio/sections/", ""));
 	}
 	
 	public List<File> getImages() {

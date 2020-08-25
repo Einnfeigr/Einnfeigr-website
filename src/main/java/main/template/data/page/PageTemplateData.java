@@ -5,19 +5,12 @@ import main.template.data.text.TextTemplateData;
 
 public class PageTemplateData implements TemplateData {
 	
-	private String path;
 	private String title;
 	private String text;
 	private String page;
 	private TextTemplateData textData;
 	private Boolean isMobile;
 	
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
 	public String getTitle() {
 		return title;
 	}

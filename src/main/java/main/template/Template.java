@@ -14,6 +14,4 @@ public interface Template {
 	public String getTemplatePath();
 	public void setTemplatePath(String path);
 	
-	public String getPath();
-	public void setPath(String path);
 }

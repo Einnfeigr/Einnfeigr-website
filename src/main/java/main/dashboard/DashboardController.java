@@ -19,7 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.misc.Util;
-import main.template.TemplateController;
+import main.template.EssentialTemplate;
+import main.template.Template;
 
 @RestController
 public class DashboardController {
@@ -35,8 +36,9 @@ public class DashboardController {
 	public ModelAndView showMain() {
 		ModelAndView mav =  new ModelAndView("index");
 		try {
-			mav.getModel().put("page", TemplateController.compileTemplate(
-					"templates/pages/dashboard/main"));
+			Template template = new EssentialTemplate(
+					"templates/pages/dashboard/main");
+			mav.getModel().put("page", template.compile());
 			mav.getModel().put("path", "../");
 			mav.getModel().put("title", "Панель управления");
 			return mav;

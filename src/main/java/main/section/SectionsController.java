@@ -20,7 +20,7 @@ public class SectionsController {
 		if(sections == null) {
 			loadSections();
 		}
-		name = "static/img/portfolio/sections/"+name;
+		name = "/static/img/portfolio/sections/"+name;
 		if(!sections.containsKey(name)) {
 			throw new IOException(name+" section can't be found");
 		}

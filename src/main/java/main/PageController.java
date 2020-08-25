@@ -21,9 +21,11 @@ import main.img.ImageDataController;
 import main.misc.Util;
 import main.section.Section;
 import main.section.SectionsController;
+import main.template.EssentialTemplate;
 import main.template.ImageListTemplate;
+import main.template.SectionTemplate;
+import main.template.SectionsTemplate;
 import main.template.Template;
-import main.template.TemplateController;
 import main.template.data.page.PageTemplateData;
 import main.template.data.page.SectionPageTemplateData;
 import main.template.data.text.MainTextTemplateData;
@@ -37,7 +39,6 @@ public class PageController {
 	
     @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET)
     public ModelAndView getPage(Device device, 
-    		@RequestParam(required=false) String path,
     		@RequestParam(required=false) String ver, 
     		@RequestParam(required=false) String target,
     		@PathVariable(required=false) String page) 
@@ -45,14 +46,10 @@ public class PageController {
   		if(page == null) {
   			page = "main";
   		}
-  		if(path == null) {
-  			path = getPath(page);
-  		}
     	ModelAndView mav;
     	PageTemplateData data = new PageTemplateData();
     	try {
 	  		mav = createModelAndView(device, ver, target, data);
-      		data.setPath(path);
       		switch(page) {
 	    		case("main"):
 		        	data = loadPage(compileMain(data), "static/text/ru/main", 
@@ -60,8 +57,9 @@ public class PageController {
     				data.setTitle("Главная");	
 	    			break;
 	    		case("portfolio"):
-	    			data.setText(TemplateController.compileSections(
-	    					SectionsController.getSections(), data.getPath()));
+	    			Template sections = new SectionsTemplate(
+	    					SectionsController.getSections());
+	    			data.setText(sections.compile());
 		        	data = loadPage(data, null, 
     						"templates/pages/portfolio");
     				data.setTitle("Портфолио");
@@ -86,26 +84,15 @@ public class PageController {
 	    			logger.error("Invalid page address: "+page);
 	    			throw new NotFoundException("Invalid page address: "+page);
 	    	}
-	        mav.getModel().put("path", data.getPath());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			mav.getModel().put("isMobile", data.isMobile());
 	    	return mav;
     	} catch(NotFoundException e) {
-			if(data != null) {
-				e.setPath(data.getPath());
-			} else { 
-				e.setPath(getPath(path));
-			}
     		throw e;
 		} catch(Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
-			if(data != null) {
-				exception.setPath(data.getPath());
-			} else { 
-				exception.setPath(getPath(path));
-			}
 			throw exception;
 		}
     }
@@ -115,30 +102,24 @@ public class PageController {
     public ModelAndView getSection( Device device,
     		@PathVariable("section") String sectionName,
     		@RequestParam(required=false) String ver,
-    		@RequestParam(required=false) String target,
-    		@RequestParam(required=false) String path
+    		@RequestParam(required=false) String target
     		) throws TemplateException {
     	ModelAndView mav = null;
     	SectionPageTemplateData data = new SectionPageTemplateData();
       	try {
       		mav = createModelAndView(device, ver, target, data);
-	  		if(path == null) {
-	    		path = "../../../";
-	    	}
-	    	data.setPath(path);
 	    	data.setTitle(Util.toUpperCase(sectionName));
 	    	Section section = SectionsController.getSection(sectionName);
-	    	data.setPage(TemplateController.compileSection(section, path));
+	    	Template template = new SectionTemplate(section);
+	    	data.setPage(template.compile());
 	    	data.setSectionName(section.getName());
 	    	mav.getModel().put("name", data.getSectionName());
-	        mav.getModel().put("path", data.getPath());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			return mav;
     	} catch (Exception e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
-			exception.setPath(data.getPath());
 			throw exception;
 		}
     }
@@ -147,7 +128,6 @@ public class PageController {
     	try {
     		List<File> latest = ImageDataController.getLatestImages();
     		Template template = new ImageListTemplate(latest);
-    		template.setPath("./");
     		String images = template.compile();
     		TextTemplateData mData = new MainTextTemplateData(images);
         	data.setTextData(mData);
@@ -159,17 +139,8 @@ public class PageController {
     
     private PageTemplateData compileRetouch(PageTemplateData data) {
 		TextTemplateData rData = new TextTemplateData();
-		rData.setPath(data.getPath());
 		data.setTextData(rData);
 		return data;
-    }
-    
-    private String getPath(String url) {
-    	if(url.equals("main")) {
-    		return "./";
-    	} else {
-    		return "../";
-    	}
     }
     
     private PageTemplateData loadPage(PageTemplateData data, String textPath, 
@@ -181,10 +152,13 @@ public class PageController {
     		if(data.getTextData() == null) {
     			data.setTextData(new TextTemplateData() {});
     		}
-    		data.setText(TemplateController.compileTemplate(textPath,
-    				data.getTextData()));
+    		Template template = new EssentialTemplate(textPath);
+    		template.setData(data.getTextData());
+    		data.setText(template.compile());
     	}
-    	data.setPage(TemplateController.compileTemplate(pagePath, data));
+    	Template template = new EssentialTemplate(pagePath);
+    	template.setData(data);
+    	data.setPage(template.compile());
         return data;
     }
     

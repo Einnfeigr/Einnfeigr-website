@@ -12,7 +12,7 @@ import com.github.mustachejava.MustacheFactory;
 import main.misc.Util;
 import main.template.data.TemplateData;
 
-public abstract class EssentialTemplate implements Template {
+public class EssentialTemplate implements Template {
 
 	protected String templatePath;
 	protected String path;
@@ -20,6 +20,10 @@ public abstract class EssentialTemplate implements Template {
 	
 	public EssentialTemplate() {
 		
+	}
+	
+	public EssentialTemplate(String templatePath) {
+		setTemplatePath(templatePath);
 	}
 	
 	public String getTemplatePath() {
@@ -56,9 +60,6 @@ public abstract class EssentialTemplate implements Template {
 					"Template path must be not null");
 		}
 	   	File template = new File(templatePath);
-	   	if(data == null) {
-	   		data = new TemplateData() {};
-	   	}
 	   	if(!template.exists()) {
 	   		template = new File(Util.toAbsoluteUrl(templatePath));
 	   		if(!template.exists()) {

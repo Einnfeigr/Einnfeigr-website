@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import main.template.TemplateController;
-import main.template.data.TemplateData;
+import main.template.EssentialTemplate;
+import main.template.Template;
 import main.template.data.page.PageTemplateData;
-import main.template.data.text.TextTemplateData;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -23,33 +22,34 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleConflict(RuntimeException ex,
 			WebRequest request) {
 		try {
+			Template template;
 			String bodyOfResponse;
-			String templatePath;
+			String responseTemplatePath;
 			PageTemplateData pageData = new PageTemplateData();
-			TextTemplateData textData = new TextTemplateData() {};
 			if(ex instanceof ControllerException) {
+				String textPath;
 				if(ex instanceof NotFoundException) {
-					pageData.setText(TemplateController.compileTemplate(
-							"static/text/ru/error/notFound", textData));
+					textPath = "static/text/ru/error/notFound";
 				} else {
-					pageData.setText(TemplateController.compileTemplate(
-							"static/text/ru/error/error", textData));
+					textPath = "static/text/ru/error/error";
 				}
-				pageData.setPath(((ControllerException) ex).getPath());
+				template = new EssentialTemplate(textPath);
+				pageData.setText(template.compile());
 			}
 			if(request.getParameter("path") == null) {
-				templatePath = "templates/index";
+				responseTemplatePath = "templates/index";
 			} else {
-				templatePath = "templates/placeholder";
+				responseTemplatePath = "templates/placeholder";
 			}
 			String pagePath = "templates/pages/error/error";
-			@SuppressWarnings("unused")
-			TemplateData data = new TemplateData() {
-				String title = "Ошибка";
-				String path = pageData.getPath();
-				String page = TemplateController.compileTemplate(pagePath, pageData);
-			};
-			bodyOfResponse = TemplateController.compileTemplate(templatePath, data);
+			template = new EssentialTemplate(pagePath);
+			template.setData(pageData);
+			PageTemplateData responseData = new PageTemplateData();
+			responseData.setTitle("Ошибка");
+			responseData.setPage(template.compile());
+			template = new EssentialTemplate(responseTemplatePath);
+			template.setData(responseData);
+			bodyOfResponse = template.compile();
 		    return handleExceptionInternal(ex, bodyOfResponse, 
 		  	      new HttpHeaders(), HttpStatus.OK, request);
 		} catch (Exception e) {

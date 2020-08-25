@@ -25,19 +25,16 @@ public class SecurityController {
 			ModelAndView mav = new ModelAndView("index");
 			PageTemplateData data = new PageTemplateData();
 			data.setMobile(false);
-			data.setPath("../");
 			data.setTitle("Вход");
 			Template template = new EssentialTemplate() {};
 			template.setTemplatePath("templates/pages/login");
 			data.setPage(template.compile());
-			mav.getModel().put("path", data.getPath());
 			mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			return mav;
 		} catch(Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException ex = new ControllerException(e);
-			ex.setPath("../");
 			throw ex;
 		}
 	}

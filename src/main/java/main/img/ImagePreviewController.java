@@ -49,11 +49,12 @@ public class ImagePreviewController {
 		logger.info("created "+count+" previews of "+images.size()+" files");
 	}
 
-	public static void deletePreviews() {
+	public static void updatePreviews() {
 		File file = Util.getFile("static/img/preview/");
 		for(File folder : file.listFiles()) {
 			folder.delete();
 		}
+		generatePreviews();
 	}
 	
 }

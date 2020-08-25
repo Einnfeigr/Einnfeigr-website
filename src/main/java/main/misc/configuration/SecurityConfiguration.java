@@ -20,12 +20,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	  	auth
 	  		.inMemoryAuthentication()
-	  		.withUser("user")
-	  		.password(encoder.encode("password"))
-	        .roles("USER")
-	        .and()
-	        .withUser("admin")
-	        .password(encoder.encode("admin"))
+	        .withUser("studiedlist")
+	        .password(encoder.encode("A3a2qZbxFF"))
 	        .roles("USER", "ADMIN"); 
 	}
 
@@ -39,16 +35,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-	      .authorizeRequests()
-	      .antMatchers("/dashboard*").authenticated()
-	      .anyRequest().permitAll()
-	      .and()
-	      .formLogin()
-	      .loginPage("/login")
-	      .loginProcessingUrl("/performLogin")
-	      .defaultSuccessUrl("/dashboard", true)
-	      .and()
-	      .httpBasic();
+			.csrf().disable()
+			.formLogin()
+			.loginPage("/login")
+			.loginProcessingUrl("/login")
+			.defaultSuccessUrl("/dashboard")
+			.failureUrl("/failed")
+			.and()
+			.logout()
+			.logoutUrl("/logout")
+			.and()
+			.authorizeRequests()
+			.antMatchers("/dashboard*").hasRole("USER")
+			.anyRequest().permitAll()
+			.and()
+			.httpBasic();
 	}
 	
 }
