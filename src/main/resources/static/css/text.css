@@ -112,3 +112,7 @@ a {
 	font-size: 6.5vw;
 	text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
 }
+
+.error .textDiv, .login .textDiv {
+	padding-top: 125px;
+}
