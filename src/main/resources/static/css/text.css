@@ -3,23 +3,27 @@
 	background: white;
 	width: 100%;
 	min-height: 100vh;
-	color: #303032;
 	padding: 35px;
 }
 
 .textDiv h1 {
-	font-weight: normal;
+	font-weight: 300;
 	text-align: left;
 }
 
+.textDiv h2 {
+	font-weight: 300;
+}
+
 .textDiv .centered {
+	width: 100%;
 	text-align: center;
 }
 
 .textDiv h4 {
 	width: 70%;
 	line-height: 170%;
-	font-weight: normal;
+	font-weight: 300;
 }
 
 .textDiv .note {
