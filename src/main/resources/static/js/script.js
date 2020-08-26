@@ -4,15 +4,24 @@ $(document).ready(function() {
 	$(window).on('popstate', function() {
 		location.reload(true);
 	});
-	$('.loading').css({ display: 'grid' });
+
+	$('.previewBackground').removeClass('hidden');
 	if(loaded == true) {
-		$('.loading').fadeOut(500);
+		$('.previewBackground').fadeOut(500, function() {
+			$('.loading').hide();
+		});
 	}
 });
 
-$(window).on('load',function() {
+$(window).on('loadstart', function() {
+	$('.previewBackground').removeClass('hidden');
+})
+
+$(window).on('load', function() {
 	loaded = true;
-	$('.loading').fadeOut(500);
+	$('.previewBackground').fadeOut(500, function() {
+		$('.loading').hide();
+	});
 });
 
 
@@ -23,29 +32,57 @@ function removeDiv(cl) {
 	}, 500);
 }
 
+function showImagePreview(image) {
+	$('.loading').show();
+	$('.previewBackground').fadeIn(50);
+	$.ajax({
+		url: '/image',
+		type: 'GET',
+		data: 'imgPath='+image,
+		success: function(a) {
+			$('.previewBackground').append(a);
+			$('.loading').hide();
+		},
+		error: function() {
+			$('.previewBackground').fadeOut(500, function() {
+				$('.loading').hide();
+			});
+		}
+	});
+}
+
+function hideImagePreview(id) {
+	$('.previewBackground').fadeOut(500, function() {
+		$('#'+id).remove();
+	});
+}
+
 function showPage(title, address) {
 	$('.loading').show();
+	$('.previewBackground').fadeIn(50);
 	$.ajax({
 		url: address,
 		type: 'GET',
 		data: 'target=body',
 		success: function(a) {
-			$(window).scrollTop(0);
-			if(title != null) {
-				var ver = '';
-				var version = checkVersion();
-				if(version != '') {
-					ver = '?ver='+version;
-				}
-				$('.page').remove();
-				window.history.pushState(address, title+" | einnfeigr", address+ver);
-				document.title = title+' | einnfeigr';
+			var ver = '';
+			var version = checkVersion();
+			if(version != '') {
+				ver = '?ver='+version;
 			}
+			$('.page').remove();
+			window.history.pushState(address, title+" | einnfeigr", address+ver);
+			document.title = title+' | einnfeigr';
 			$('.pageArea').append(a);
-			$('.loading').fadeOut(500);
+			$('.previewBackground').fadeOut(500);
+			setTimeout(500, function() {
+				$('.loading').hide();
+			});
 		},
 		error: function() {
-			$('.loading').fadeOut(500);
+			$('.previewBackground').fadeOut(500, function() {
+				$('.loading').hide();
+			});
 		}
 	});
 }

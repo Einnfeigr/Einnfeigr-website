@@ -17,13 +17,13 @@
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
 >
 
-	<bean id="dashboardController" 		class="main.dashboard.DashboardController" 	/>
-	<bean id="pageController" 			class="main.PageController" 				/>
-	<bean id="securityController" 		class="main.SecurityController" 			/>
-	<bean id="imageStorageService"		class="main.dashboard.ImageStorageService" 	/>
-	<bean id="imagePreviewController"	class="main.img.ImagePreviewController"		/>
-	<bean id="imageDataDao" 			class="main.img.ImageDataDao"  				/>
-	<bean id="imageDataController" 		class="main.img.ImageDataController"		 >
+	<bean id="dashboardController" 		class="main.dashboard.DashboardController"					  />
+	<bean id="pageController" 			class="main.PageController" 								  />
+	<bean id="securityController" 		class="main.SecurityController" 							  />
+	<bean id="imageStorageService"		class="main.dashboard.ImageStorageService" 					  />
+	<bean id="imagePreviewController"	class="main.img.ImagePreviewController"						  />
+	<bean id="imageDataDao" 			class="main.img.ImageDataDao"  								  />
+	<bean id="imageDataController" 		class="main.img.ImageDataController"		 				   >
 		<constructor-arg ref="imageDataDao" />
 	</bean>
 	<bean id="initializator" 			class="main.misc.Initializator"	>

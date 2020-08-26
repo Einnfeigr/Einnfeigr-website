@@ -1,7 +1,7 @@
-<form method="POST" enctype="multipart/form-data" action="./">
+<form method="POST" enctype="multipart/form-data" action="/dashboard/upload">
 	<table>
-		<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+		<tr><td>Файл для загрузки:</td><td><input type="file" name="file" /></td></tr>
+		<tr><td>Относительный путь на сервере:</td><td><input type="text" name="path" /></td></tr>
 		<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-		<input type="hidden" name="path" value="./" />
 	</table>
 </form>
