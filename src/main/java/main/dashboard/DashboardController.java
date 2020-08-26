@@ -19,11 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.misc.Util;
-import main.section.SectionsController;
 import main.template.EssentialTemplate;
-import main.template.SectionsTemplate;
 import main.template.Template;
-import main.template.data.SectionsTemplateData;
+import main.template.data.page.PageTemplateData;
 
 @RestController
 public class DashboardController {
@@ -66,16 +64,21 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value="/dashboard/upload", method=RequestMethod.POST)
-	public ResponseEntity<Resource> uploadFile(
+	public ResponseEntity<String> uploadFile(
 			@RequestParam("file") MultipartFile file,
 			@RequestParam("path") String path) {
 		if(path == null) {
 			path = ((File)file).getParentFile().getAbsolutePath();
 		}
 		try {
+			Template pageTemplate = new EssentialTemplate("templates/index");
+			PageTemplateData pageData = new PageTemplateData();
+			Template template = new EssentialTemplate(
+					"static/text/ru/dashboard/upload/success");
+			pageData.setPage(template.compile());
 			storageService.store(file, path);
 			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION)
-					.body(null);
+					.body(pageTemplate.compile());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().body(null);

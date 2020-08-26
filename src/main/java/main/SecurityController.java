@@ -2,6 +2,7 @@ package main;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import main.template.EssentialTemplate;
 import main.template.Template;
 import main.template.data.page.PageTemplateData;
 
+@Component
 @RestController
 public class SecurityController {
 	

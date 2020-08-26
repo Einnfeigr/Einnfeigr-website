@@ -21,6 +21,7 @@ public class ImageController {
 	public ModelAndView showPreview(@RequestParam String imgPath) {
 		try {
 			ModelAndView mav = new ModelAndView("misc/img/preview");
+			mav.getModel().put("id", imgPath.hashCode());
 			mav.getModel().put("imagePath", imgPath);
 			return mav;
 		} catch(Exception e) {
