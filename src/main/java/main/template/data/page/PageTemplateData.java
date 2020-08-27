@@ -1,20 +1,16 @@
-package main.pojo;
+package main.template.data.page;
+
+import main.template.data.TemplateData;
+import main.template.data.text.TextTemplateData;
 
 public class PageTemplateData implements TemplateData {
 	
-	private String path;
 	private String title;
 	private String text;
 	private String page;
 	private TextTemplateData textData;
 	private Boolean isMobile;
 	
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
 	public String getTitle() {
 		return title;
 	}
@@ -39,10 +35,10 @@ public class PageTemplateData implements TemplateData {
 	public void setTextData(TextTemplateData textData) {
 		this.textData = textData;
 	}
-	public Boolean getIsMobile() {
+	public Boolean isMobile() {
 		return isMobile;
 	}
-	public void setIsMobile(Boolean isMobile) {
+	public void setMobile(Boolean isMobile) {
 		this.isMobile = isMobile;
 	}
 	

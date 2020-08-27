@@ -39,13 +39,12 @@ public class Section {
 							images.add(file);
 					}
 				} catch(IndexOutOfBoundsException e) {
-					System.out.println(file.getName());
 					e.printStackTrace();
 				}
 			}
 		}
 		path = Util.toRelativeUrl(directory.getAbsolutePath());
-		setName(path.replace("\\", "/").replace("static/img/portfolio/sections/", ""));
+		setName(path.replace("/static/img/portfolio/sections/", ""));
 	}
 	
 	public List<File> getImages() {

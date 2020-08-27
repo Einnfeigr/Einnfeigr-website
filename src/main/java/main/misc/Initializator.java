@@ -1,5 +1,7 @@
 package main.misc;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +19,17 @@ public class Initializator implements InitializingBean {
 	}
 	
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		imageController.loadImages();
-    	SectionsController.loadSections();
-    	ImagePreviewController.generatePreviews();
+	public void afterPropertiesSet() {
+		try {
+			imageController.loadImages();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			SectionsController.loadSections();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		ImagePreviewController.generatePreviews();
 	}	
 }

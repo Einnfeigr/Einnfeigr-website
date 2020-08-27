@@ -1,9 +1,14 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,142 +18,183 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
+import main.exception.NotFoundException;
 import main.exception.TemplateException;
+import main.img.ImageDataController;
 import main.misc.Util;
-import main.pojo.PageTemplateData;
-import main.pojo.TextTemplateData;
 import main.section.Section;
 import main.section.SectionsController;
-import main.template.TemplateController;
+import main.template.EssentialTemplate;
+import main.template.ImageListTemplate;
+import main.template.SectionTemplate;
+import main.template.SectionsTemplate;
+import main.template.Template;
+import main.template.data.page.PageTemplateData;
+import main.template.data.page.SectionPageTemplateData;
+import main.template.data.text.MainTextTemplateData;
+import main.template.data.text.TextTemplateData;
 
 @RestController
 public class PageController {
 	
-    @RequestMapping(value= {"/", "/portfolio", "/retouch", "/about", 
-    		"/contacts"}, method= RequestMethod.GET)
-    public ModelAndView getPage(@RequestParam(required=false) String path,
-    		Device device, HttpServletRequest request) 
-    				throws ControllerException {
-    	ModelAndView mav;
-    	PageTemplateData data = new PageTemplateData();
-  		String requestUrl = request.getRequestURI();
-  		while(requestUrl.endsWith("/") && requestUrl.length() > 1) {
-  			requestUrl = requestUrl.substring(0, requestUrl.length()-1);
-  		}
-  		if(path == null) {
-  			path = getPath(requestUrl);
-  		}
+	private final static Logger logger = 
+			LoggerFactory.getLogger(PageController.class);
+	
+    @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET,
+    		produces = "application/json", headers = "target=body")
+    public ResponseEntity<Page> getPageBody(Device device, 
+    		@RequestParam(required=false) String ver,
+    		@PathVariable(value="page",required=false) Optional<String> pageName)
+    				throws TemplateException {
     	try {
-	  		mav = createModelAndView(device, request, data);
-      		data.setPath(path);
-      		switch(requestUrl) {
-	    		case("/"):
-		        	data = loadPage(compileMain(data), "static/text/ru/main", 
-	    					"templates/pages/main");
-    				data.setTitle("Главная");	
-	    			break;
-	    		case("/portfolio"):	    
-	    			data.setText(TemplateController.compileSections(
-	    					SectionsController.getSections(), data.getPath()));
-		        	data = loadPage(data, null, 
-    						"templates/pages/portfolio");
-    				data.setTitle("Портфолио");
-	    			break;
-	    		case("/retouch"):
-	    			data = loadPage(compileRetouch(data),
-	    					"static/text/ru/retouch", "templates/pages/retouch");
-    				data.setTitle("Ретушь");
-	    			break;
-	    		case("/about"):
-	    			data = loadPage(data, "static/text/ru/about", 
-	    					"templates/pages/about");
-    				data.setTitle("Обо всем");
-	    			break;
-	    		case("/contacts"):
-	    			data = loadPage(data, "static/text/ru/contacts", 
-	    					"templates/pages/contacts");
-    				data.setTitle("Контакты");
-	    			break;
-	    		default: 
-	    			throw new IOException("URL: "+requestUrl);
-	    	}
-	        mav.getModel().put("path", data.getPath());
+    		String name;
+    		if(pageName.isPresent()) {
+    			name = pageName.get();
+    		} else {
+    			name = "main";
+    		}
+	    	Page page = new Page();
+	    	PageTemplateData data = getPageData(name, device, ver);
+	    	page.setTitle(data.getTitle());
+	    	page.setContent(data.getPage());
+	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
+    	} catch(Exception e) {
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			ControllerException exception = new ControllerException(e);
+			throw exception;
+    	}
+    }
+	
+    @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET)
+    public ModelAndView getPage(Device device, 
+    		@RequestParam(required=false) String ver, 
+    		@PathVariable(required=false) Optional<String> page) 
+    				throws ControllerException {
+    	try {
+    		String name;
+    		if(page.isPresent()) {
+    			name = page.get();
+    		} else {
+    			name = "main";
+    		}
+	  		ModelAndView mav = new ModelAndView("index");
+      		PageTemplateData data = getPageData(name, device, ver);
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
-			mav.getModel().put("isMobile", data.getIsMobile());
+			mav.getModel().put("isMobile", data.isMobile());
 	    	return mav;
-		} catch (Exception e) {
-			e.printStackTrace();
+    	} catch(NotFoundException e) {
+    		throw e;
+		} catch(Exception e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
-			if(data != null) {
-				exception.setPath(data.getPath());
-			} else { 
-				exception.setPath(getPath(path));
-			}
 			throw exception;
 		}
     }
     
-    @RequestMapping(value= "/portfolio/sections/{section}", method= RequestMethod.GET)
-    public ModelAndView getSection(@PathVariable("section") String sectionName,
-    		Device device, HttpServletRequest request) throws TemplateException {
-    	ModelAndView mav = null;
+    private PageTemplateData getPageData(String page, Device device, String ver) 
+    		throws IOException {
     	PageTemplateData data = new PageTemplateData();
-  		String path;
+    	data.setMobile(isMobile(data, device, ver));
+    	switch(page) {
+			case("main"):
+	        	data = loadPage(compileMain(data), "static/text/ru/main", 
+						"templates/pages/main");
+				data.setTitle("Главная");	
+				break;
+			case("portfolio"):
+				Template sections = new SectionsTemplate(
+						SectionsController.getSections());
+				data.setText(sections.compile());
+	        	data = loadPage(data, null, 
+						"templates/pages/portfolio");
+				data.setTitle("Портфолио");
+				break;
+			case("retouch"):
+				data = loadPage(compileRetouch(data), 
+						"static/text/ru/retouch", 
+						"templates/pages/retouch");
+				data.setTitle("Ретушь");
+				break;
+			case("about"):
+				data = loadPage(data, "static/text/ru/about", 
+						"templates/pages/about");
+				data.setTitle("Обо всем");
+				break;
+			case("contacts"):
+				data = loadPage(data, "static/text/ru/contacts", 
+						"templates/pages/contacts");
+				data.setTitle("Контакты");
+				break;
+			default: 
+				logger.error("Invalid page address: "+page);
+				throw new NotFoundException("Invalid page address: "+page);
+    	} 	
+    	return data;
+    }
+    
+    @RequestMapping(value= "/portfolio/sections/{section}",
+    		method = RequestMethod.GET, produces = "application/json",
+    		headers = "target=body")
+    public ResponseEntity<Page> getSectionBody(Device device, 
+    		@PathVariable("section") String sectionName,
+    		@RequestParam(required=false) String ver) throws TemplateException {
     	try {
-	  		mav = createModelAndView(device, request, data);
-	    	if(request.getParameter("path") != null ) {
-	    		path = request.getParameter("path");
-	    	} else {
-	    		path = "../../../";
-	    	}
-	    	data.setPath(path);
-	    	data.setTitle(sectionName);
-	        String title = Util.toUpperCase(data.getTitle());
+	    	Page page = new Page();
+	    	Template template = new SectionTemplate(
+	    			SectionsController.getSection(sectionName));	    	
+	    	page.setTitle(Util.toUpperCase(sectionName));
+	    	page.setContent(template.compile());
+	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
+    	} catch(Exception e) {
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			ControllerException exception = new ControllerException(e);
+			throw exception;
+    	}
+    }
+    
+    @RequestMapping(value= "/portfolio/sections/{section}", 
+    		method= RequestMethod.GET)
+    public ModelAndView getSection(Device device,
+    		@PathVariable("section") String sectionName,
+    		@RequestParam(required=false) String ver) throws TemplateException {
+    	ModelAndView mav = null;
+    	PageTemplateData data = new SectionPageTemplateData();
+      	try {
+      		mav = new ModelAndView("index");
+      		data.setMobile(isMobile(data, device, ver));
+	    	data.setTitle(Util.toUpperCase(sectionName));
 	    	Section section = SectionsController.getSection(sectionName);
-	    	data.setPage(TemplateController.compileSection(section, path));
+	    	Template template = new SectionTemplate(section);
+	    	data.setPage(template.compile());
 	    	mav.getModel().put("name", section.getName());
-	        mav.getModel().put("path", path);
-	        mav.getModel().put("title", title);
+	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			return mav;
     	} catch (Exception e) {
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			ControllerException exception = new ControllerException(e);
-			exception.setPath(data.getPath());
 			throw exception;
 		}
     }
     
     private PageTemplateData compileMain(PageTemplateData data) {
     	try {
-    		final String tPath = data.getPath();
-        	@SuppressWarnings("unused")
-        	TextTemplateData mainTextData = new TextTemplateData() {
-        		String latestLoaded = TemplateController.compileLatestLoaded(tPath);
-        	};
-        	data.setTextData(mainTextData);
-    	} catch(IOException e) {
-    		e.printStackTrace();
+    		List<File> latest = ImageDataController.getLatestImages();
+    		Template template = new ImageListTemplate(latest);
+    		String images = template.compile();
+    		TextTemplateData mData = new MainTextTemplateData(images);
+        	data.setTextData(mData);
+    	} catch(IOException | IllegalArgumentException e) {
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
     	}
     	return data;
     }
     
     private PageTemplateData compileRetouch(PageTemplateData data) {
-    	final String tPath = data.getPath();
-		@SuppressWarnings("unused")
-		TextTemplateData retouchTextData = new TextTemplateData() {
-			String path = tPath;
-		};
-		data.setTextData(retouchTextData);
+		TextTemplateData rData = new TextTemplateData();
+		data.setTextData(rData);
 		return data;
-    }
-    
-    private String getPath(String url) {
-    	if(url.length() == 1 && url.contains("/")) {
-    		return "./";
-    	} else {
-    		return "../";
-    	}
     }
     
     private PageTemplateData loadPage(PageTemplateData data, String textPath, 
@@ -160,40 +206,32 @@ public class PageController {
     		if(data.getTextData() == null) {
     			data.setTextData(new TextTemplateData() {});
     		}
-    		data.setText(TemplateController.compileTemplate(textPath,
-    				data.getTextData()));
+    		Template template = new EssentialTemplate(textPath);
+    		template.setData(data.getTextData());
+    		data.setText(template.compile());
     	}
-    	data.setPage(TemplateController.compileTemplate(pagePath, data));
+    	Template template = new EssentialTemplate(pagePath);
+    	template.setData(data);
+    	data.setPage(template.compile());
         return data;
     }
     
-    private ModelAndView createModelAndView(Device device,
-    		HttpServletRequest request, PageTemplateData data) {
-    	StringBuilder ver = new StringBuilder("");
-    	StringBuilder templatePath = new StringBuilder("");
-    	if(request.getParameter("ver") != null) {
-    		ver.append(request.getParameter("ver"));
+    private boolean isMobile(
+    		PageTemplateData data, Device device, String ver) {
+    	if(ver == null) {
+    		ver = "";
     	}
     	if(device.isNormal() && ver.toString().equals("") 
-    			|| ver.toString().equals("desktop")) {
-    		data.setIsMobile(null);
+    			|| ver.equals("desktop")) {
+    		return false;
 	  	} else if((device.isMobile() && ver.toString().equals(""))
 	  			|| (device.isTablet() && ver.toString().equals(""))
     			|| ver.toString().equals("mobile")) {
-    		data.setIsMobile(true);
+    		return true;
 	  	} else {
-	  		throw new NullPointerException("Cannot specify device! ver:"+ver);
+	  		logger.warn("Cannot specify device! ver:"+ver);
+	  		return true;
 	  	}
-    	if(request.getParameter("target") != null) {
-    		if(request.getParameter("target").equals("body")) {
-    			templatePath.append("placeholder");
-    		} else {
-    			templatePath.append("index");
-    		}
-    	} else {
-    		templatePath.append("index");
-    	}
-    	return new ModelAndView(templatePath.toString());
     }
     
 }

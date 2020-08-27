@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
@@ -20,21 +21,31 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import main.misc.filter.SimpleFileFilter;
+import main.img.ImagePreviewController;
 import main.misc.filter.FileFilter;
 
 public class Util {
-    
+	
+	private final static Logger logger = 
+			LoggerFactory.getLogger(ImagePreviewController.class);
+	public final static String EXCEPTION_LOG_MESSAGE = 
+			"Exception has been caught";
+	
     public static boolean isAbsolute(File file) throws FileNotFoundException {
     	return isAbsolute(file.getAbsolutePath());
     }
     
     public static boolean isAbsolute(String url) throws FileNotFoundException {
-		return url.replace("\\", "/").contains(ResourceUtils.getURL("classpath:")
-				.getPath().substring(1).replace("\\", "/"));
+		return url.replace("\\", "/").contains(
+				ResourceUtils.getURL("classpath:").getFile()
+				.substring(1)
+				.replace("\\", "/"));
     }
     
     public static String toAbsoluteUrl(String url) {
@@ -54,8 +65,10 @@ public class Util {
     		if(!isAbsolute(url)) {
     			return url;
     		}
-    		return url.replace("\\", "/").replace(ResourceUtils.getURL("classpath:").getFile()
-    				.substring(1).replace("\\", "/"), "");
+    		return url.replace("\\", "/").replace(
+    				ResourceUtils.getURL("classpath:").getFile()
+    				.substring(1)
+    				.replace("\\", "/"), "/");
     	} catch(IOException e) {
     		e.printStackTrace();
     		return null;
@@ -70,7 +83,8 @@ public class Util {
     	return parseFiles(file, true, new SimpleFileFilter());
     }
     
-    public static List<File> parseFiles(File file, boolean parseSubdirectories) {
+    public static List<File> parseFiles(File file, 
+    		boolean parseSubdirectories) {
     	return parseFiles(file, parseSubdirectories, new SimpleFileFilter());
     }
     
@@ -88,7 +102,8 @@ public class Util {
     			if(!parseSubdirectories) {
     				continue;
     			}
-    			List<File> cFiles = parseFiles(cFile, parseSubdirectories, filter);
+    			List<File> cFiles = parseFiles(cFile, parseSubdirectories,
+    					filter);
     			if(cFiles != null) {
     				files.addAll(cFiles);
     			}
@@ -158,7 +173,8 @@ public class Util {
     		if(string.length() < 1) {
     			continue;
     		}
-    		string = Character.toUpperCase(string.charAt(0))+string.substring(1);
+    		string = Character.toUpperCase(string.charAt(0))
+    				+string.substring(1);
     		sb.append(string+separator);
     	}
     	return sb.toString();
@@ -170,21 +186,33 @@ public class Util {
     		return;
     	}
 		Files.copy(src.toPath(), dest.toPath(), 
-				StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+				StandardCopyOption.REPLACE_EXISTING, 
+				StandardCopyOption.COPY_ATTRIBUTES);
     }
     
-    public static void copyImage(File src, File dest) {
+    public static void copyImage(File src, File dest) 
+    		throws IllegalArgumentException {
     	if(!Util.isImage(src) || !Util.isImage(dest)) {
-    		throw new IllegalArgumentException("One or both passed files are not images");
+    		throw new IllegalArgumentException(
+    				"One or both passed files are not images");
     	}
     	if(!src.exists()) {
     		throw new NullPointerException(
-    				"Couldn't find file '"+src.getAbsolutePath()+"'");
+    				"Can't find file '"+src.getAbsolutePath()+"'");
     	}
+    	try(InputStream is = new FileInputStream(src)) {
+    		copyImage(getExtension(src), is, dest);
+    	} catch(Exception e) {
+    		logger.error(EXCEPTION_LOG_MESSAGE, e);
+    		throw new IllegalArgumentException(e);
+		}
+    }
+    
+    public static void copyImage(String extension, InputStream stream, File dest) {
     	BufferedImage image = null;
     	try {
-	        image = ImageIO.read(src);
-	    	ImageIO.write(image, getExtension(src), dest);
+	        image = ImageIO.read(stream);
+	    	ImageIO.write(image, extension, dest);
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
@@ -250,17 +278,61 @@ public class Util {
     	return names;
     }
     
-	public static BufferedImage resize(BufferedImage image, int width, int height) { 
+    //TODO refactor
+    public static BufferedImage resizeByLarger(BufferedImage image, 
+    		int larger) {
+    	double ratio;
+    	int height = image.getHeight();
+    	int width = image.getWidth();
+    	if(height < width) {
+    		ratio = (double) height / (double) width;
+    		width = larger;
+    		height = (int) (width*ratio);
+    	} else if(height > width){
+    		ratio = (double) width / (double) height;
+    		height = larger;
+    		width = (int) (height*ratio);
+    	} else {
+    		width = larger;
+    		height = larger;
+    	}
+    	return resize(image, width, height);
+    }
+    
+    public static BufferedImage resizeBySmaller(BufferedImage image, 
+    		int smaller) {
+    	double ratio;
+    	int height = image.getHeight();
+    	int width = image.getWidth();
+    	if(height > width) {
+    		ratio = (double) height / (double) width;
+    		width = smaller;
+    		height = (int) (width*ratio);
+    	} else if(height < width) {
+    		ratio = (double) width / (double) height;
+    		height = smaller;
+    		width = (int) (height*ratio);
+    	} else {
+    		width = smaller;
+    		height = smaller;
+    	}
+    	return resize(image, width, height);
+    }
+    
+	public static BufferedImage resize(BufferedImage image, int width,
+			int height) { 
 	    int w = image.getWidth(), h = image.getHeight();
-	    int type = image.getType() == 0? BufferedImage.TYPE_INT_ARGB : image.getType();
+	    int type = image.getType() == 0? 
+	    		BufferedImage.TYPE_INT_ARGB : image.getType();
 	    BufferedImage resizedImage = new BufferedImage(width, height, type);
 	    Graphics2D g = resizedImage.createGraphics();
 	    g.setComposite(AlphaComposite.Src);
-	    g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-	    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-	    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-
-	    //g.drawImage(image, 0, 0, width, height, null);
+	    g.setRenderingHint(RenderingHints.KEY_RENDERING,
+	    		RenderingHints.VALUE_RENDER_QUALITY);
+	    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+	    		RenderingHints.VALUE_ANTIALIAS_ON);
+	    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+	    		RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 	    g.scale((double)width/w,(double)height/h);
 	    g.drawRenderedImage(image, null);
 	    g.dispose();

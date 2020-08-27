@@ -1,4 +1,4 @@
-package main.misc;
+package main.misc.configuration;
 
 import java.util.List;
 
