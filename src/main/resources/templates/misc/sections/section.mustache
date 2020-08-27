@@ -1,10 +1,10 @@
 <div class="section {{#images}}page{{/images}}  {{^images}}{{name}}{{/images}}"
 		{{#previews}}
-			onclick="showPage('{{title}}', '/portfolio/sections/{{name}}/', '../../../')"
+			onclick="showPage('/portfolio/sections/{{name}}/')"
 		{{/previews}}
 >	
 	{{#images}}
-		<a class="back" onclick="showPage('Портфолио', '/portfolio/','../')" >
+		<a class="back" onclick="showPage('/portfolio/')" >
 			Вернуться к портфолио
 		</a>
 		<div class="images" >{{{images}}}</div>	
