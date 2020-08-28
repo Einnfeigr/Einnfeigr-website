@@ -22,6 +22,6 @@ Terms of the first release are:
 * [x] images previews
 * [x] logging
 #### Dashboard
-* [ ] authentication and autorization
+* [x] authentication and authorization
 * [ ] frontend
 * [ ] uploading/downloading sections
