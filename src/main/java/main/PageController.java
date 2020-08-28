@@ -3,9 +3,12 @@ package main;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,53 +40,45 @@ public class PageController {
 	private final static Logger logger = 
 			LoggerFactory.getLogger(PageController.class);
 	
+    @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET,
+    		produces = "application/json", headers = "target=body")
+    public ResponseEntity<Page> getPageBody(Device device, 
+    		@RequestParam(required=false) String ver,
+    		@PathVariable(value="page",required=false) Optional<String> pageName)
+    				throws TemplateException {
+    	try {
+    		String name;
+    		if(pageName.isPresent()) {
+    			name = pageName.get();
+    		} else {
+    			name = "main";
+    		}
+	    	Page page = new Page();
+	    	PageTemplateData data = getPageData(name, device, ver);
+	    	page.setTitle(data.getTitle());
+	    	page.setContent(data.getPage());
+	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
+    	} catch(Exception e) {
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			ControllerException exception = new ControllerException(e);
+			throw exception;
+    	}
+    }
+	
     @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET)
     public ModelAndView getPage(Device device, 
     		@RequestParam(required=false) String ver, 
-    		@RequestParam(required=false) String target,
-    		@PathVariable(required=false) String page) 
+    		@PathVariable(required=false) Optional<String> page) 
     				throws ControllerException {
-  		if(page == null) {
-  			page = "main";
-  		}
-    	ModelAndView mav;
-    	PageTemplateData data = new PageTemplateData();
     	try {
-	  		mav = createModelAndView(device, ver, target, data);
-      		switch(page) {
-	    		case("main"):
-		        	data = loadPage(compileMain(data), "static/text/ru/main", 
-	    					"templates/pages/main");
-    				data.setTitle("Главная");	
-	    			break;
-	    		case("portfolio"):
-	    			Template sections = new SectionsTemplate(
-	    					SectionsController.getSections());
-	    			data.setText(sections.compile());
-		        	data = loadPage(data, null, 
-    						"templates/pages/portfolio");
-    				data.setTitle("Портфолио");
-	    			break;
-	    		case("retouch"):
-	    			data = loadPage(compileRetouch(data), 
-	    					"static/text/ru/retouch", 
-	    					"templates/pages/retouch");
-    				data.setTitle("Ретушь");
-	    			break;
-	    		case("about"):
-	    			data = loadPage(data, "static/text/ru/about", 
-	    					"templates/pages/about");
-    				data.setTitle("Обо всем");
-	    			break;
-	    		case("contacts"):
-	    			data = loadPage(data, "static/text/ru/contacts", 
-	    					"templates/pages/contacts");
-    				data.setTitle("Контакты");
-	    			break;
-	    		default: 
-	    			logger.error("Invalid page address: "+page);
-	    			throw new NotFoundException("Invalid page address: "+page);
-	    	}
+    		String name;
+    		if(page.isPresent()) {
+    			name = page.get();
+    		} else {
+    			name = "main";
+    		}
+	  		ModelAndView mav = new ModelAndView("index");
+      		PageTemplateData data = getPageData(name, device, ver);
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			mav.getModel().put("isMobile", data.isMobile());
@@ -97,23 +92,82 @@ public class PageController {
 		}
     }
     
+    private PageTemplateData getPageData(String page, Device device, String ver) 
+    		throws IOException {
+    	PageTemplateData data = new PageTemplateData();
+    	data.setMobile(isMobile(data, device, ver));
+    	switch(page) {
+			case("main"):
+	        	data = loadPage(compileMain(data), "static/text/ru/main", 
+						"templates/pages/main");
+				data.setTitle("Главная");	
+				break;
+			case("portfolio"):
+				Template sections = new SectionsTemplate(
+						SectionsController.getSections());
+				data.setText(sections.compile());
+	        	data = loadPage(data, null, 
+						"templates/pages/portfolio");
+				data.setTitle("Портфолио");
+				break;
+			case("retouch"):
+				data = loadPage(compileRetouch(data), 
+						"static/text/ru/retouch", 
+						"templates/pages/retouch");
+				data.setTitle("Ретушь");
+				break;
+			case("about"):
+				data = loadPage(data, "static/text/ru/about", 
+						"templates/pages/about");
+				data.setTitle("Обо всем");
+				break;
+			case("contacts"):
+				data = loadPage(data, "static/text/ru/contacts", 
+						"templates/pages/contacts");
+				data.setTitle("Контакты");
+				break;
+			default: 
+				logger.error("Invalid page address: "+page);
+				throw new NotFoundException("Invalid page address: "+page);
+    	} 	
+    	return data;
+    }
+    
+    @RequestMapping(value= "/portfolio/sections/{section}",
+    		method = RequestMethod.GET, produces = "application/json",
+    		headers = "target=body")
+    public ResponseEntity<Page> getSectionBody(Device device, 
+    		@PathVariable("section") String sectionName,
+    		@RequestParam(required=false) String ver) throws TemplateException {
+    	try {
+	    	Page page = new Page();
+	    	Template template = new SectionTemplate(
+	    			SectionsController.getSection(sectionName));	    	
+	    	page.setTitle(Util.toUpperCase(sectionName));
+	    	page.setContent(template.compile());
+	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
+    	} catch(Exception e) {
+    		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			ControllerException exception = new ControllerException(e);
+			throw exception;
+    	}
+    }
+    
     @RequestMapping(value= "/portfolio/sections/{section}", 
     		method= RequestMethod.GET)
-    public ModelAndView getSection( Device device,
+    public ModelAndView getSection(Device device,
     		@PathVariable("section") String sectionName,
-    		@RequestParam(required=false) String ver,
-    		@RequestParam(required=false) String target
-    		) throws TemplateException {
+    		@RequestParam(required=false) String ver) throws TemplateException {
     	ModelAndView mav = null;
-    	SectionPageTemplateData data = new SectionPageTemplateData();
+    	PageTemplateData data = new SectionPageTemplateData();
       	try {
-      		mav = createModelAndView(device, ver, target, data);
+      		mav = new ModelAndView("index");
+      		data.setMobile(isMobile(data, device, ver));
 	    	data.setTitle(Util.toUpperCase(sectionName));
 	    	Section section = SectionsController.getSection(sectionName);
 	    	Template template = new SectionTemplate(section);
 	    	data.setPage(template.compile());
-	    	data.setSectionName(section.getName());
-	    	mav.getModel().put("name", data.getSectionName());
+	    	mav.getModel().put("name", section.getName());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			return mav;
@@ -162,32 +216,22 @@ public class PageController {
         return data;
     }
     
-    private ModelAndView createModelAndView(Device device,
-    		String ver, String target, PageTemplateData data) {
+    private boolean isMobile(
+    		PageTemplateData data, Device device, String ver) {
     	if(ver == null) {
     		ver = "";
     	}
-    	StringBuilder templatePath = new StringBuilder("");
     	if(device.isNormal() && ver.toString().equals("") 
     			|| ver.equals("desktop")) {
-    		data.setMobile(null);
+    		return false;
 	  	} else if((device.isMobile() && ver.toString().equals(""))
 	  			|| (device.isTablet() && ver.toString().equals(""))
     			|| ver.toString().equals("mobile")) {
-    		data.setMobile(true);
+    		return true;
 	  	} else {
 	  		logger.warn("Cannot specify device! ver:"+ver);
-	  		data.setMobile(null);
+	  		return true;
 	  	}
-    	if(target == null) {
-    		target = "";
-    	}
-    	if(target.equals("body")) {
-    		templatePath.append("placeholder");
-    	} else {
-    		templatePath.append("index");
-    	}
-    	return new ModelAndView(templatePath.toString());
     }
     
 }

@@ -57,13 +57,15 @@ function hideImagePreview(id) {
 	});
 }
 
-function showPage(title, address) {
+function showPage(address) {
 	$('.loading').show();
 	$('.previewBackground').fadeIn(50);
 	$.ajax({
 		url: address,
+		beforeSend: function(request) {
+		    request.setRequestHeader("target", "body");
+		 },
 		type: 'GET',
-		data: 'target=body',
 		success: function(a) {
 			var ver = '';
 			var version = checkVersion();
@@ -71,9 +73,9 @@ function showPage(title, address) {
 				ver = '?ver='+version;
 			}
 			$('.page').remove();
-			window.history.pushState(address, title+" | einnfeigr", address+ver);
-			document.title = title+' | einnfeigr';
-			$('.pageArea').append(a);
+			window.history.pushState(address, a.title+" | einnfeigr", address+ver);
+			document.title = a.title+' | einnfeigr';
+			$('.pageArea').append(a.content);
 			$('.previewBackground').fadeOut(500);
 			setTimeout(500, function() {
 				$('.loading').hide();
