@@ -25,7 +25,7 @@ public class ImageListTemplate extends EssentialTemplate {
 	@Override
 	public String compile() throws IOException {
 		if(images == null || images.size() == 0) {
-			throw new IllegalArgumentException("Images list contains no images");
+			throw new IllegalArgumentException("Images list contain no images");
 		}
 		StringBuilder sb = new StringBuilder("");
 		for(File image : images) {

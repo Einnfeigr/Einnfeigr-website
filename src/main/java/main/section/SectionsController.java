@@ -28,7 +28,7 @@ public class SectionsController {
 	}
 	
 	public static void loadSections() throws IOException {
-		Section main = new Section(Util.createFile(
+		Section main = new Section(Util.getFile(
 				"static/img/portfolio/sections/"));
 		sections = new HashMap<>();
 		addSections(main);
