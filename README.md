@@ -18,10 +18,6 @@ Terms of the first release are:
   * [ ] util
   * [ ] mvc controllers
   * [ ] image data and preview controllers
-* [ ] dashboard
+* [ ] work with google drive
 * [x] images previews
 * [x] logging
-#### Dashboard
-* [x] authentication and authorization
-* [ ] frontend
-* [ ] uploading/downloading sections
