@@ -50,10 +50,7 @@ public class ImageStorageService implements StorageService {
 			Util.writeFile(localFile, Util.readFile(file));
 		}
 		try {
-			SectionsController.loadSections();
 			ImagePreviewController.generatePreview(localFile);
-		} catch (IOException e) {
-			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		} catch (PreviewException e) {
 			logger.warn("Uploaded image preview exists", e);
 		}

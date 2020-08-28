@@ -29,7 +29,6 @@
 	box-sizing: border-box;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
 	justify-self: center;
 	padding: 135px 40px 35px 40px;
 }

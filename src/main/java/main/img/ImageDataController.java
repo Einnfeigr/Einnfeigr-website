@@ -45,6 +45,9 @@ public class ImageDataController {
 		if(files == null || files.size() == 0) {
 			logger.warn("Found 0 files");
 		}
+		while(files.size() > 10) {
+			files.remove(files.size()-1);
+		}
 		return files;
 	}
 	
@@ -79,8 +82,8 @@ public class ImageDataController {
 						ImagePreviewController.SMALLER_SIDE),
 						Util.getExtension(i.getFile()), previewFile);
 			} catch (IOException e) {
-				e.printStackTrace();
-			}
+				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			} 
 		});
 	}
 	
@@ -106,7 +109,7 @@ public class ImageDataController {
 		List<Integer> toRemove = new ArrayList<>();
 		//clean of unindexed images
 		for(ImageData data : images) {
-			if(!indexedImages.contains(data)) {
+			if(!indexedImages.contains(data) || !data.getFile().exists()) {
 				toRemove.add(images.indexOf(data));
 			}
 		}

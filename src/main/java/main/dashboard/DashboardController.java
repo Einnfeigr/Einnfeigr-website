@@ -1,6 +1,5 @@
 package main.dashboard;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.slf4j.Logger;
@@ -18,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
+import main.exception.PreviewException;
+import main.img.ImagePreviewController;
 import main.misc.Util;
+import main.section.SectionsController;
 import main.template.EssentialTemplate;
 import main.template.Template;
 import main.template.data.page.PageTemplateData;
@@ -65,10 +67,10 @@ public class DashboardController {
 	
 	@RequestMapping(value="/dashboard/upload", method=RequestMethod.POST)
 	public ResponseEntity<String> uploadFile(
-			@RequestParam("file") MultipartFile file,
+			@RequestParam("file") MultipartFile[] files,
 			@RequestParam("path") String path) {
 		if(path == null) {
-			path = ((File)file).getParentFile().getAbsolutePath();
+			path = "/img/portfolio/sections/ретушь/";
 		}
 		try {
 			Template pageTemplate = new EssentialTemplate("templates/index");
@@ -76,13 +78,22 @@ public class DashboardController {
 			Template template = new EssentialTemplate(
 					"static/text/ru/dashboard/upload/success");
 			pageData.setPage(template.compile());
-			storageService.store(file, path);
+			for(MultipartFile file : files) {
+				storageService.store(file, path);
+				
+			}		
+			try {
+				SectionsController.loadSections();
+
+			} catch (IOException e) {
+				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			}
 			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION)
 					.body(pageTemplate.compile());
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			return ResponseEntity.badRequest().body(null);
 		}
-		
+
 	}
 }
