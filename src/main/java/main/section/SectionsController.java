@@ -28,19 +28,19 @@ public class SectionsController {
 	}
 	
 	public static void loadSections() throws IOException {
-		Section main = new Section(Util.getFile(
+		/* Section main = new Section(Util.getFile(
 				"static/img/sections"));
 		sections = new HashMap<>();
-		addSections(main);
+		addSections(main); */
 	}
 	
 	private static void addSections(Section section) {
-		if(section.getSections().isEmpty()) {
+		/* if(section.getSections().isEmpty()) {
 			return;
 		}
 		section.getSections().forEach((k, v) -> {
 			sections.put(k, v);
 			addSections(v);
-		});
+		}); */
 	}
 }

@@ -13,12 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.google.gson.JsonSyntaxException;
-
+import main.drive.DriveDao;
 import main.img.ImageData;
-import main.img.ImageDataDao;
 import main.misc.configuration.ProjectConfiguration;
 import main.misc.configuration.SecurityConfiguration;
+import main.section.Section;
 
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})
@@ -29,16 +28,23 @@ public class ImageDataDaoTest {
 			LoggerFactory.getLogger(ImageDataDaoTest.class);
 	
 	@Autowired
-	ImageDataDao dao;
+	DriveDao dao;
 	
 	@Test
-	public void getFilesTest() throws JsonSyntaxException, IOException {
-		List<ImageData> dataList = dao.getAll();
+	public void getAllFilesTest() throws IOException {
+		List<ImageData> dataList = dao.getAllFiles();
 		logger.info("Obtained "+dataList.size()+" files");
 		logger.info("1: "+dataList.get(0).getId());
 		logger.info("2: "+dataList.get(1).getId());
 		assertThat(dataList.get(0));
 		assertThat(dataList.get(1));
+	}
+	
+	@Test
+	public void getAllFoldersTest() throws IOException {
+		List<Section> sections = dao.getAllFolders();
+		assertThat(sections.size() == 2);
+		assertThat(sections.get(0).getSections().size() == 1);
 	}
 	
 }

@@ -26,6 +26,7 @@ public class SectionTemplate extends EssentialTemplate {
 	
 	protected String parseImages(Section section, int count) throws IOException {
 		StringBuilder images = new StringBuilder();
+		/*
 		List<File> imagesList = section.getImages();
 		for(int x = 0; x < count; x++) {
 			if(x >= imagesList.size()) {
@@ -35,8 +36,8 @@ public class SectionTemplate extends EssentialTemplate {
 			template.setTemplatePath(imageTemplatePath);
 			template.setData(new ImageTemplateData(imagesList.get(x)));
 			images.append(template.compile());
-		}
-		return images.toString();
+		} */
+		return images.toString(); 
 	}
 	
 }
