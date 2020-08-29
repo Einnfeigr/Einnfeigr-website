@@ -23,6 +23,10 @@ public class ImageDataController {
 	private DriveDao dao;
 	
 	public ImageDataController() {
+		update();
+	}
+
+	private void update() {
 		try {
 			images = dao.getAllFiles();
 		} catch(Exception e) {
@@ -33,12 +37,11 @@ public class ImageDataController {
 			}
 		}
 	}
-
+	
 	public List<File> getLatestImages() {
 		List<File> files = new ArrayList<>();
 		try {
-			List<ImageData> dataList = dao.getLatest();
-			dataList.forEach(d -> files.add(new File(
+			images.forEach(d -> files.add(new File(
 					"https://drive.google.com/uc?id="+d.getId()
 					+"&export=download")));
 		} catch(Exception e) {

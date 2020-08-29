@@ -32,4 +32,8 @@ public class DriveFile {
 		this.parentId = parentId;
 	}
 	
+	public boolean isDirectory() {
+		return mimeType.equals("application/vnd.google-apps.folder");
+	}
+	
 }

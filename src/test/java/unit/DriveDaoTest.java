@@ -22,10 +22,10 @@ import main.section.Section;
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ImageDataDaoTest {
+public class DriveDaoTest {
 
 	private final static Logger logger = 
-			LoggerFactory.getLogger(ImageDataDaoTest.class);
+			LoggerFactory.getLogger(DriveDaoTest.class);
 	
 	@Autowired
 	DriveDao dao;
@@ -43,8 +43,14 @@ public class ImageDataDaoTest {
 	@Test
 	public void getAllFoldersTest() throws IOException {
 		List<Section> sections = dao.getAllFolders();
-		assertThat(sections.size() == 2);
-		assertThat(sections.get(0).getSections().size() == 1);
+
+		logger.info("obtained "+sections.size()+" folders");
+		for(Section cSection : sections) {
+			logger.info(cSection.getId());
+		}
+		assertThat(sections.size() > 1 
+				&& sections.get(0).getSections().size() > 0 
+				|| sections.get(1).getSections().size() > 0);
 	}
 	
 }

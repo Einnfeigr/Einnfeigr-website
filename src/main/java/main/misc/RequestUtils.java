@@ -6,7 +6,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import main.drive.DriveMethods;
+
 public class RequestUtils {
+	
+	private final static Logger logger = 
+			LoggerFactory.getLogger(RequestUtils.class);
 	
 	public static final String rootId = "1zTDcH9LuuZ0KUI2c3K6f-r5pAUt_mrpa";
 	private static String key;
@@ -15,10 +23,23 @@ public class RequestUtils {
 		RequestUtils.key = key;
 	}
 	
-	public static String generateRequestUrl(String id, String params) {
-		return "https://www.googleapis.com/drive/v2/files?q=%27"+id
-				+"%27+in+parents&key="+key+params;
+	public static String generateRequestUrl(DriveMethods method, String id, 
+			String params) {
+		switch(method.ordinal()) {
+		case(0):
+			return "https://www.googleapis.com/drive/v2/files?q=%27"+id
+					+"%27+in+parents&key="+key+params;
+		case(1):
+			return "https://www.googleapis.com/drive/v2/files/"+id
+					+"?key="+key+params;
+
+		default:
+			return null;	
+		}
+		
 	}    
+	
+	
     public static String performGetRequest(String address) throws IOException {
     	return performRequest(address, "GET");
     }
@@ -35,6 +56,11 @@ public class RequestUtils {
 			do {
 				content.append((char)br.read());
 			} while(br.ready());
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("performed "+method+" request on address '"
+					+address+"'");
+			logger.debug(content.toString());
 		}
 		return content.toString();
     }
