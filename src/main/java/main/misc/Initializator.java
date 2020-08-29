@@ -20,7 +20,7 @@ public class Initializator implements InitializingBean {
 	
 	@Override
 	public void afterPropertiesSet() {
-		try {
+		/*try {
 			imageController.loadImages();
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -30,6 +30,6 @@ public class Initializator implements InitializingBean {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		ImagePreviewController.generatePreviews();
+		ImagePreviewController.generatePreviews(); */
 	}	
 }

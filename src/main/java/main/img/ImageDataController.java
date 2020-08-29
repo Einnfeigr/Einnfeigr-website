@@ -1,6 +1,7 @@
 package main.img;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import main.misc.Util;
 import main.misc.filter.ImagePreviewFileFilter;
@@ -21,13 +23,13 @@ public class ImageDataController {
 	
 	List<ImageData> images;
 
+	@Autowired
 	private ImageDataDao dao;
 
 	private static final String PREVIEW_PATH = "static/img/preview/latest/";
 	private static final String COPY_PATH = "static/img/latest/";
 	
-	public ImageDataController(ImageDataDao dao) {
-		this.dao = dao;
+	public ImageDataController() {
 		try {
 			images = dao.getAll();
 		} catch(Exception e) {
@@ -40,13 +42,19 @@ public class ImageDataController {
 	}
 
 	public static List<File> getLatestImages() {
-		List<File> files = Util.parseFiles(Util.getFile(COPY_PATH), true,
-				new ImagePreviewFileFilter());
-		if(files == null || files.size() == 0) {
-			logger.warn("Found 0 files");
-		}
-		while(files.size() > 10) {
-			files.remove(files.size()-1);
+		List<File> files = null;
+		try {
+			files = Util.parseFiles(Util.getFile(COPY_PATH), true,
+					new ImagePreviewFileFilter());
+			if(files == null || files.size() == 0) {
+				logger.warn("Found 0 files");
+			} else {
+				while(files.size() > 10) {
+					files.remove(files.size()-1);
+				}
+			}
+		} catch(FileNotFoundException e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
 		return files;
 	}
@@ -69,7 +77,7 @@ public class ImageDataController {
 	}
 	
 	private void saveImages(List<ImageData> images) {
-		images.forEach(i -> {
+		/* images.forEach(i -> {
 			File previewFile = new File(Util.toAbsoluteUrl(
 					PREVIEW_PATH+i.getName()));
 			File file = new File(Util.toAbsoluteUrl(
@@ -84,14 +92,15 @@ public class ImageDataController {
 			} catch (IOException e) {
 				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			} 
-		});
+		}); */
 	}
 	
 	private List<ImageData> parseImagesData(File file) {
 		if(!file.isDirectory()) {
 			return null;
-		} 
+		}
 		List<ImageData> dataList = new ArrayList<>();
+		/*
 		for(File cFile : file.listFiles()) {
 			if(Util.isImage(cFile)) {				
 				ImageData data = new ImageData();
@@ -101,11 +110,12 @@ public class ImageDataController {
 			} else if(cFile.isDirectory()) {
 				dataList.addAll(parseImagesData(cFile));
 			}
-		} 
-		return dataList;
+		} */
+		return dataList; 
 	}
 	
 	private void merge(List<ImageData> images, List<ImageData> indexedImages) {
+		/*
 		List<Integer> toRemove = new ArrayList<>();
 		//clean of unindexed images
 		for(ImageData data : images) {
@@ -124,5 +134,6 @@ public class ImageDataController {
 				images.add(data);
 			}
 		}
+		*/
 	}
 }

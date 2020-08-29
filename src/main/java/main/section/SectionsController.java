@@ -20,7 +20,7 @@ public class SectionsController {
 		if(sections == null) {
 			loadSections();
 		}
-		name = "/static/img/portfolio/sections/"+name;
+		name = "/static/img/sections/"+name;
 		if(!sections.containsKey(name)) {
 			throw new IOException(name+" section can't be found");
 		}
@@ -29,7 +29,7 @@ public class SectionsController {
 	
 	public static void loadSections() throws IOException {
 		Section main = new Section(Util.getFile(
-				"static/img/portfolio/sections/"));
+				"static/img/sections"));
 		sections = new HashMap<>();
 		addSections(main);
 	}

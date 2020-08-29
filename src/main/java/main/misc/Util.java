@@ -37,6 +37,8 @@ public class Util {
 	public final static String EXCEPTION_LOG_MESSAGE = 
 			"Exception has been caught";
 	
+	private final static ClassLoader classLoader = Util.class.getClassLoader();
+	
     public static boolean isAbsolute(File file) throws FileNotFoundException {
     	return isAbsolute(file.getAbsolutePath());
     }
@@ -114,8 +116,14 @@ public class Util {
     	return files;
     }
     
-    public static File getFile(String path) {
-    	return new File(toAbsoluteUrl(path));
+    public static File getFile(String path) throws FileNotFoundException {
+    	File file;
+    	try {
+    		file = new File(classLoader.getResource(path).getFile());
+    	} catch(NullPointerException e) {
+    		throw new FileNotFoundException(path+" file cannot be found");
+    	}
+    	return file;
     }
     
     public static File createFile(File file) {

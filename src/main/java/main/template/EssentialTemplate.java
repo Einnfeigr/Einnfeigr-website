@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import org.springframework.util.ResourceUtils;
+
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -59,13 +61,10 @@ public class EssentialTemplate implements Template {
 			throw new IllegalArgumentException(
 					"Template path must be not null");
 		}
-	   	File template = new File(templatePath);
+	   	File template = Util.getFile(templatePath);
 	   	if(!template.exists()) {
-	   		template = new File(Util.toAbsoluteUrl(templatePath));
-	   		if(!template.exists()) {
-	   			throw new FileNotFoundException(
-	   					"File '"+templatePath+"' cannot be found");
-	   		}
+	   		throw new FileNotFoundException(
+	   				"File '"+templatePath+"' cannot be found");
 	   	}
 	   	if(!template.isFile()) {
 	   		throw new IllegalArgumentException(
