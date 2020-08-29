@@ -25,9 +25,6 @@ public class ImageDataController {
 
 	@Autowired
 	private ImageDataDao dao;
-
-	private static final String PREVIEW_PATH = "static/img/preview/latest/";
-	private static final String COPY_PATH = "static/img/latest/";
 	
 	public ImageDataController() {
 		try {
@@ -43,7 +40,7 @@ public class ImageDataController {
 
 	public static List<File> getLatestImages() {
 		List<File> files = null;
-		try {
+		/*try {
 			files = Util.parseFiles(Util.getFile(COPY_PATH), true,
 					new ImagePreviewFileFilter());
 			if(files == null || files.size() == 0) {
@@ -55,7 +52,7 @@ public class ImageDataController {
 			}
 		} catch(FileNotFoundException e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-		}
+		}*/
 		return files;
 	}
 	
@@ -67,9 +64,6 @@ public class ImageDataController {
 		if(indexedImages != null) {
 			logger.info("indexed "+indexedImages.size()+" images");
 			merge(images, indexedImages);
-			Comparator<ImageData> comparator = (d1, d2) -> d1.compareTo(d2);
-			images.sort(comparator);
-			dao.save(images);
 			saveImages(images);
 		} else {
 			logger.warn("indexed 0 images");
