@@ -32,13 +32,11 @@ public class RequestUtils {
 		case(1):
 			return "https://www.googleapis.com/drive/v2/files/"+id
 					+"?key="+key+params;
-
 		default:
 			return null;	
 		}
 		
 	}    
-	
 	
     public static String performGetRequest(String address) throws IOException {
     	return performRequest(address, "GET");

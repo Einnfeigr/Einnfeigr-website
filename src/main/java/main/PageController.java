@@ -24,7 +24,7 @@ import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
 import main.section.Section;
-import main.section.SectionsController;
+import main.section.SectionController;
 import main.template.EssentialTemplate;
 import main.template.ImageListTemplate;
 import main.template.SectionTemplate;
@@ -43,6 +43,8 @@ public class PageController {
 	
 	@Autowired
 	ImageDataController dataController;
+	@Autowired 
+	SectionController sectionController;
 	
     @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET,
     		produces = "application/json", headers = "target=body")
@@ -108,7 +110,7 @@ public class PageController {
 				break;
 			case("portfolio"):
 				Template sections = new SectionsTemplate(
-						SectionsController.getSections());
+						sectionController.getMainSection().getSections());
 				data.setText(sections.compile());
 	        	data = loadPage(data, null, 
 						"templates/pages/portfolio");
@@ -146,7 +148,7 @@ public class PageController {
     	try {
 	    	Page page = new Page();
 	    	Template template = new SectionTemplate(
-	    			SectionsController.getSection(sectionName));	    	
+	    			sectionController.getSection(sectionName));	    	
 	    	page.setTitle(Util.toUpperCase(sectionName));
 	    	page.setContent(template.compile());
 	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
@@ -168,7 +170,7 @@ public class PageController {
       		mav = new ModelAndView("index");
       		data.setMobile(isMobile(data, device, ver));
 	    	data.setTitle(Util.toUpperCase(sectionName));
-	    	Section section = SectionsController.getSection(sectionName);
+	    	Section section = sectionController.getSection(sectionName);
 	    	Template template = new SectionTemplate(section);
 	    	data.setPage(template.compile());
 	    	mav.getModel().put("name", section.getName());

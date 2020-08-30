@@ -1,7 +1,5 @@
 package main.dashboard;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
-import main.exception.PreviewException;
-import main.img.ImagePreviewController;
 import main.misc.Util;
-import main.section.SectionsController;
 import main.template.EssentialTemplate;
 import main.template.Template;
 import main.template.data.page.PageTemplateData;
@@ -81,12 +76,6 @@ public class DashboardController {
 			for(MultipartFile file : files) {
 				storageService.store(file, path);
 				
-			}		
-			try {
-				SectionsController.loadSections();
-
-			} catch (IOException e) {
-				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			}
 			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION)
 					.body(pageTemplate.compile());

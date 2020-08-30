@@ -1,6 +1,5 @@
 package main.drive;
 
-
 import static main.misc.RequestUtils.generateRequestUrl;
 import static main.misc.RequestUtils.performGetRequest;
 import static main.misc.RequestUtils.rootId;
@@ -18,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import main.img.ImageData;
+import main.misc.RequestUtils;
 import main.section.Section;
 
 public class DriveDao {
@@ -28,6 +28,10 @@ public class DriveDao {
 	private static Type token = 
 			new TypeToken<Map<String,List<DriveFile>>>() {}.getType();
 	
+	//injection in constructor guarantees RequestUtils initialization
+	//can be refactored
+	private DriveDao(RequestUtils utils) {}
+			
 	public List<ImageData> getLatest() throws  IOException {
 		String content = performGetRequest(generateRequestUrl(
 				DriveMethods.FILE_LIST, rootId,
@@ -38,7 +42,7 @@ public class DriveDao {
 	}
 	
 	public List<ImageData> getAllFiles() throws IOException {
-		return parseFiles(getDirectoryContent(rootId));
+		return parseFiles(getDirectoryContent(rootId), true);
 	}
 	
 	public List<Section> getAllFolders() throws IOException {
@@ -69,12 +73,17 @@ public class DriveDao {
 			return sectionList;
 		}
 		Section section = getSection(file);
-		sectionList.add(section);
+		//TODO refactor
 		sectionList.forEach(s -> {
+			if(logger.isDebugEnabled()) {
+				logger.debug("section: "+file.getId()+" | "+file.getTitle());
+				logger.debug("parent id: "+file.getParentId());
+			}
 			if(s.getId().equals(file.getParentId())) {
 				s.addSection(section);
 			}
 		});
+		sectionList.add(section);
 		List<DriveFile> files = getDirectoryContent(file.getId());
 		for(DriveFile cFile : files) {
 			if(cFile.isDirectory()) {
@@ -88,20 +97,21 @@ public class DriveDao {
 		Section section = new Section();
 		section.setId(file.getId());
 		section.setName(file.getTitle());
-		section.setImages(parseFiles(getDirectoryContent(file.getId())));
+		section.setImages(parseFiles(getDirectoryContent(file.getId()), false));
 		return section;
 	}
 	
-	private List<ImageData> parseFiles(List<DriveFile> files)
+	private List<ImageData> parseFiles(List<DriveFile> files, boolean recursive)
 			throws IOException {
 		List<ImageData> dataList = new ArrayList<>();
 		for(DriveFile file : files) {
-			if(file.isDirectory()) {
-				dataList.addAll(parseFiles(getDirectoryContent(file.getId())));		
-			} else {
+			if(!file.isDirectory()) {
 				ImageData data = new ImageData();
 				data.setId(file.getId());
 				dataList.add(data);
+			} else if(recursive) {
+				dataList.addAll(parseFiles(getDirectoryContent(file.getId()),
+						recursive));		
 			}
 		}
 		return dataList;

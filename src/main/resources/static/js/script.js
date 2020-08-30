@@ -32,7 +32,7 @@ function removeDiv(cl) {
 	}, 500);
 }
 
-function showImagePreview(image) {
+function showImage(image) {
 	$('.loading').show();
 	$('.previewBackground').fadeIn(50);
 	$.ajax({

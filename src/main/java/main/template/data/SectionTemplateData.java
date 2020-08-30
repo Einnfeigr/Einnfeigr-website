@@ -4,6 +4,7 @@ public class SectionTemplateData implements TemplateData {
 
 	String name;
 	String images;
+	String id;
 
 
 	public String getName() {
@@ -20,6 +21,14 @@ public class SectionTemplateData implements TemplateData {
 
 	public void setImages(String images) {
 		this.images = images;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

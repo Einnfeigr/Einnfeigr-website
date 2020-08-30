@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -28,9 +26,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import main.misc.filter.SimpleFileFilter;
+import main.img.ImageData;
 import main.img.ImagePreviewController;
 import main.misc.filter.FileFilter;
+import main.misc.filter.SimpleFileFilter;
 
 public class Util {
 	
@@ -348,4 +347,9 @@ public class Util {
 	    g.dispose();
 	    return resizedImage; 
 	}   
+	
+	public static String getDownloadUrl(ImageData data) {
+		return "https://drive.google.com/uc?id="+data.getId()
+		+"&export=download";
+	}
 }
