@@ -3,8 +3,8 @@ package main.template;
 import java.io.IOException;
 import java.util.List;
 
+import main.drive.DriveUtils;
 import main.img.ImageData;
-import main.misc.Util;
 import main.section.Section;
 import main.template.data.ImageTemplateData;
 import main.template.data.SectionTemplateData;
@@ -38,7 +38,7 @@ public class SectionTemplate extends EssentialTemplate {
 			if(x >= imagesList.size()) {
 				url = "/img/placeholder.jpg";
 			} else {
-				url = Util.getDownloadUrl(imagesList.get(x));
+				url = DriveUtils.getDownloadUrl(imagesList.get(x));
 			}
 			template.setData(new ImageTemplateData(url));
 			images.append(template.compile());

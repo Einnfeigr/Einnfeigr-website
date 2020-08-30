@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.drive.DriveDao;
+import main.drive.DriveUtils;
 import main.img.ImageDataController;
-import main.misc.RequestUtils;
 import main.misc.Util;
 
 public class SectionController {
@@ -47,7 +47,7 @@ public class SectionController {
 			List<Section> sectionList = dao.getAllFolders();
 			sections = new HashMap<>();
 			sectionList.forEach(s -> {
-				if(s.getId().equals(RequestUtils.rootId)) {
+				if(s.getId().equals(DriveUtils.rootId)) {
 					mainSection = s;
 				}
 				sections.put(s.getId(), s);

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.drive.DriveDao;
+import main.drive.DriveUtils;
 import main.misc.Util;
 
 public class ImageDataController {
@@ -39,7 +40,8 @@ public class ImageDataController {
 	public List<File> getLatestImages() {
 		List<File> files = new ArrayList<>();
 		try {
-			images.forEach(d -> files.add(new File(Util.getDownloadUrl(d))));
+			images.forEach(d -> files.add(
+					new File(DriveUtils.getDownloadUrl(d))));
 		} catch(Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}

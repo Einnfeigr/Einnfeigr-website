@@ -1,9 +1,5 @@
 package main.drive;
 
-import static main.misc.RequestUtils.generateRequestUrl;
-import static main.misc.RequestUtils.performGetRequest;
-import static main.misc.RequestUtils.rootId;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -17,7 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import main.img.ImageData;
-import main.misc.RequestUtils;
+import main.misc.BufferedRequestBuilder;
+import main.misc.RequestBuilder;
 import main.section.Section;
 
 public class DriveDao {
@@ -26,41 +23,47 @@ public class DriveDao {
 			LoggerFactory.getLogger(DriveDao.class);
 	
 	private static Type token = 
-			new TypeToken<Map<String,List<DriveFile>>>() {}.getType();
+			new TypeToken<Map<String,List<DriveFile>>>() {}.getType();		
+
+	private static RequestBuilder requestBuilder = 
+			new BufferedRequestBuilder();
+
 	
 	//injection in constructor guarantees RequestUtils initialization
 	//can be refactored
-	private DriveDao(RequestUtils utils) {}
+	private DriveDao(DriveUtils utils) {}
 			
 	public List<ImageData> getLatest() throws  IOException {
-		String content = performGetRequest(generateRequestUrl(
-				DriveMethods.FILE_LIST, rootId,
-				"&orderby=createdTime&pageSize=10&fields=items(id)"));
+		String content = requestBuilder.performGetRequest(
+				DriveUtils.generateRequestUrl(
+						DriveMethods.FILE_LIST, DriveUtils.rootId,
+						"&orderby=createdTime&pageSize=10&fields=items(id)"));
 		Map<String,List<ImageData>> map = new Gson().fromJson(
 				content.toString(), token);
 		return map.get("items");
 	}
 	
 	public List<ImageData> getAllFiles() throws IOException {
-		return parseFiles(getDirectoryContent(rootId), true);
+		return parseFiles(getDirectoryContent(DriveUtils.rootId), true);
 	}
 	
 	public List<Section> getAllFolders() throws IOException {
-		return parseFolders(getFile(rootId),
+		return parseFolders(getFile(DriveUtils.rootId),
 				new ArrayList<Section>());
 	}
 	
 	private DriveFile getFile(String id) throws IOException {
-		String content = performGetRequest(generateRequestUrl(
-				DriveMethods.FILE_GET, id,
-				"&fields=id,mimeType,title"));
+		String content = requestBuilder.performGetRequest(
+				DriveUtils.generateRequestUrl(
+						DriveMethods.FILE_GET, id,"&fields=id,mimeType,title"));
 		return new Gson().fromJson(content, DriveFile.class);
 	}
 	
 	private List<DriveFile> getDirectoryContent(String id)
 			throws IOException {
-		String content = performGetRequest(generateRequestUrl(
-				DriveMethods.FILE_LIST, id,
+		String content = requestBuilder.performGetRequest(
+				DriveUtils.generateRequestUrl(
+						DriveMethods.FILE_LIST, id,
 				"&fields=items(id,mimeType,title,parents(id))"));
 		Map<String,List<DriveFile>> map =  new Gson().fromJson(content, token);
 		List<DriveFile> files = map.get("items");
