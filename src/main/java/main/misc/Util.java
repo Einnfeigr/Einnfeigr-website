@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import main.misc.filter.SimpleFileFilter;
 import main.img.ImagePreviewController;
 import main.misc.filter.FileFilter;
+import main.misc.filter.SimpleFileFilter;
 
 public class Util {
 	
@@ -36,6 +36,8 @@ public class Util {
 			LoggerFactory.getLogger(ImagePreviewController.class);
 	public final static String EXCEPTION_LOG_MESSAGE = 
 			"Exception has been caught";
+	
+	private final static ClassLoader classLoader = Util.class.getClassLoader();
 	
     public static boolean isAbsolute(File file) throws FileNotFoundException {
     	return isAbsolute(file.getAbsolutePath());
@@ -114,8 +116,8 @@ public class Util {
     	return files;
     }
     
-    public static File getFile(String path) {
-    	return new File(toAbsoluteUrl(path));
+    public static File getFile(String path) throws FileNotFoundException {
+    	return new File(classLoader.getResource("").getFile()+path);
     }
     
     public static File createFile(File file) {
@@ -208,7 +210,8 @@ public class Util {
 		}
     }
     
-    public static void copyImage(String extension, InputStream stream, File dest) {
+    public static void copyImage(String extension, InputStream stream,
+    		File dest) {
     	BufferedImage image = null;
     	try {
 	        image = ImageIO.read(stream);
@@ -242,11 +245,8 @@ public class Util {
     		throw new FileNotFoundException();
     	}
     	StringBuilder content = new StringBuilder("");
-    	try(BufferedReader br = new BufferedReader(new InputStreamReader(
-    			new FileInputStream(file)))) {
-    		while(br.ready()) {
-    			content.append(br.readLine());
-    		}
+    	for(String string : Files.readAllLines(file.toPath())) {
+    		content.append(string+"\n");
     	}
     	return content.toString();
     }
@@ -273,7 +273,8 @@ public class Util {
     		if(cFile.isDirectory()) {
     			names.addAll(parseNames(cFile, baseFile));
     		}
-    		names.add(file.getAbsolutePath().replace(baseFile.getAbsolutePath(), ""));
+    		names.add(file.getAbsolutePath().replace(baseFile.getAbsolutePath(),
+    				""));
     	}
     	return names;
     }
@@ -338,4 +339,5 @@ public class Util {
 	    g.dispose();
 	    return resizedImage; 
 	}   
+
 }

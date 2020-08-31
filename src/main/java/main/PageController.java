@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
@@ -23,7 +24,7 @@ import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
 import main.section.Section;
-import main.section.SectionsController;
+import main.section.SectionController;
 import main.template.EssentialTemplate;
 import main.template.ImageListTemplate;
 import main.template.SectionTemplate;
@@ -39,6 +40,11 @@ public class PageController {
 	
 	private final static Logger logger = 
 			LoggerFactory.getLogger(PageController.class);
+	
+	@Autowired
+	ImageDataController dataController;
+	@Autowired 
+	SectionController sectionController;
 	
     @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET,
     		produces = "application/json", headers = "target=body")
@@ -104,7 +110,7 @@ public class PageController {
 				break;
 			case("portfolio"):
 				Template sections = new SectionsTemplate(
-						SectionsController.getSections());
+						sectionController.getMainSection().getSections());
 				data.setText(sections.compile());
 	        	data = loadPage(data, null, 
 						"templates/pages/portfolio");
@@ -142,7 +148,7 @@ public class PageController {
     	try {
 	    	Page page = new Page();
 	    	Template template = new SectionTemplate(
-	    			SectionsController.getSection(sectionName));	    	
+	    			sectionController.getSection(sectionName));	    	
 	    	page.setTitle(Util.toUpperCase(sectionName));
 	    	page.setContent(template.compile());
 	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
@@ -164,7 +170,7 @@ public class PageController {
       		mav = new ModelAndView("index");
       		data.setMobile(isMobile(data, device, ver));
 	    	data.setTitle(Util.toUpperCase(sectionName));
-	    	Section section = SectionsController.getSection(sectionName);
+	    	Section section = sectionController.getSection(sectionName);
 	    	Template template = new SectionTemplate(section);
 	    	data.setPage(template.compile());
 	    	mav.getModel().put("name", section.getName());
@@ -180,7 +186,7 @@ public class PageController {
     
     private PageTemplateData compileMain(PageTemplateData data) {
     	try {
-    		List<File> latest = ImageDataController.getLatestImages();
+    		List<File> latest = dataController.getLatestImages();
     		Template template = new ImageListTemplate(latest);
     		String images = template.compile();
     		TextTemplateData mData = new MainTextTemplateData(images);

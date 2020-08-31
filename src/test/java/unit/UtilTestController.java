@@ -1,10 +1,4 @@
 package unit;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import main.misc.Util;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.image.BufferedImage;
@@ -13,8 +7,25 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import main.misc.Util;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UtilTestController {
+
+	private final static Logger logger = 
+			LoggerFactory.getLogger(UtilTestController.class);
+	
+	@Test
+	public void testGetFile() throws FileNotFoundException {
+		File file = Util.getFile("static/img");
+		logger.info(file.getAbsolutePath());
+	}
 	
 	@Test
 	public void testResize() {

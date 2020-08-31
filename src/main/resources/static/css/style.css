@@ -9,6 +9,10 @@ body {
 	margin: 0;
 }
 
+.textDiv img {
+	background: url(/img/placeholder.png) no-repeat scroll 0 0;
+}
+
 .backgroundImage {
 	position: fixed;
 	z-index: -1;

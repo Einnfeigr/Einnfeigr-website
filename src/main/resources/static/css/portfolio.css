@@ -65,8 +65,11 @@
 }
 
 .previews img {
+	box-shadow: 1px 1px 10px rgba(0,0,0,0.3);
+	object-fit: cover;
 	position: relative;
-	width: inherit;
+	width: 20vw;
+	height: 15vw;
 	margin: auto;
 }
 

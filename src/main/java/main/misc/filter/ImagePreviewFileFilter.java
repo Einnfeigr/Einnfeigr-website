@@ -13,7 +13,8 @@ public class ImagePreviewFileFilter implements FileFilter {
 			return false;
 		}
 		String name = file.getName();
-		if(name.contains("background") || name.contains("logo")) {
+		if(name.contains("background") || name.contains("logo") 
+				|| name.contains("placeholder")) {
 			return false;
 		}
 		switch(extension) {

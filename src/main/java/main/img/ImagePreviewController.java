@@ -1,6 +1,7 @@
 package main.img;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,43 +34,51 @@ public class ImagePreviewController {
 		if(image.getAbsolutePath().replace("\\", "/").contains("preview")) {
 			throw new PreviewException();
 		}
-		File output = Util.getFile(image.getAbsolutePath()
-				.replace("\\", "/")
-				.replace("static/img/", "static/img/preview/"));
+		File output = Util.getFile(Util.toRelativeUrl(image.getAbsolutePath())
+				.replace("/static/img/",
+						"static/img/preview/"));
 		//No need to create preview if one exists
 		if(output.exists()) {
 			throw new PreviewException();
 		}
 		Util.createFile(output);
-		ImageIO.write(Util.resizeBySmaller(ImageIO.read(image), 
-				SMALLER_SIDE),
+		ImageIO.write(Util.resizeBySmaller(ImageIO.read(image),  SMALLER_SIDE),
 				Util.getExtension(image), output);
 	}
 	
 	public static void generatePreviews() {
-		File file = Util.getFile("static/img/");
-		List<File> images = Util.parseFiles(file, true, 
-				new ImagePreviewFileFilter());
-		int count = 0;
-		for(File image : images) {
-			try {
-				generatePreview(image);
-				count++;
-			} catch (IOException | IllegalArgumentException e) {
-				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-			} catch(PreviewException e) {
-				continue;
+		try {
+			File file = Util.getFile("static/img");
+			List<File> images = Util.parseFiles(file, true, 
+					new ImagePreviewFileFilter());
+			int count = 0;
+			for(File image : images) {
+				try {
+					generatePreview(image);
+					count++;
+				} catch (IOException | IllegalArgumentException e) {
+					logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+				} catch(PreviewException e) {
+					continue;
+				}
 			}
+			logger.info("Created "+count+" previews of "
+					+images.size()+" files");
+		} catch(FileNotFoundException e) {
+			logger.error("Error creating previews", e);
 		}
-		logger.info("created "+count+" previews of "+images.size()+" files");
 	}
 
 	public static void updatePreviews() {
-		File file = Util.getFile("static/img/preview/");
-		for(File folder : file.listFiles()) {
-			folder.delete();
+		try {
+			File file = Util.getFile("static/img/preview");
+			for(File folder : file.listFiles()) {
+				folder.delete();
+			}
+			generatePreviews();
+		} catch(FileNotFoundException e) {
+			logger.error("Cannot delete previews", e);
 		}
-		generatePreviews();
 	}
 	
 }

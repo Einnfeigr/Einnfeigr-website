@@ -1,9 +1,10 @@
 package main.template;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import main.drive.DriveUtils;
+import main.img.ImageData;
 import main.section.Section;
 import main.template.data.ImageTemplateData;
 import main.template.data.SectionTemplateData;
@@ -20,23 +21,29 @@ public class SectionTemplate extends EssentialTemplate {
 		setTemplatePath("templates/misc/sections/section");
 		SectionTemplateData data = new SectionTemplateData();
 		data.setName(section.getName());
+		data.setId(section.getId());
 		data.setImages(parseImages(section, section.getImages().size()));
 		setData(data);
 	}	
 	
-	protected String parseImages(Section section, int count) throws IOException {
+	protected String parseImages(Section section, int count) 
+			throws IOException {
 		StringBuilder images = new StringBuilder();
-		List<File> imagesList = section.getImages();
-		for(int x = 0; x < count; x++) {
-			if(x >= imagesList.size()) {
-				break;
-			}
+		
+		List<ImageData> imagesList = section.getImages();
+		for(int x = count-1; x >= 0; x--) {
 			Template template = new EssentialTemplate();
 			template.setTemplatePath(imageTemplatePath);
-			template.setData(new ImageTemplateData(imagesList.get(x)));
+			String url;
+			if(x >= imagesList.size()) {
+				url = "/img/placeholder.png";
+			} else {
+				url = DriveUtils.getDownloadUrl(imagesList.get(x));
+			}
+			template.setData(new ImageTemplateData(url));
 			images.append(template.compile());
-		}
-		return images.toString();
+		} 
+		return images.toString(); 
 	}
 	
 }

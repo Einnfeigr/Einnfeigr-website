@@ -1,26 +1,25 @@
 package main.template;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 
 import main.section.Section;
 import main.template.data.SectionsTemplateData;
 
 public class SectionsTemplate extends EssentialTemplate {
 	
-	private Map<String, Section> sections;
+	private List<Section> sections;
 		
-	public SectionsTemplate(Map<String, Section> sections) {
+	public SectionsTemplate(List<Section> sections) {
 		this.sections = sections;
 	}
 	
 	@Override
 	public String compile() throws IOException {
 		StringBuilder sectionsContent = new StringBuilder("");
-		for(Entry<String, Section> entry : sections.entrySet()) {
-			SectionTemplate sectionTemplate = new SectionPreviewTemplate(
-					entry.getValue());
+		for(Section section : sections) {
+			SectionTemplate sectionTemplate = 
+					new SectionPreviewTemplate(section);
 			sectionsContent.append(sectionTemplate.compile());
 		}
 		Template sectionsTemplate = new EssentialTemplate();

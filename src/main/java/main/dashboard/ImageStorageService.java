@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import main.exception.PreviewException;
 import main.img.ImagePreviewController;
 import main.misc.Util;
-import main.section.SectionsController;
+import main.section.SectionController;
 
 public class ImageStorageService implements StorageService {
 	

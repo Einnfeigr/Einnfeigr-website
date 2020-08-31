@@ -29,9 +29,9 @@ public class ImageListTemplate extends EssentialTemplate {
 		}
 		StringBuilder sb = new StringBuilder("");
 		for(File image : images) {
-			Template template = new EssentialTemplate() {};	
+			Template template = new EssentialTemplate();	
 			template.setTemplatePath("templates/misc/img/image");
-			template.setData(new ImageTemplateData(image));
+			template.setData(new ImageTemplateData(image.toString()));
 			sb.append(template.compile());
 		}
 		return sb.toString();
