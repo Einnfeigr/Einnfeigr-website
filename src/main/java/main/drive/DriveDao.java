@@ -13,8 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import main.img.ImageData;
-import main.misc.BufferedRequestBuilder;
-import main.misc.RequestBuilder;
+import main.misc.request.BufferedRequestBuilder;
+import main.misc.request.RequestBuilder;
 import main.section.Section;
 
 public class DriveDao {

@@ -35,20 +35,20 @@ public class ImagePreviewController {
 			throw new PreviewException();
 		}
 		File output = Util.getFile(Util.toRelativeUrl(image.getAbsolutePath())
-				.replace("/static/img/", "static/img/preview/"));
+				.replace("/static/img/",
+						"static/img/preview/"));
 		//No need to create preview if one exists
 		if(output.exists()) {
 			throw new PreviewException();
 		}
 		Util.createFile(output);
-		ImageIO.write(Util.resizeBySmaller(ImageIO.read(image), 
-				SMALLER_SIDE),
+		ImageIO.write(Util.resizeBySmaller(ImageIO.read(image),  SMALLER_SIDE),
 				Util.getExtension(image), output);
 	}
 	
 	public static void generatePreviews() {
 		try {
-			File file = Util.getFile("static/img/");
+			File file = Util.getFile("static/img");
 			List<File> images = Util.parseFiles(file, true, 
 					new ImagePreviewFileFilter());
 			int count = 0;
@@ -62,7 +62,8 @@ public class ImagePreviewController {
 					continue;
 				}
 			}
-			logger.info("Created "+count+" previews of "+images.size()+" files");
+			logger.info("Created "+count+" previews of "
+					+images.size()+" files");
 		} catch(FileNotFoundException e) {
 			logger.error("Error creating previews", e);
 		}
@@ -70,7 +71,7 @@ public class ImagePreviewController {
 
 	public static void updatePreviews() {
 		try {
-			File file = Util.getFile("static/img/preview/");
+			File file = Util.getFile("static/img/preview");
 			for(File folder : file.listFiles()) {
 				folder.delete();
 			}

@@ -36,7 +36,7 @@ public class SectionTemplate extends EssentialTemplate {
 			template.setTemplatePath(imageTemplatePath);
 			String url;
 			if(x >= imagesList.size()) {
-				url = "/img/placeholder.jpg";
+				url = "/img/placeholder.png";
 			} else {
 				url = DriveUtils.getDownloadUrl(imagesList.get(x));
 			}

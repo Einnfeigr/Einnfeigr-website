@@ -117,13 +117,7 @@ public class Util {
     }
     
     public static File getFile(String path) throws FileNotFoundException {
-    	File file;
-    	try {
-    		file = new File(classLoader.getResource(path).getFile());
-    	} catch(NullPointerException e) {
-    		throw new FileNotFoundException(path+" file cannot be found");
-    	}
-    	return file;
+    	return new File(classLoader.getResource("").getFile()+path);
     }
     
     public static File createFile(File file) {

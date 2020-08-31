@@ -1,4 +1,4 @@
-package main.misc;
+package main.misc.request;
 
 import java.io.IOException;
 
