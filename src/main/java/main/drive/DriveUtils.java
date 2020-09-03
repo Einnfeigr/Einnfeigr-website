@@ -8,6 +8,9 @@ public class DriveUtils {
 	public static final String rootId = "1zTDcH9LuuZ0KUI2c3K6f-r5pAUt_mrpa";
 	
 	public DriveUtils(String key) {
+		if(key.toLowerCase().equals("google drive api key")) {
+			key = System.getenv("GoogleDriveApiKey");
+		}
 		DriveUtils.key = key;
 	}
 	
