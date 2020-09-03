@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +35,7 @@ import main.misc.filter.SimpleFileFilter;
 public class Util {
 	
 	@Autowired
-	ServletContext servletContext;
+	static ServletContext servletContext;
 	
 	private final static Logger logger = 
 			LoggerFactory.getLogger(ImagePreviewController.class);
