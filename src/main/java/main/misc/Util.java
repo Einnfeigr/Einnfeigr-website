@@ -32,6 +32,9 @@ import main.misc.filter.SimpleFileFilter;
 
 public class Util {
 	
+	@Autowired
+	ServletContext servletContext;
+	
 	private final static Logger logger = 
 			LoggerFactory.getLogger(ImagePreviewController.class);
 	public final static String EXCEPTION_LOG_MESSAGE = 
@@ -117,7 +120,7 @@ public class Util {
     }
     
     public static File getFile(String path) throws FileNotFoundException {
-    	return new File(classLoader.getResource("").getFile()+path);
+    	return new File(servletContext.getRealPath("")+path);
     }
     
     public static File createFile(File file) {
