@@ -9,32 +9,29 @@ import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import main.drive.DriveDao;
+import main.drive.DriveFile;
 import main.exception.PreviewException;
 import main.misc.Util;
 import main.misc.filter.ImagePreviewFileFilter;
 
 public class ImagePreviewController {
 	
+	@Autowired
+	static DriveDao driveDao;
+	
 	private final static Logger logger = 
 			LoggerFactory.getLogger(ImagePreviewController.class);
 	
 	public final static int SMALLER_SIDE = 350;
 	
-	public static void generatePreview(File image) 
+	public static void generatePreview(ImageData image) 
 			throws IOException,PreviewException {
-		if(image.isDirectory() || !image.exists()) {
-			throw new IllegalArgumentException("Invalid file |"+image);
-		}
-		if(!image.getAbsolutePath().replace("\\", "/")
-				.contains("static/img/")) {
-			throw new IllegalArgumentException(
-					"File must be located at 'static/img' folder | "+image);
-		}
-		if(image.getAbsolutePath().replace("\\", "/").contains("preview")) {
-			throw new PreviewException();
-		}
-		File output = Util.getFile(Util.toRelativeUrl(image.getAbsolutePath())
+		//TODO generate google drive previews
+		/*
+		File output = Util.getFile()
 				.replace("/static/img/",
 						"static/img/preview/"));
 		//No need to create preview if one exists
@@ -44,15 +41,16 @@ public class ImagePreviewController {
 		Util.createFile(output);
 		ImageIO.write(Util.resizeBySmaller(ImageIO.read(image),  SMALLER_SIDE),
 				Util.getExtension(image), output);
+		*/
 	}
 	
 	public static void generatePreviews() {
+		//TODO generate google drive previews
+		/*
 		try {
-			File file = Util.getFile("static/img");
-			List<File> images = Util.parseFiles(file, true, 
-					new ImagePreviewFileFilter());
-			int count = 0;
-			for(File image : images) {
+			int count;
+			List<ImageData> images = driveDao.getAllFiles();
+			for(ImageData image : images) {
 				try {
 					generatePreview(image);
 					count++;
@@ -67,10 +65,12 @@ public class ImagePreviewController {
 		} catch(FileNotFoundException e) {
 			logger.error("Error creating previews", e);
 		}
+		*/
 	}
 
 	public static void updatePreviews() {
-		try {
+		//TODO generate google drive previews
+		/* try {
 			File file = Util.getFile("static/img/preview");
 			for(File folder : file.listFiles()) {
 				folder.delete();
@@ -78,7 +78,7 @@ public class ImagePreviewController {
 			generatePreviews();
 		} catch(FileNotFoundException e) {
 			logger.error("Cannot delete previews", e);
-		}
+		} */
 	}
 	
 }

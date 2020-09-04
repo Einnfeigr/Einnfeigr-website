@@ -1,7 +1,5 @@
 package main.drive;
 
-import main.img.ImageData;
-
 public class DriveUtils {
 	
 	private static String key;
@@ -23,14 +21,15 @@ public class DriveUtils {
 		case(1):
 			return "https://www.googleapis.com/drive/v2/files/"+id
 					+"?key="+key+params;
+		case(2):
+			return "https://www.googleapis.com/upload/drive/v2/files";
 		default:
 			return null;	
 		}
 		
 	}   
 	
-	public static String getDownloadUrl(ImageData data) {
-		return "https://drive.google.com/uc?id="+data.getId()
-		+"&export=download";
+	public static String getDownloadUrl(String id) {
+		return "https://drive.google.com/uc?id="+id+"&export=download";
 	}
 }

@@ -24,14 +24,9 @@ public class BufferedRequestBuilder extends StandardRequestBuilder {
 	public BufferedRequestBuilder() {
 		maxCalls = -1;
 	}
-	
+
 	@Override
-	public String performGetRequest(String address) throws IOException {
-    	return performRequest(address, "GET");
-    }
-	
-	@Override
-	public String performRequest(String address, String method) 
+	public String performRequest(String address, String method, String params) 
     		throws IOException {
 		RequestData data;
 		int index;
@@ -47,7 +42,7 @@ public class BufferedRequestBuilder extends StandardRequestBuilder {
 				requestBuffer.remove(index);
 			}
 		}
-		String response = super.performRequest(address, method);
+		String response = super.performRequest(address, method, params);
 		data.reset();
 		data.setResponse(new ResponseData(response));
 		requestBuffer.add(data);

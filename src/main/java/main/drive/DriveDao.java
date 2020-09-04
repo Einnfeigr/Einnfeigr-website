@@ -28,9 +28,8 @@ public class DriveDao {
 	private static RequestBuilder requestBuilder = 
 			new BufferedRequestBuilder();
 
-	
+	//TODO refactor
 	//injection in constructor guarantees RequestUtils initialization
-	//can be refactored
 	private DriveDao(DriveUtils utils) {}
 			
 	public List<ImageData> getLatest() throws  IOException {

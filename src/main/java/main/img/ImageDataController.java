@@ -1,6 +1,5 @@
 package main.img;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class ImageDataController {
 	private final static Logger logger = 
 			LoggerFactory.getLogger(ImageDataController.class);
 	
-	private List<ImageData> images;
+	private List<ImageData> dataList;
 
 	private DriveDao dao;
 	
@@ -27,21 +26,21 @@ public class ImageDataController {
 
 	public void update() {
 		try {
-			images = dao.getAllFiles();
+			dataList = dao.getAllFiles();
 		} catch(Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		} finally {
-			if(images == null) {
-				images = new ArrayList<>();
+			if(dataList == null) {
+				dataList = new ArrayList<>();
 			}
 		}
 	}
 	
-	public List<File> getLatestImages() {
-		List<File> files = new ArrayList<>();
+	public List<String> getLatestImages() {
+		List<String> files = new ArrayList<>();
 		try {
-			images.forEach(d -> files.add(
-					new File(DriveUtils.getDownloadUrl(d))));
+			dataList.forEach(d -> files.add(DriveUtils.getDownloadUrl(
+					d.getId())));
 		} catch(Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
