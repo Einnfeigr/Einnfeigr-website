@@ -1,6 +1,5 @@
 package main.dashboard;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -10,11 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
-import main.exception.PreviewException;
-import main.img.ImagePreviewController;
-import main.misc.Util;
-import main.section.SectionController;
-
+//Iceboxed
 public class ImageStorageService implements StorageService {
 	
 	private final static Logger logger = 
@@ -27,6 +22,7 @@ public class ImageStorageService implements StorageService {
 
 	@Override
 	public void store(MultipartFile file, String path) throws IOException {
+		/*
 		String filename = file.getOriginalFilename().replace("\\", "/");
 		if(filename.contains("/")) {
 			String[] sp = filename.split("/");
@@ -54,6 +50,7 @@ public class ImageStorageService implements StorageService {
 		} catch (PreviewException e) {
 			logger.warn("Uploaded image preview exists", e);
 		}
+		*/
 	}
 
 	@Override

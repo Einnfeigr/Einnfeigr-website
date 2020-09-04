@@ -1,6 +1,5 @@
 package main;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -50,8 +49,8 @@ public class PageController {
     		produces = "application/json", headers = "target=body")
     public ResponseEntity<Page> getPageBody(Device device, 
     		@RequestParam(required=false) String ver,
-    		@PathVariable(value="page",required=false) Optional<String> pageName)
-    				throws TemplateException {
+    		@PathVariable(value="page",required=false) Optional<String> pageName
+    				) throws TemplateException {
     	try {
     		String name;
     		if(pageName.isPresent()) {
@@ -186,7 +185,7 @@ public class PageController {
     
     private PageTemplateData compileMain(PageTemplateData data) {
     	try {
-    		List<File> latest = dataController.getLatestImages();
+    		List<String> latest = dataController.getLatestImages();
     		Template template = new ImageListTemplate(latest);
     		String images = template.compile();
     		TextTemplateData mData = new MainTextTemplateData(images);
@@ -222,8 +221,7 @@ public class PageController {
         return data;
     }
     
-    private boolean isMobile(
-    		PageTemplateData data, Device device, String ver) {
+    private boolean isMobile(PageTemplateData data, Device device, String ver) {
     	if(ver == null) {
     		ver = "";
     	}

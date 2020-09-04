@@ -1,8 +1,5 @@
 package main.misc;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,8 +33,6 @@ public class Util {
 			LoggerFactory.getLogger(ImagePreviewController.class);
 	public final static String EXCEPTION_LOG_MESSAGE = 
 			"Exception has been caught";
-	
-	private final static ClassLoader classLoader = Util.class.getClassLoader();
 	
     public static boolean isAbsolute(File file) throws FileNotFoundException {
     	return isAbsolute(file.getAbsolutePath());
@@ -115,11 +110,7 @@ public class Util {
     	}
     	return files;
     }
-    
-    public static File getFile(String path) throws FileNotFoundException {
-    	return new File(classLoader.getResource("").getFile()+path);
-    }
-    
+
     public static File createFile(File file) {
     	try {
     		if(file.exists()) {
@@ -278,66 +269,5 @@ public class Util {
     	}
     	return names;
     }
-    
-    //TODO refactor
-    public static BufferedImage resizeByLarger(BufferedImage image, 
-    		int larger) {
-    	double ratio;
-    	int height = image.getHeight();
-    	int width = image.getWidth();
-    	if(height < width) {
-    		ratio = (double) height / (double) width;
-    		width = larger;
-    		height = (int) (width*ratio);
-    	} else if(height > width){
-    		ratio = (double) width / (double) height;
-    		height = larger;
-    		width = (int) (height*ratio);
-    	} else {
-    		width = larger;
-    		height = larger;
-    	}
-    	return resize(image, width, height);
-    }
-    
-    public static BufferedImage resizeBySmaller(BufferedImage image, 
-    		int smaller) {
-    	double ratio;
-    	int height = image.getHeight();
-    	int width = image.getWidth();
-    	if(height > width) {
-    		ratio = (double) height / (double) width;
-    		width = smaller;
-    		height = (int) (width*ratio);
-    	} else if(height < width) {
-    		ratio = (double) width / (double) height;
-    		height = smaller;
-    		width = (int) (height*ratio);
-    	} else {
-    		width = smaller;
-    		height = smaller;
-    	}
-    	return resize(image, width, height);
-    }
-    
-	public static BufferedImage resize(BufferedImage image, int width,
-			int height) { 
-	    int w = image.getWidth(), h = image.getHeight();
-	    int type = image.getType() == 0? 
-	    		BufferedImage.TYPE_INT_ARGB : image.getType();
-	    BufferedImage resizedImage = new BufferedImage(width, height, type);
-	    Graphics2D g = resizedImage.createGraphics();
-	    g.setComposite(AlphaComposite.Src);
-	    g.setRenderingHint(RenderingHints.KEY_RENDERING,
-	    		RenderingHints.VALUE_RENDER_QUALITY);
-	    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-	    		RenderingHints.VALUE_ANTIALIAS_ON);
-	    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-	    		RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-	    g.scale((double)width/w,(double)height/h);
-	    g.drawRenderedImage(image, null);
-	    g.dispose();
-	    return resizedImage; 
-	}   
 
 }

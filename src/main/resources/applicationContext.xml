@@ -23,7 +23,7 @@
 	<bean id="imageStorageService"		class="main.dashboard.ImageStorageService" 					  />
 	<bean id="imagePreviewController"	class="main.img.ImagePreviewController"						  />
 	<bean id="driveUtils" 			class="main.drive.DriveUtils"  							 		   >
-		<constructor-arg value="Google Drive Api Key" />
+		<constructor-arg value="Google drive api key" />
 	</bean>
 	<bean id="driveDao"					class="main.drive.DriveDao"								  	   >
 		<constructor-arg ref="driveUtils" />
