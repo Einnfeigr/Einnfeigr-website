@@ -55,19 +55,6 @@ public class EssentialTemplate implements Template {
 	}
 
 	public String compile() throws IOException {
-		if(templatePath == null) {
-			throw new IllegalArgumentException(
-					"Template path must be not null");
-		}
-	   	File template = Util.getFile(templatePath);
-	   	if(!template.exists()) {
-	   		throw new FileNotFoundException(
-	   				"File '"+templatePath+"' cannot be found");
-	   	}
-	   	if(!template.isFile()) {
-	   		throw new IllegalArgumentException(
-	   				"Template '"+templatePath+"' must be a file");
-	   	}
 	   	MustacheFactory factory = new DefaultMustacheFactory();
 	   	Mustache mustache = factory.compile(templatePath);
 	   	StringWriter writer = new StringWriter();
