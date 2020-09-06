@@ -1,16 +1,25 @@
-body.expanded {
+html.expanded body {
 	margin-left: 250px;
 }
 
-body.expanded .title {
+html.expanded {
+	overflow-y: hidden;
+}
+
+html.expanded .nav {
+	left: 0;
+}
+
+htnl.expanded .title {
 	left: 250px;
 }
 
-body.expanded .main .title {
+htnl.expanded .main .title {
 	left: 0;
 }
 
 .title {
+	position: relative;
 	width: 100vw;
 }
 
@@ -24,4 +33,14 @@ body.expanded .main .title {
 
 .textDiv h4 {
 	width: 100%;
+}
+
+.main .backgroundImage {
+	margin: 0;
+}
+
+.backgroundImage {
+	position: absolute;
+	margin: 0;
+	top: 0;
 }

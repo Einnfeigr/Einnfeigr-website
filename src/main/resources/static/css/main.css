@@ -6,6 +6,7 @@
 	position: relative;
 	z-index: 0;
 	height: 100vh;
+	height: calc(var(--vh, 1vh) * 100);
 }
 
 .main .title h1 {
@@ -19,6 +20,7 @@
 .main .background {
 	padding-top: 0;
 	height: 100vh;
+	height: calc(var(--vh, 1vh) * 100);
 }
 
 .main .wrapper {
@@ -27,7 +29,10 @@
 }
 
 .main .backgroundImage {
-	min-height: 100vh;
+	bottom: 0;
+	max-height: none;
+	height: 100vh;
+	margin-top: -100vh;
 }
 
 .latest {
