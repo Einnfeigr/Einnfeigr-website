@@ -20,7 +20,8 @@ html {
 	position: sticky;
 	bottom: calc(100vh - 45vw);
 	z-index: -2;
-	max-height: 55vw;
+	height: 55vw;
+	min-width: 100vw;
 	margin-top: -55vw;
 }
 

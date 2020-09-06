@@ -4,7 +4,6 @@ $(document).ready(function() {
 	$(window).on('popstate', function() {
 		location.reload(true);
 	});
-
 	$('.previewBackground').removeClass('hidden');
 	if(loaded == true) {
 		$('.previewBackground').fadeOut(500, function() {
@@ -12,10 +11,6 @@ $(document).ready(function() {
 		});
 	}
 });
-
-$(window).on('loadstart', function() {
-	$('.previewBackground').removeClass('hidden');
-})
 
 $(window).on('load', function() {
 	loaded = true;

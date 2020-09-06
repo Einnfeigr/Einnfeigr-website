@@ -30,7 +30,6 @@
 
 .main .backgroundImage {
 	bottom: 0;
-	max-height: none;
 	height: 100vh;
 	margin-top: -100vh;
 }
