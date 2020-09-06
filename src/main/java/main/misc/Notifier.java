@@ -1,7 +1,5 @@
 package main.misc;
 
-import java.net.InetAddress;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +14,13 @@ public class Notifier {
 	public void notifyServer() { 
 		try {
 			RequestBuilder builder = new StandardRequestBuilder();
-			builder.performGetRequest("http://"+InetAddress.getLocalHost().getHostAddress()+":8080");
-			logger.info("server has been notified");
+			String url = System.getenv("currentUrl");
+			if(url != null) {
+				builder.performGetRequest(url);
+				logger.info("server has been notified");
+			} else {
+				logger.warn("server cannot be notified because url is null");
+			}
 		} catch(Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);	
 		}
