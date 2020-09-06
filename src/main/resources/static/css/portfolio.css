@@ -1,76 +1,52 @@
-.portfolio .backgroundImageWrapper {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.portfolio .backgroundImage {
-	min-height: 100vh;
-	height: auto;
-}
-
 .portfolio .textDiv {
-	background: none;
-}
-
-.section .page {
-	margin-top: 90px;
-}
-
-.section .images {
-	
+	color: white;
+	padding-top: 90px;
+	background: rgb(83, 83, 83);
 }
 
 .portfolio .title {
+	z-index: 1;
+	height: auto;
+	font-size: 3rem;
 	position: relative;
 }
 
 .sections {
-	box-sizing: border-box;
 	display: flex;
 	flex-wrap: wrap;
+	border-radius: 3px;
 	justify-self: center;
-	padding: 135px 40px 35px 40px;
+	box-sizing: border-box;
+	padding: 35px 40px 35px 40px;
 }
 
 .page .section {
-	cursor: pointer;
 	margin: 25px;
+	cursor: pointer;
 	position: relative;
-	background: rgba(255,255,255,0.3);
 	border-radius: 4px;
 }
 
-.section .name {
-	position: relative;
+.page .section .name {
+	padding: 5px;
 	text-align: center;
-	padding: 10px;
-}
-
-.section .name:after {
-	content: "";
-	position: absolute;
-	width: 70%;
-	height: 1px;
-	background: black;
-	left: 15%;
-	top: 0;
+	position: relative;
 }
 
 .previews {
-	max-width: 100%;
-	width: 20vw;
-	position: relative;
+	width: 10vw;
 	padding: 25px;
+	max-width: 100%;
+	position: relative;
 }
 
 .previews img {
-	box-shadow: 1px 1px 10px rgba(0,0,0,0.3);
+	width: 10vw;
+	height: 7vw;
+	margin: auto;
 	object-fit: cover;
 	position: relative;
-	width: 20vw;
-	height: 15vw;
-	margin: auto;
+	box-shadow: 1px 1px 10px rgba(0,0,0,0.3);
 }
 
 .previews img:first-child {	
@@ -91,19 +67,23 @@
 
 .section .back {
 	color: white;
-	line-height: 200%;
-	cursor: pointer;
 	height: 10px;
+	cursor: pointer;
+	line-height: 200%;
 }
 
 .section .images {
-	padding: 50px 0 50px 0;
 	display: flex;
 	flex-wrap: wrap;
 	margin: -0.5rem;
+	padding: 50px 0 50px 0;
 }
 
 .section .images img {
-	width: calc(100%/3 - 1rem);
     margin: 0.5rem;
+	width: calc(100%/3 - 1rem);
+}
+
+.page.section {
+	background: rgb(83, 83, 83);
 }
