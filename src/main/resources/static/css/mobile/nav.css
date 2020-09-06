@@ -20,12 +20,19 @@ body, .nav, .pageArea .title {
 	width: 250px;
 	height: 100vh;
 	left: -250px;
-	position: absolute;
+	position: fixed;
+	top: 0;
+	overflow: scroll;
 	z-index: 11;
 }
 
-.nav.expanded {
-	left: 0;
+.nav::-webkit-scrollbar {
+	display: none;
+}
+
+.nav {
+	-ms-overflow-style: none; 
+	scrollbar-width: none;
 }
 
 .nav .buttons {

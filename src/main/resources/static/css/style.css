@@ -4,21 +4,31 @@ a {
 
 body {
 	font-family: 'Fira Sans', sans-serif;
-	background: rgba(100,100,100,0.4);
-	overflow: hidden;
 	margin: 0;
 }
 
+html {
+	overflow-x: hidden;
+}
+
 .textDiv img {
-	background: url(/img/placeholder.png) no-repeat scroll 0 0;
+	background: rgba(0,0,0,0.2);
 }
 
 .backgroundImage {
-	position: fixed;
-	z-index: -1;
+	overflow: hidden;
+	position: sticky;
+	bottom: calc(100vh - 45vw);
+	z-index: -2;
+	max-height: 55vw;
+	margin-top: -55vw;
+}
+
+.backgroundImage > img {
+	width: auto;
+ 	object-fit: cover;
 	min-height: 45vh;
 	min-width: 100vw;
-	top: 0;
 }
 
 .previewBackground {
@@ -47,21 +57,21 @@ body {
 
 .wrapper {
 	display: grid;
-	grid-template-rows: 45vh minmax(100px, auto);
+	grid-template-rows: minmax(calc(90+20vw), 55vh) minmax(100px, auto);
 }
 
-.scrollPane::-webkit-scrollbar {
+html::-webkit-scrollbar {
 	display: none;
 }
 
-.scrollPane {
+html {
 	-ms-overflow-style: none; 
 	scrollbar-width: none;
 }
 
 .background {
-	position: relative;
 	height: 45vh;
+	height: calc(var(--vh, 1vh) * 45);
 	width: 100vw;
 	padding-top: 90px;
 	box-sizing: border-box;
@@ -70,19 +80,6 @@ body {
 .pageArea {
 	position: relative;
 	height: auto;
-}
-
-.pageWrapper {
-	box-sizing: border-box;
-	display: grid;
-	grid-template-rows: auto 130px;
-}
-
-.scrollPane {
-	overflow-x: hidden;
-	height: 100vh;
-	width: 100vw;
-	overflow: scroll;
 }
 
 .page {
