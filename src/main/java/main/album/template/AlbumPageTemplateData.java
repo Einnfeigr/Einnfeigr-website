@@ -1,4 +1,6 @@
-package main.template.data.page;
+package main.album.template;
+
+import main.page.PageTemplateData;
 
 public class AlbumPageTemplateData extends PageTemplateData {
 

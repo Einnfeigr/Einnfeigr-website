@@ -15,10 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import main.PageController;
 import main.SecurityController;
 import main.misc.configuration.ProjectConfiguration;
 import main.misc.configuration.SecurityConfiguration;
+import main.page.PageController;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers= {PageController.class, SecurityController.class})

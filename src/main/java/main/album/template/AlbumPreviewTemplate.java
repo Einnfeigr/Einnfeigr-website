@@ -1,9 +1,8 @@
-package main.template;
+package main.album.template;
 
 import java.io.IOException;
 
 import main.album.Album;
-import main.template.data.page.AlbumPreviewTemplateData;
 
 public class AlbumPreviewTemplate extends AlbumTemplate {
 

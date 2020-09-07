@@ -2,6 +2,8 @@ package unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Comparator;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import main.img.ImageData;
+import main.img.ImageDataComparator;
 import main.img.ImageDataController;
 import main.misc.configuration.ProjectConfiguration;
 import main.misc.configuration.SecurityConfiguration;
@@ -40,12 +43,13 @@ public class ImageDataControllerTest {
 		ImageData data6 = new ImageData();
 		data5.setTitle("abc");
 		data6.setTitle("abc");
-		logger.debug("1:"+data1.compareTo(data2));
-		logger.debug("2:"+data3.compareTo(data4));
-		logger.debug("3:"+data5.compareTo(data6));
-		assertThat(data1.compareTo(data2) == 1 
-				&& data3.compareTo(data4) == -1
-				&& data5.compareTo(data6) == 0);
+		Comparator<ImageData> dataComparator = new ImageDataComparator();
+		logger.debug("1:"+dataComparator.compare(data1, data2));
+		logger.debug("2:"+dataComparator.compare(data3, data4));
+		logger.debug("3:"+dataComparator.compare(data5, data6));
+		assertThat(dataComparator.compare(data1, data2) == 1 
+				&& dataComparator.compare(data3, data4) == -1
+				&& dataComparator.compare(data5, data6) == 0);
 	}
 	
 	@Test

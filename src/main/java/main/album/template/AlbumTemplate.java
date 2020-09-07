@@ -1,4 +1,4 @@
-package main.template;
+package main.album.template;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,10 +6,11 @@ import java.util.List;
 import main.album.Album;
 import main.drive.DriveUtils;
 import main.img.ImageData;
+import main.template.EssentialDataTemplate;
+import main.template.Template;
 import main.template.data.ImageTemplateData;
-import main.template.data.AlbumTemplateData;
 
-public class AlbumTemplate extends EssentialTemplate {
+public class AlbumTemplate extends EssentialDataTemplate {
 	
 	protected String imageTemplatePath = "templates/misc/img/image";
 	
@@ -31,15 +32,15 @@ public class AlbumTemplate extends EssentialTemplate {
 		StringBuilder images = new StringBuilder();
 		List<ImageData> imagesList = album.getImages();
 		for(int x = count-1; x >= 0; x--) {
-			Template template = new EssentialTemplate();
-			template.setTemplatePath(imageTemplatePath);
 			String url;
 			if(x >= imagesList.size()) {
 				url = "/img/placeholder.png";
 			} else {
 				url = DriveUtils.getDownloadUrl(imagesList.get(x).getId());
 			}
-			template.setData(new ImageTemplateData(url));
+			Template template = new EssentialDataTemplate(
+					new ImageTemplateData(url));
+			template.setTemplatePath(imageTemplatePath);
 			images.append(template.compile());
 		} 
 		return images.toString(); 

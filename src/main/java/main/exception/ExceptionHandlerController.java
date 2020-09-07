@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import main.template.EssentialTemplate;
-import main.template.Template;
-import main.template.data.page.PageTemplateData;
+import main.page.PageTemplateData;
+import main.template.EssentialDataTemplate;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -22,7 +21,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleConflict(RuntimeException ex,
 			WebRequest request) {
 		try {
-			Template template;
+			EssentialDataTemplate template;
 			String bodyOfResponse;
 			String responseTemplatePath;
 			PageTemplateData pageData = new PageTemplateData();
@@ -33,7 +32,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 				} else {
 					textPath = "static/text/ru/error/error";
 				}
-				template = new EssentialTemplate(textPath);
+				template = new EssentialDataTemplate(textPath);
 				pageData.setText(template.compile());
 			}
 			if(request.getParameter("path") == null) {
@@ -42,12 +41,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 				responseTemplatePath = "templates/placeholder";
 			}
 			String pagePath = "templates/pages/error/error";
-			template = new EssentialTemplate(pagePath);
+			template = new EssentialDataTemplate(pagePath);
 			template.setData(pageData);
 			PageTemplateData responseData = new PageTemplateData();
 			responseData.setTitle("Ошибка");
 			responseData.setPage(template.compile());
-			template = new EssentialTemplate(responseTemplatePath);
+			template = new EssentialDataTemplate(responseTemplatePath);
 			template.setData(responseData);
 			bodyOfResponse = template.compile();
 		    return handleExceptionInternal(ex, bodyOfResponse, 

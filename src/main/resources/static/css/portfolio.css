@@ -11,7 +11,7 @@
 	position: relative;
 }
 
-.sections {
+.albums {
 	display: flex;
 	flex-wrap: wrap;
 	border-radius: 3px;
@@ -20,14 +20,14 @@
 	padding: 35px 40px 35px 40px;
 }
 
-.page .section {
+.page .album {
 	margin: 25px;
 	cursor: pointer;
 	position: relative;
 	border-radius: 4px;
 }
 
-.page .section .name {
+.page .album .name {
 	padding: 5px;
 	text-align: center;
 	position: relative;
@@ -61,29 +61,29 @@
 	right: 15px;
 } 
 
-.pageArea > .section {
+.pageArea > .album {
 	padding: 135px 25px 0 25px;
 }
 
-.section .back {
+.album .back {
 	color: white;
 	height: 10px;
 	cursor: pointer;
 	line-height: 200%;
 }
 
-.section .images {
+.album .images {
 	display: flex;
 	flex-wrap: wrap;
 	margin: -0.5rem;
 	padding: 50px 0 50px 0;
 }
 
-.section .images img {
+.album .images img {
     margin: 0.5rem;
 	width: calc(100%/3 - 1rem);
 }
 
-.page.section {
+.page.album {
 	background: rgb(83, 83, 83);
 }

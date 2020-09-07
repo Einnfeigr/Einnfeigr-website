@@ -1,7 +1,9 @@
-package main;
+package main.page;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,20 +21,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.album.Album;
 import main.album.AlbumController;
+import main.album.template.AlbumListTemplate;
+import main.album.template.AlbumPageTemplateData;
+import main.album.template.AlbumTemplate;
 import main.exception.ControllerException;
 import main.exception.NotFoundException;
 import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
-import main.template.EssentialTemplate;
+import main.template.EssentialMapTemplate;
 import main.template.ImageListTemplate;
-import main.template.AlbumTemplate;
-import main.template.AlbumListTemplate;
+import main.template.EssentialDataTemplate;
 import main.template.Template;
-import main.template.data.page.PageTemplateData;
-import main.template.data.page.AlbumPageTemplateData;
-import main.template.data.text.MainTextTemplateData;
-import main.template.data.text.TextTemplateData;
+import main.template.Template;
 
 @RestController
 public class PageController {
@@ -116,7 +117,7 @@ public class PageController {
 				data.setTitle("Портфолио");
 				break;
 			case("retouch"):
-				data = loadPage(compileRetouch(data), 
+				data = loadPage(new PageTemplateData(), 
 						"static/text/ru/retouch", 
 						"templates/pages/retouch");
 				data.setTitle("Ретушь");
@@ -187,19 +188,13 @@ public class PageController {
     	try {
     		List<String> latest = dataController.getLatestImages();
     		Template template = new ImageListTemplate(latest);
-    		String images = template.compile();
-    		TextTemplateData mData = new MainTextTemplateData(images);
-        	data.setTextData(mData);
+    		Map<String, String> textData = new HashMap<>();
+    		textData.put("latest", template.compile());
+        	data.setTextData(textData);
     	} catch(IOException | IllegalArgumentException e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
     	}
     	return data;
-    }
-    
-    private PageTemplateData compileRetouch(PageTemplateData data) {
-		TextTemplateData rData = new TextTemplateData();
-		data.setTextData(rData);
-		return data;
     }
     
     private PageTemplateData loadPage(PageTemplateData data, String textPath, 
@@ -209,14 +204,15 @@ public class PageController {
         }
     	if(textPath != null) {
     		if(data.getTextData() == null) {
-    			data.setTextData(new TextTemplateData() {});
+    			data.setTextData(new HashMap<>());
     		}
-    		Template template = new EssentialTemplate(textPath);
-    		template.setData(data.getTextData());
+    		Template template = new EssentialMapTemplate(data.getTextData());
+    		template.setTemplatePath(textPath);
     		data.setText(template.compile());
     	}
-    	Template template = new EssentialTemplate(pagePath);
-    	template.setData(data);
+    	EssentialDataTemplate template = new EssentialDataTemplate();
+    	template.setTemplatePath(textPath);
+		template.setData(data);
     	data.setPage(template.compile());
         return data;
     }

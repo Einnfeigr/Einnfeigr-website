@@ -1,4 +1,4 @@
-package main.template.data.page;
+package main.album.template;
 
 public class AlbumListPageController {
 

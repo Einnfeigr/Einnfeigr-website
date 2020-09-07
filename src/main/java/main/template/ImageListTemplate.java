@@ -5,7 +5,7 @@ import java.util.List;
 
 import main.template.data.ImageTemplateData;
 
-public class ImageListTemplate extends EssentialTemplate {
+public class ImageListTemplate extends AbstractTemplate {
 	
 	private List<String> paths;
 	
@@ -28,8 +28,8 @@ public class ImageListTemplate extends EssentialTemplate {
 		}
 		StringBuilder sb = new StringBuilder("");
 		for(String path : paths) {
-			Template template = new EssentialTemplate();	
-			template.setTemplatePath("templates/misc/img/image");
+			EssentialDataTemplate template = new EssentialDataTemplate();	
+			template.setTemplatePath("templates/misc/img/image");			
 			template.setData(new ImageTemplateData(path.toString()));
 			sb.append(template.compile());
 		}

@@ -10,9 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.misc.Util;
-import main.template.EssentialTemplate;
+import main.page.PageTemplateData;
+import main.template.EssentialMapTemplate;
 import main.template.Template;
-import main.template.data.page.PageTemplateData;
 
 @Component
 @RestController
@@ -28,7 +28,7 @@ public class SecurityController {
 			PageTemplateData data = new PageTemplateData();
 			data.setMobile(false);
 			data.setTitle("Вход");
-			Template template = new EssentialTemplate() {};
+			Template template = new EssentialMapTemplate() {};
 			template.setTemplatePath("templates/pages/login");
 			data.setPage(template.compile());
 			mav.getModel().put("title", data.getTitle());

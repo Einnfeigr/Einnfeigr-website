@@ -16,9 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.exception.ControllerException;
 import main.misc.Util;
-import main.template.EssentialTemplate;
+import main.page.PageTemplateData;
+import main.template.EssentialMapTemplate;
 import main.template.Template;
-import main.template.data.page.PageTemplateData;
 
 @RestController
 public class DashboardController {
@@ -33,7 +33,7 @@ public class DashboardController {
 	public ModelAndView showMain() {
 		ModelAndView mav =  new ModelAndView("index");
 		try {
-			Template template = new EssentialTemplate(
+			Template template = new EssentialMapTemplate(
 					"templates/pages/dashboard/main");
 			mav.getModel().put("page", template.compile());
 			mav.getModel().put("title", "Панель управления");
@@ -68,9 +68,9 @@ public class DashboardController {
 			path = "/img/portfolio/albums/ретушь/";
 		}
 		try {
-			Template pageTemplate = new EssentialTemplate("templates/index");
+			Template pageTemplate = new EssentialMapTemplate("templates/index");
 			PageTemplateData pageData = new PageTemplateData();
-			Template template = new EssentialTemplate(
+			Template template = new EssentialMapTemplate(
 					"static/text/ru/dashboard/upload/success");
 			pageData.setPage(template.compile());
 			for(MultipartFile file : files) {

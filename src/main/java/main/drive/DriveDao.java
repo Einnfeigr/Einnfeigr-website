@@ -3,6 +3,7 @@ package main.drive;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 import main.album.Album;
 import main.img.ImageData;
+import main.img.ImageDataComparator;
 import main.misc.request.BufferedRequestBuilder;
 import main.misc.request.RequestBuilder;
 
@@ -49,8 +51,9 @@ public class DriveDao {
 	}
 	
 	public List<Album> getAllFolders() throws IOException {
-		return parseFolders(getFile(DriveUtils.rootId),
-				new ArrayList<Album>());
+		List<Album> albums = parseFolders(getFile(DriveUtils.rootId),
+				new ArrayList<>());
+		return albums;
 	}
 	
 	private DriveFile getFile(String id) throws IOException {
@@ -112,7 +115,11 @@ public class DriveDao {
 		Album album = new Album();
 		album.setId(file.getId());
 		album.setName(file.getTitle());
-		album.setImages(parseFiles(getDirectoryContent(file.getId()), false));
+		List<ImageData> imageList = parseFiles(
+				getDirectoryContent(file.getId()), false);
+		Comparator<ImageData> comparator = new ImageDataComparator();
+		imageList.sort(comparator);
+		album.setImages(imageList);
 		return album;
 	}
 	

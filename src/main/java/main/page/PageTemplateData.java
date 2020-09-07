@@ -1,14 +1,15 @@
-package main.template.data.page;
+package main.page;
+
+import java.util.Map;
 
 import main.template.data.TemplateData;
-import main.template.data.text.TextTemplateData;
 
 public class PageTemplateData implements TemplateData {
 	
 	private String title;
 	private String text;
 	private String page;
-	private TextTemplateData textData;
+	private Map<String, String> textData;
 	private Boolean isMobile;
 	
 	public String getTitle() {
@@ -29,10 +30,10 @@ public class PageTemplateData implements TemplateData {
 	public void setPage(String page) {
 		this.page = page;
 	}
-	public TextTemplateData getTextData() {
+	public Map<String, String> getTextData() {
 		return textData;
 	}
-	public void setTextData(TextTemplateData textData) {
+	public void setTextData(Map<String, String> textData) {
 		this.textData = textData;
 	}
 	public Boolean isMobile() {
