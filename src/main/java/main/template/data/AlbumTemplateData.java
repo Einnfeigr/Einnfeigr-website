@@ -1,6 +1,6 @@
 package main.template.data;
 
-public class SectionTemplateData implements TemplateData {
+public class AlbumTemplateData implements TemplateData {
 
 	String name;
 	String images;

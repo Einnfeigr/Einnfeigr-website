@@ -1,19 +1,19 @@
-package main.section;
+package main.album;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import main.img.ImageData;
 
-public class Section {
+public class Album {
 	
 	private List<ImageData> images;
-	private List<Section> sections;
+	private List<Album> albums;
 	private String id;
 	private String name;
 	
-	public Section() {
-		sections = new ArrayList<>();
+	public Album() {
+		albums = new ArrayList<>();
 	}
 	
 	public List<ImageData> getImages() {
@@ -22,14 +22,14 @@ public class Section {
 	public void setImages(List<ImageData> images) {
 		this.images = images;
 	}
-	public List<Section> getSections() {
-		return sections;
+	public List<Album> getAlbums() {
+		return albums;
 	}
-	public void setSections(List<Section> sections) {
-		this.sections = sections;
+	public void setAlbums(List<Album> albums) {
+		this.albums = albums;
 	}
-	public void addSection(Section section) {
-		sections.add(section);
+	public void addAlbum(Album album) {
+		albums.add(album);
 	}
 	public String getId() {
 		return id;

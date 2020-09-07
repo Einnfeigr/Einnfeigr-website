@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import main.album.Album;
 import main.drive.DriveDao;
 import main.img.ImageData;
 import main.misc.configuration.ProjectConfiguration;
 import main.misc.configuration.SecurityConfiguration;
-import main.section.Section;
 
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})
@@ -42,15 +42,15 @@ public class DriveDaoTest {
 	
 	@Test
 	public void getAllFoldersTest() throws IOException {
-		List<Section> sections = dao.getAllFolders();
+		List<Album> albums = dao.getAllFolders();
 
-		logger.info("obtained "+sections.size()+" folders");
-		for(Section cSection : sections) {
-			logger.info(cSection.getId());
+		logger.info("obtained "+albums.size()+" folders");
+		for(Album album : albums) {
+			logger.info(album.getId());
 		}
-		assertThat(sections.size() > 1 
-				&& sections.get(0).getSections().size() > 0 
-				|| sections.get(1).getSections().size() > 0);
+		assertThat(albums.size() > 1 
+				&& albums.get(0).getAlbums().size() > 0 
+				|| albums.get(1).getAlbums().size() > 0);
 	}
 	
 }

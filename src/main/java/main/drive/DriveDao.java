@@ -10,12 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import main.album.Album;
 import main.img.ImageData;
 import main.misc.request.BufferedRequestBuilder;
 import main.misc.request.RequestBuilder;
-import main.section.Section;
 
 public class DriveDao {
 	
@@ -25,18 +26,19 @@ public class DriveDao {
 	private static Type token = 
 			new TypeToken<Map<String,List<DriveFile>>>() {}.getType();		
 
+	private DriveUtils driveUtils;
 	private static RequestBuilder requestBuilder = 
 			new BufferedRequestBuilder();
 
-	//TODO refactor
-	//injection in constructor guarantees RequestUtils initialization
-	private DriveDao(DriveUtils utils) {}
+	private DriveDao(DriveUtils driveUtils) {
+		this.driveUtils = driveUtils;
+	}
 			
 	public List<ImageData> getLatest() throws  IOException {
 		String content = requestBuilder.performGetRequest(
-				DriveUtils.generateRequestUrl(
+				driveUtils.generateRequestUrl(
 						DriveMethods.FILE_LIST, DriveUtils.rootId,
-						"&orderby=createdTime&pageSize=10&fields=items(id)"));
+						"&orderby=createdTime&fields=items(id)"));
 		Map<String,List<ImageData>> map = new Gson().fromJson(
 				content.toString(), token);
 		return map.get("items");
@@ -46,61 +48,72 @@ public class DriveDao {
 		return parseFiles(getDirectoryContent(DriveUtils.rootId), true);
 	}
 	
-	public List<Section> getAllFolders() throws IOException {
+	public List<Album> getAllFolders() throws IOException {
 		return parseFolders(getFile(DriveUtils.rootId),
-				new ArrayList<Section>());
+				new ArrayList<Album>());
 	}
 	
 	private DriveFile getFile(String id) throws IOException {
 		String content = requestBuilder.performGetRequest(
-				DriveUtils.generateRequestUrl(
+				driveUtils.generateRequestUrl(
 						DriveMethods.FILE_GET, id,"&fields=id,mimeType,title"));
 		return new Gson().fromJson(content, DriveFile.class);
 	}
 	
 	private List<DriveFile> getDirectoryContent(String id)
 			throws IOException {
+		List<DriveFile> files = null;
 		String content = requestBuilder.performGetRequest(
-				DriveUtils.generateRequestUrl(
+				driveUtils.generateRequestUrl(
 						DriveMethods.FILE_LIST, id,
-				"&fields=items(id,mimeType,title,parents(id))"));
-		Map<String,List<DriveFile>> map =  new Gson().fromJson(content, token);
-		List<DriveFile> files = map.get("items");
+				"&fields=items(id,mimeType,title,parents(id))&orderby=name"));
+		Map<String,List<DriveFile>> map;
+		try {
+			map =  new Gson().fromJson(content, token);
+			files = map.get("items");
+		} catch(JsonSyntaxException e) {
+			logger.error("cannot parse json: \n "+content);
+			logger.error("exception is: ", e);
+		}
 		return files;
 	}
 	
-	private List<Section> parseFolders(DriveFile file,
-			List<Section> sectionList) throws IOException {
+	private List<Album> parseFolders(DriveFile file,
+			List<Album> albumList) throws IOException {
 		if(!file.isDirectory()) {
-			return sectionList;
+			return albumList;
 		}
-		Section section = getSection(file);
+		Album album = generateAlbum(file);
 		//TODO refactor
-		sectionList.forEach(s -> {
+		albumList.forEach(s -> {
 			if(logger.isDebugEnabled()) {
-				logger.debug("section: "+file.getId()+" | "+file.getTitle());
+				logger.debug("album: "+file.getId()+" | "+file.getTitle());
 				logger.debug("parent id: "+file.getParentId());
 			}
 			if(s.getId().equals(file.getParentId())) {
-				s.addSection(section);
+				s.addAlbum(album);
 			}
 		});
-		sectionList.add(section);
+		albumList.add(album);
 		List<DriveFile> files = getDirectoryContent(file.getId());
 		for(DriveFile cFile : files) {
 			if(cFile.isDirectory()) {
-				parseFolders(cFile, sectionList);		
+				parseFolders(cFile, albumList);		
 			} 
 		}
-		return sectionList;
+		return albumList;
 	}
 	
-	private Section getSection(DriveFile file) throws IOException {
-		Section section = new Section();
-		section.setId(file.getId());
-		section.setName(file.getTitle());
-		section.setImages(parseFiles(getDirectoryContent(file.getId()), false));
-		return section;
+	private Album generateAlbum(DriveFile file) throws IOException {
+		if(!file.isDirectory()) {
+			throw new IllegalArgumentException("File must be directory | "
+					+file.getTitle());
+		}
+		Album album = new Album();
+		album.setId(file.getId());
+		album.setName(file.getTitle());
+		album.setImages(parseFiles(getDirectoryContent(file.getId()), false));
+		return album;
 	}
 	
 	private List<ImageData> parseFiles(List<DriveFile> files, boolean recursive)
@@ -110,6 +123,7 @@ public class DriveDao {
 			if(!file.isDirectory()) {
 				ImageData data = new ImageData();
 				data.setId(file.getId());
+				data.setTitle(file.getTitle());
 				dataList.add(data);
 			} else if(recursive) {
 				dataList.addAll(parseFiles(getDirectoryContent(file.getId()),

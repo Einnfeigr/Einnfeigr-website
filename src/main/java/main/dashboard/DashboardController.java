@@ -65,7 +65,7 @@ public class DashboardController {
 			@RequestParam("file") MultipartFile[] files,
 			@RequestParam("path") String path) {
 		if(path == null) {
-			path = "/img/portfolio/sections/ретушь/";
+			path = "/img/portfolio/albums/ретушь/";
 		}
 		try {
 			Template pageTemplate = new EssentialTemplate("templates/index");

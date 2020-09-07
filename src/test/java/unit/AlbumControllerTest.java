@@ -13,40 +13,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import main.PageController;
+import main.album.Album;
+import main.album.AlbumController;
 import main.img.ImageData;
 import main.misc.configuration.ProjectConfiguration;
 import main.misc.configuration.SecurityConfiguration;
-import main.section.Section;
-import main.section.SectionController;
 
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SectionControllerTest {
+public class AlbumControllerTest {
 
 	private final static Logger logger = 
-			LoggerFactory.getLogger(SectionControllerTest.class);
+			LoggerFactory.getLogger(AlbumControllerTest.class);
 	
 	@Autowired
-	SectionController sectionController;
+	AlbumController albumController;
 	
 	@Test
 	public void testImageData() {
-		Map<String, Section> sections = sectionController.getSections();
-		for(Entry<String, Section> entry : sections.entrySet()) {
-			Section section = entry.getValue();
+		Map<String, Album> albums = albumController.getAllAlbums();
+		for(Entry<String, Album> entry : albums.entrySet()) {
+			Album album = entry.getValue();
 			logger.info("=============================================");
-			logger.info("section: "+section.getId()+" | "+section.getName());
+			logger.info("album: "+album.getId()+" | "+album.getName());
 			logger.info("images: ");
-			for(ImageData image : section.getImages()) {
+			for(ImageData image : album.getImages()) {
 				logger.info(image.getId());
 			}
-			logger.info("sections: ");
-			for(Section cSection : section.getSections()) {
-				logger.info(cSection.getId()+" | "+cSection.getName());
+			logger.info("albums: ");
+			for(Album cAlbum : album.getAlbums()) {
+				logger.info(cAlbum.getId()+" | "+cAlbum.getName());
 			}
-			assertThat(section.getImages().size() > 0);
+			assertThat(album.getImages().size() > 0);
 		}
 	}
 	

@@ -17,20 +17,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import main.album.Album;
+import main.album.AlbumController;
 import main.exception.ControllerException;
 import main.exception.NotFoundException;
 import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
-import main.section.Section;
-import main.section.SectionController;
 import main.template.EssentialTemplate;
 import main.template.ImageListTemplate;
-import main.template.SectionTemplate;
-import main.template.SectionsTemplate;
+import main.template.AlbumTemplate;
+import main.template.AlbumListTemplate;
 import main.template.Template;
 import main.template.data.page.PageTemplateData;
-import main.template.data.page.SectionPageTemplateData;
+import main.template.data.page.AlbumPageTemplateData;
 import main.template.data.text.MainTextTemplateData;
 import main.template.data.text.TextTemplateData;
 
@@ -43,7 +43,7 @@ public class PageController {
 	@Autowired
 	ImageDataController dataController;
 	@Autowired 
-	SectionController sectionController;
+	AlbumController albumController;
 	
     @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET,
     		produces = "application/json", headers = "target=body")
@@ -108,9 +108,9 @@ public class PageController {
 				data.setTitle("Главная");	
 				break;
 			case("portfolio"):
-				Template sections = new SectionsTemplate(
-						sectionController.getMainSection().getSections());
-				data.setText(sections.compile());
+				Template albums = new AlbumListTemplate(
+						albumController.getRootAlbums());
+				data.setText(albums.compile());
 	        	data = loadPage(data, null, 
 						"templates/pages/portfolio");
 				data.setTitle("Портфолио");
@@ -138,17 +138,17 @@ public class PageController {
     	return data;
     }
     
-    @RequestMapping(value= "/portfolio/sections/{section}",
+    @RequestMapping(value= "/portfolio/albums/{id}",
     		method = RequestMethod.GET, produces = "application/json",
     		headers = "target=body")
-    public ResponseEntity<Page> getSectionBody(Device device, 
-    		@PathVariable("section") String sectionName,
+    public ResponseEntity<Page> getAlbumBody(Device device, 
+    		@PathVariable() String id,
     		@RequestParam(required=false) String ver) throws TemplateException {
     	try {
 	    	Page page = new Page();
-	    	Template template = new SectionTemplate(
-	    			sectionController.getSection(sectionName));	    	
-	    	page.setTitle(Util.toUpperCase(sectionName));
+	    	Album album = albumController.getAlbum(id);
+	    	Template template = new AlbumTemplate(album);	    	
+	    	page.setTitle(Util.toUpperCase(album.getName()));
 	    	page.setContent(template.compile());
 	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
     	} catch(Exception e) {
@@ -158,21 +158,21 @@ public class PageController {
     	}
     }
     
-    @RequestMapping(value= "/portfolio/sections/{section}", 
+    @RequestMapping(value= "/portfolio/albums/{id}", 
     		method= RequestMethod.GET)
-    public ModelAndView getSection(Device device,
-    		@PathVariable("section") String sectionName,
+    public ModelAndView getAlbum(Device device,
+    		@PathVariable() String id,
     		@RequestParam(required=false) String ver) throws TemplateException {
     	ModelAndView mav = null;
-    	PageTemplateData data = new SectionPageTemplateData();
+    	PageTemplateData data = new AlbumPageTemplateData();
       	try {
       		mav = new ModelAndView("index");
       		data.setMobile(isMobile(data, device, ver));
-	    	data.setTitle(Util.toUpperCase(sectionName));
-	    	Section section = sectionController.getSection(sectionName);
-	    	Template template = new SectionTemplate(section);
+	    	Album album = albumController.getAlbum(id);
+	    	Template template = new AlbumTemplate(album);
 	    	data.setPage(template.compile());
-	    	mav.getModel().put("name", section.getName());
+	    	data.setTitle(Util.toUpperCase(album.getName()));
+	    	mav.getModel().put("name", album.getName());
 	        mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			return mav;

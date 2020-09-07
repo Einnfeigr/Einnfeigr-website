@@ -55,7 +55,7 @@ public class StandardRequestBuilder implements RequestBuilder {
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(
 				connection.getInputStream()))) {
 			do {
-				content.append((char)br.read());
+				content.append(br.readLine());
 			} while(br.ready());
 		}
 		if(logger.isDebugEnabled()) {

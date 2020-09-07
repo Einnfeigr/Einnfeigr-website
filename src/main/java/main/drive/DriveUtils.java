@@ -12,7 +12,7 @@ public class DriveUtils {
 		DriveUtils.key = key;
 	}
 	
-	public static String generateRequestUrl(DriveMethods method, String id, 
+	public String generateRequestUrl(DriveMethods method, String id, 
 			String params) {
 		switch(method.ordinal()) {
 		case(0):

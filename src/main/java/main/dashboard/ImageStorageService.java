@@ -35,7 +35,7 @@ public class ImageStorageService implements StorageService {
 		}
 		File localFile = Util.getFile("static/upload/"+path+filename);
 		if(Util.isImage(localFile)) {
-			if(path.contains("img/portfolio/sections/")) {
+			if(path.contains("img/portfolio/albums/")) {
 				localFile = Util.getFile("static/"+path+filename);
 			}
 			Util.createFile(localFile);

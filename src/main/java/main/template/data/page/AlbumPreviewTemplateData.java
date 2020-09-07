@@ -1,8 +1,8 @@
 package main.template.data.page;
 
-import main.template.data.SectionTemplateData;
+import main.template.data.AlbumTemplateData;
 
-public class SectionPreviewTemplateData extends SectionTemplateData {
+public class AlbumPreviewTemplateData extends AlbumTemplateData {
 
 	String previews;
 
