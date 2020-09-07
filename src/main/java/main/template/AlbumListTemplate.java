@@ -1,18 +1,17 @@
-package main.album.template;
+package main.template;
 
 import java.io.IOException;
 import java.util.List;
 
 import main.album.Album;
-import main.template.AbstractTemplate;
-import main.template.EssentialDataTemplate;
-import main.template.Template;
 
 public class AlbumListTemplate extends AbstractTemplate {
 	
 	private List<Album> albums;
 		
-	public AlbumListTemplate(List<Album> albums) {
+	AlbumListTemplate() {}
+	
+	public void setAlbums(List<Album> albums) {
 		this.albums = albums;
 	}
 	
@@ -24,9 +23,9 @@ public class AlbumListTemplate extends AbstractTemplate {
 					new AlbumPreviewTemplate(album);
 			albumsContent.append(albumTemplate.compile());
 		}
-		Template albumsTemplate = new EssentialDataTemplate(
-				new AlbumListTemplateData(albumsContent.toString()));
-		albumsTemplate.setTemplatePath("templates/misc/albums/albumList");
+		Template albumsTemplate = TemplateFactory.buildTemplate(
+				new AlbumListTemplateData(albumsContent.toString()),
+				templatePath);
 		return albumsTemplate.compile();
 	}
 }

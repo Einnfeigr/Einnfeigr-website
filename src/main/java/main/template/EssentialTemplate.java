@@ -7,19 +7,11 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-public class AbstractDataTemplate<T> extends AbstractTemplate {
-	
-	public AbstractDataTemplate() {}
-	
-	public AbstractDataTemplate(String templatePath) {
-		super(templatePath);
-	}
-
-	public AbstractDataTemplate(T data) {
-		setData(data);
-	}
+public class EssentialTemplate<T> extends AbstractTemplate {
 	
 	T data;
+	
+	EssentialTemplate() {}
 	
 	public void setData(T data) {
 		this.data = data;

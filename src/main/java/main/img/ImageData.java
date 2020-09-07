@@ -1,5 +1,7 @@
 package main.img;
 
+import main.drive.DriveUtils;
+
 public class ImageData {
 
 	private String id;
@@ -17,5 +19,7 @@ public class ImageData {
 	public void setTitle(String name) {
 		this.title = name;
 	}
-	
+	public String getUrl() {
+		return DriveUtils.getDownloadUrl(id);
+	}
 }

@@ -2,7 +2,6 @@ package main.page;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,19 +20,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.album.Album;
 import main.album.AlbumController;
-import main.album.template.AlbumListTemplate;
-import main.album.template.AlbumPageTemplateData;
-import main.album.template.AlbumTemplate;
 import main.exception.ControllerException;
 import main.exception.NotFoundException;
 import main.exception.TemplateException;
 import main.img.ImageDataController;
 import main.misc.Util;
-import main.template.EssentialMapTemplate;
-import main.template.ImageListTemplate;
-import main.template.EssentialDataTemplate;
+import main.template.AlbumListTemplate;
+import main.template.AlbumPageTemplateData;
+import main.template.AlbumTemplate;
 import main.template.Template;
-import main.template.Template;
+import main.template.TemplateFactory;
 
 @RestController
 public class PageController {
@@ -104,14 +100,13 @@ public class PageController {
     	data.setMobile(isMobile(data, device, ver));
     	switch(page) {
 			case("main"):
-	        	data = loadPage(compileMain(data), "static/text/ru/main", 
-						"templates/pages/main");
+	        	data = compileMain(data);
 				data.setTitle("Главная");	
 				break;
 			case("portfolio"):
-				Template albums = new AlbumListTemplate(
+				Template template = TemplateFactory.buildTemplate(
 						albumController.getRootAlbums());
-				data.setText(albums.compile());
+				data.setText(template.compile());
 	        	data = loadPage(data, null, 
 						"templates/pages/portfolio");
 				data.setTitle("Портфолио");
@@ -185,12 +180,19 @@ public class PageController {
     }
     
     private PageTemplateData compileMain(PageTemplateData data) {
-    	try {
-    		List<String> latest = dataController.getLatestImages();
-    		Template template = new ImageListTemplate(latest);
+    	Template template;
+		try {
+    		template = TemplateFactory.buildTemplate(
+    				dataController.getLatestImages());
     		Map<String, String> textData = new HashMap<>();
-    		textData.put("latest", template.compile());
-        	data.setTextData(textData);
+    		Map<String, String> pageData = new HashMap<>();
+        	textData.put("latest", template.compile());
+    		template = TemplateFactory.buildTemplate(textData,
+    				"static/text/ru/main");
+    		pageData.put("text", template.compile());
+    		template = TemplateFactory.buildTemplate(pageData,
+    				"templates/pages/main");
+    		data.setPage(template.compile());
     	} catch(IOException | IllegalArgumentException e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
     	}
@@ -199,20 +201,19 @@ public class PageController {
     
     private PageTemplateData loadPage(PageTemplateData data, String textPath, 
     		String pagePath) throws IOException {
-        if(data == null || pagePath == null) {
+    	Template template;
+    	if(data == null || pagePath == null) {
         	throw new NullPointerException("Null passed as argument");
         }
     	if(textPath != null) {
     		if(data.getTextData() == null) {
     			data.setTextData(new HashMap<>());
     		}
-    		Template template = new EssentialMapTemplate(data.getTextData());
-    		template.setTemplatePath(textPath);
+    		template = TemplateFactory.buildTemplate(data.getTextData(),
+    				textPath);
     		data.setText(template.compile());
     	}
-    	EssentialDataTemplate template = new EssentialDataTemplate();
-    	template.setTemplatePath(textPath);
-		template.setData(data);
+    	template = TemplateFactory.buildTemplate(data, pagePath);
     	data.setPage(template.compile());
         return data;
     }

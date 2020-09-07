@@ -7,30 +7,23 @@ import main.template.data.ImageTemplateData;
 
 public class ImageListTemplate extends AbstractTemplate {
 	
-	private List<String> paths;
+	private List<String> urls;
 	
-	public ImageListTemplate(List<String> paths) {
-		this.paths = paths;
-	}
+	ImageListTemplate() {}
 
-	public List<String> getImages() {
-		return paths;
-	}
-
-	public void setImages(List<String> paths) {
-		this.paths = paths;
+	public void setUrls(List<String> urls) {
+		this.urls = urls;
 	}
 
 	@Override
 	public String compile() throws IOException {
-		if(paths == null || paths.size() == 0) {
+		if(urls == null || urls.size() == 0) {
 			throw new IllegalArgumentException("Empty paths list");
 		}
 		StringBuilder sb = new StringBuilder("");
-		for(String path : paths) {
-			EssentialDataTemplate template = new EssentialDataTemplate();	
-			template.setTemplatePath("templates/misc/img/image");			
-			template.setData(new ImageTemplateData(path.toString()));
+		for(String url : urls) {
+			Template template = TemplateFactory.buildTemplate(
+					new ImageTemplateData(url), "templates/misc/img/image");
 			sb.append(template.compile());
 		}
 		return sb.toString();

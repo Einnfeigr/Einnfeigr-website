@@ -1,4 +1,4 @@
-package main.album.template;
+package main.template;
 
 public class AlbumPreviewTemplateData extends AlbumTemplateData {
 

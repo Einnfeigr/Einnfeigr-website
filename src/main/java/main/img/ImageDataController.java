@@ -50,15 +50,8 @@ public class ImageDataController {
 		}
 	}
 	
-	public List<String> getLatestImages() {
-		List<String> files = new ArrayList<>();
-		try {
-			dataList.forEach(d -> files.add(DriveUtils.getDownloadUrl(
-					d.getId())));
-		} catch(Exception e) {
-			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-		}
-		return files;
+	public List<ImageData> getLatestImages() {
+		return latest;
 	}
 	
 }

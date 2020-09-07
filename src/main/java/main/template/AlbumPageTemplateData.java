@@ -1,4 +1,4 @@
-package main.album.template;
+package main.template;
 
 import main.page.PageTemplateData;
 
