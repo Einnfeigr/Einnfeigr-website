@@ -12,6 +12,7 @@ public class TemplateFactory {
 
 	private TemplateFactory() {}
 	
+	//TODO refactor
 	public static <T> Template buildTemplate(List<T> list) {
 		if(list == null || list.size() < 1) {
 			throw new IllegalArgumentException("List is empty");

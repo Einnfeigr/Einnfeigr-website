@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,18 +24,47 @@ import main.img.ImageDataComparator;
 
 public class DriveDao {
 	
+	private Map<String, DriveFile> fileCache;
+	private Map<String, List<DriveFile>> folderCache;
+	private DriveUtils driveUtils;
+	private static RequestBuilder requestBuilder = 
+			new StandardRequestBuilder();
+	
 	private final static Logger logger = 
 			LoggerFactory.getLogger(DriveDao.class);
 	
 	private static Type token = 
 			new TypeToken<Map<String,List<DriveFile>>>() {}.getType();		
 
-	private DriveUtils driveUtils;
-	private static RequestBuilder requestBuilder = 
-			new StandardRequestBuilder();
 
 	private DriveDao(DriveUtils driveUtils) {
+		fileCache = new HashMap<>();
+		folderCache = new HashMap<>();
 		this.driveUtils = driveUtils;
+	}
+
+	public void resetCache(String id) {
+		if(fileCache.containsKey(id)) {
+			fileCache.remove(id);
+		} else if(folderCache.containsKey(id)) {
+			folderCache.remove(id);
+		} else {
+			logger.warn("Given file doesn't have cache | "+id);
+		}
+	}
+	
+	public void resetCache(List<String> ids) {
+		if(ids == null) {
+			throw new IllegalArgumentException("Id list is null");
+		}
+		for(String id: ids) {
+			resetCache(id);
+		}
+	}
+	
+	public void resetCache() {
+		fileCache.clear();
+		folderCache.clear();
 	}
 	
 	public List<ImageData> getLatest() throws  IOException {
@@ -74,21 +104,29 @@ public class DriveDao {
 	}
 	
 	private DriveFile getFile(String id) throws IOException {
+		if(fileCache.containsKey(id)) {
+			return fileCache.get(id);
+		}
+		DriveFile file = null;
 		String url = driveUtils.generateRequestUrl(DriveMethods.FILE_GET, id);
 		String content;
 		try {
 			content = requestBuilder
 					.performGet(url, "fields", "id,mimeType,title");
-			return new Gson().fromJson(content, DriveFile.class);
+			file = new Gson().fromJson(content, DriveFile.class);
+			fileCache.put(file.getId(), file);
 		} catch(RequestException e) {
-			logger.error(e.getMessage(), e);
+			logger.error(url, e);
 			logger.error(e.getResponse().getContent());
-			return null;
 		}
+		return file;
 	}
 	
 	private List<DriveFile> getDirectoryContent(String id)
 			throws IOException {
+		if(folderCache.containsKey(id)) {
+			return folderCache.get(id);
+		}
 		List<DriveFile> files = null;
 		String url = driveUtils.generateRequestUrl(DriveMethods.FILE_LIST, id);
 		String content;
@@ -100,12 +138,13 @@ public class DriveDao {
 			try {
 				map =  new Gson().fromJson(content, token);
 				files = map.get("items");
+				folderCache.put(id, files);
 			} catch(JsonSyntaxException e) {
 				logger.error("cannot parse json: \n "+content);
 				logger.error("exception is: ", e);
 			}
 		} catch(RequestException e) {
-			logger.error(e.getMessage(), e);
+			logger.error(url, e);
 			logger.error(e.getResponse().getContent());
 		}
 		return files;
