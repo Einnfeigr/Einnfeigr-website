@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.drive.DriveDao;
-import main.drive.DriveUtils;
 import main.misc.Util;
 
 public class ImageDataController {

@@ -1,21 +1,13 @@
 package main.img;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import main.drive.DriveDao;
-import main.drive.DriveFile;
 import main.exception.PreviewException;
-import main.misc.Util;
-import main.misc.filter.ImagePreviewFileFilter;
 
 public class ImagePreviewController {
 	

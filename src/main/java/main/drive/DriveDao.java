@@ -15,10 +15,11 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import main.album.Album;
+import main.exception.RequestException;
+import main.http.RequestBuilder;
+import main.http.StandardRequestBuilder;
 import main.img.ImageData;
 import main.img.ImageDataComparator;
-import main.misc.request.BufferedRequestBuilder;
-import main.misc.request.RequestBuilder;
 
 public class DriveDao {
 	
@@ -30,59 +31,91 @@ public class DriveDao {
 
 	private DriveUtils driveUtils;
 	private static RequestBuilder requestBuilder = 
-			new BufferedRequestBuilder();
+			new StandardRequestBuilder();
 
 	private DriveDao(DriveUtils driveUtils) {
 		this.driveUtils = driveUtils;
 	}
-			
+	
 	public List<ImageData> getLatest() throws  IOException {
-		String content = requestBuilder.performGetRequest(
-				driveUtils.generateRequestUrl(
-						DriveMethods.FILE_LIST, DriveUtils.rootId,
-						"&orderby=createdTime&fields=items(id)"));
+		String content;
+		content = requestBuilder.performGet(driveUtils.generateRequestUrl(
+				DriveMethods.FILE_LIST, DriveUtils.rootId),
+				"orderby","createdTime","fields","items(id)");
 		Map<String,List<ImageData>> map = new Gson().fromJson(
 				content.toString(), token);
 		return map.get("items");
 	}
 	
 	public List<ImageData> getAllFiles() throws IOException {
-		return parseFiles(getDirectoryContent(DriveUtils.rootId), true);
+		List<ImageData> dataList;
+		List<DriveFile> files = getDirectoryContent(DriveUtils.rootId);
+		if(files != null) {
+			dataList = parseFiles(files, true);
+		} else {
+			dataList = new ArrayList<>();
+		}
+		return dataList;
 	}
 	
 	public List<Album> getAllFolders() throws IOException {
-		List<Album> albums = parseFolders(getFile(DriveUtils.rootId),
-				new ArrayList<>());
+		List<Album> albums = new ArrayList<>();
+		DriveFile rootFile = getRoot();
+		if(rootFile != null) {
+			albums = parseFolders(rootFile, albums);
+		} else {
+			logger.warn("Root file is null!");
+		}
 		return albums;
 	}
 	
+	private DriveFile getRoot() throws IOException {
+		return getFile(DriveUtils.rootId);
+	}
+	
 	private DriveFile getFile(String id) throws IOException {
-		String content = requestBuilder.performGetRequest(
-				driveUtils.generateRequestUrl(
-						DriveMethods.FILE_GET, id,"&fields=id,mimeType,title"));
-		return new Gson().fromJson(content, DriveFile.class);
+		String url = driveUtils.generateRequestUrl(DriveMethods.FILE_GET, id);
+		String content;
+		try {
+			content = requestBuilder
+					.performGet(url, "fields", "id,mimeType,title");
+			return new Gson().fromJson(content, DriveFile.class);
+		} catch(RequestException e) {
+			logger.error(e.getMessage(), e);
+			logger.error(e.getResponse().getContent());
+			return null;
+		}
 	}
 	
 	private List<DriveFile> getDirectoryContent(String id)
 			throws IOException {
 		List<DriveFile> files = null;
-		String content = requestBuilder.performGetRequest(
-				driveUtils.generateRequestUrl(
-						DriveMethods.FILE_LIST, id,
-				"&fields=items(id,mimeType,title,parents(id))&orderby=name"));
-		Map<String,List<DriveFile>> map;
+		String url = driveUtils.generateRequestUrl(DriveMethods.FILE_LIST, id);
+		String content;
 		try {
-			map =  new Gson().fromJson(content, token);
-			files = map.get("items");
-		} catch(JsonSyntaxException e) {
-			logger.error("cannot parse json: \n "+content);
-			logger.error("exception is: ", e);
+			content = requestBuilder.performGet(url,
+					"fields","items(id,mimeType,title,parents(id))",
+					"orderby","name");
+			Map<String,List<DriveFile>> map;
+			try {
+				map =  new Gson().fromJson(content, token);
+				files = map.get("items");
+			} catch(JsonSyntaxException e) {
+				logger.error("cannot parse json: \n "+content);
+				logger.error("exception is: ", e);
+			}
+		} catch(RequestException e) {
+			logger.error(e.getMessage(), e);
+			logger.error(e.getResponse().getContent());
 		}
 		return files;
 	}
 	
 	private List<Album> parseFolders(DriveFile file,
 			List<Album> albumList) throws IOException {
+		if(file == null) {
+			throw new IllegalArgumentException();
+		}
 		if(!file.isDirectory()) {
 			return albumList;
 		}

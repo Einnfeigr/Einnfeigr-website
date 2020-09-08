@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import main.ProjectConfiguration;
 import main.album.Album;
 import main.drive.DriveDao;
 import main.img.ImageData;
-import main.misc.configuration.ProjectConfiguration;
-import main.misc.configuration.SecurityConfiguration;
+import main.security.SecurityConfiguration;
 
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})

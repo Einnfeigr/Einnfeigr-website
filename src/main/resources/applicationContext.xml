@@ -20,7 +20,7 @@
 	<bean id="dashboardController"    class="main.dashboard.DashboardController" />
 	<bean id="imageStorageService"    class="main.dashboard.ImageStorageService" />
 	<bean id="imagePreviewController" class="main.img.ImagePreviewController" />
-	<bean id="securityController"     class="main.SecurityController" />
+	<bean id="securityController"     class="main.security.SecurityController" />
 	<bean id="pageController"         class="main.page.PageController" />
 	<bean id="driveUtils"             class="main.drive.DriveUtils" >
 		<constructor-arg value="Google Drive Api Key" />

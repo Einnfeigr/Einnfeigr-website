@@ -2,6 +2,7 @@ package main.drive;
 
 public class DriveUtils {
 	
+	private static String authToken;
 	private static String key;
 	public static final String rootId = "1zTDcH9LuuZ0KUI2c3K6f-r5pAUt_mrpa";
 	
@@ -12,15 +13,18 @@ public class DriveUtils {
 		DriveUtils.key = key;
 	}
 	
-	public String generateRequestUrl(DriveMethods method, String id, 
-			String params) {
+	public String getAuthToken() {
+		return authToken;
+	}
+	
+	public String generateRequestUrl(DriveMethods method, String id) {
 		switch(method.ordinal()) {
 		case(0):
 			return "https://www.googleapis.com/drive/v2/files?q=%27"+id
-					+"%27+in+parents&key="+key+params;
+					+"%27+in+parents&key="+key;
 		case(1):
 			return "https://www.googleapis.com/drive/v2/files/"+id
-					+"?key="+key+params;
+					+"?key="+key;
 		case(2):
 			return "https://www.googleapis.com/upload/drive/v2/files";
 		default:

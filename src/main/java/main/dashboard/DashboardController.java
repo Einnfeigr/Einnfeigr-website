@@ -1,5 +1,9 @@
 package main.dashboard;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+
+import main.drive.DriveUtils;
 import main.exception.ControllerException;
+import main.http.Request;
+import main.http.RequestBuilder;
+import main.http.StandardRequestBuilder;
 import main.misc.Util;
 import main.template.Template;
 import main.template.TemplateFactory;
@@ -26,7 +36,7 @@ public class DashboardController {
 			LoggerFactory.getLogger(DashboardController.class);
 	
 	@Autowired
-	ImageStorageService storageService;
+	private ImageStorageService storageService;
 	
 	@RequestMapping(value="/dashboard", method=RequestMethod.GET)
 	public ModelAndView showMain() {
@@ -83,5 +93,27 @@ public class DashboardController {
 			return ResponseEntity.badRequest().body(null);
 		}
 
+	}
+	
+	@RequestMapping(value="/dashboard/watch", method=RequestMethod.GET)
+	public ResponseEntity<String> startWatch(@RequestParam String id)
+			throws IOException {
+		if(!id.equals(System.getenv("drive.channelId"))) {
+			return ResponseEntity.badRequest().body("Invalid id");
+		}
+		RequestBuilder builder = new StandardRequestBuilder();
+		Map<String, String> content = new HashMap<>();
+		content.put("id", id);
+		content.put("type", "webhook");
+		content.put("address", System.getenv("currentUrl")
+				+"/api/drive/callback");
+		Request request = builder.blank()
+				.address("https://www.googleapis.com/drive/v3/files/"+
+					DriveUtils.rootId+"/watch/")
+				.method("POST")
+				.content(new Gson().toJson(content))
+				.authorization("Bearer ")
+				.contentType("application/json");
+		return ResponseEntity.ok().body(request.perform().getContent());
 	}
 }

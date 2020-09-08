@@ -2,6 +2,7 @@ package main.page;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,9 +24,9 @@ import main.album.AlbumController;
 import main.exception.ControllerException;
 import main.exception.NotFoundException;
 import main.exception.TemplateException;
+import main.img.ImageData;
 import main.img.ImageDataController;
 import main.misc.Util;
-import main.template.AlbumListTemplate;
 import main.template.AlbumPageTemplateData;
 import main.template.AlbumTemplate;
 import main.template.Template;
@@ -182,11 +183,13 @@ public class PageController {
     private PageTemplateData compileMain(PageTemplateData data) {
     	Template template;
 		try {
-    		template = TemplateFactory.buildTemplate(
-    				dataController.getLatestImages());
     		Map<String, String> textData = new HashMap<>();
     		Map<String, String> pageData = new HashMap<>();
-        	textData.put("latest", template.compile());
+			List<ImageData> dataList = dataController.getLatestImages();
+			if(dataList != null && dataList.size() > 0) {
+				template = TemplateFactory.buildTemplate(dataList);
+				textData.put("latest", template.compile());
+			}
     		template = TemplateFactory.buildTemplate(textData,
     				"static/text/ru/main");
     		pageData.put("text", template.compile());

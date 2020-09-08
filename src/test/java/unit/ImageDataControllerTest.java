@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import main.ProjectConfiguration;
 import main.img.ImageData;
 import main.img.ImageDataComparator;
 import main.img.ImageDataController;
-import main.misc.configuration.ProjectConfiguration;
-import main.misc.configuration.SecurityConfiguration;
+import main.security.SecurityConfiguration;
 
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})

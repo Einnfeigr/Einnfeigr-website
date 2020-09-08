@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import main.ProjectConfiguration;
 import main.img.ImageUtils;
 import main.misc.Util;
-import main.misc.configuration.ProjectConfiguration;
-import main.misc.configuration.SecurityConfiguration;
+import main.security.SecurityConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(

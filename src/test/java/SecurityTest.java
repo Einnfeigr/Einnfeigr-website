@@ -10,12 +10,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import main.SecurityController;
-import main.misc.configuration.ProjectConfiguration;
-import main.misc.configuration.SecurityConfiguration;
+import main.ProjectConfiguration;
+import main.dashboard.DashboardController;
+import main.security.SecurityConfiguration;
+import main.security.SecurityController;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers= {SecurityController.class})
+@WebMvcTest(controllers= {DashboardController.class, SecurityController.class})
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})
 public class SecurityTest {
@@ -52,8 +53,9 @@ public class SecurityTest {
 	@Test
 	public void dashboard() throws Exception {
 		mvc.perform(MockMvcRequestBuilders
-				.get("/dashboard")
+				.get("/dashboard/watch")
 				.header("user-agent", MOBILE_USER_AGENT)
+				.param("id", "id")
 				.accept(MediaType.ALL))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
