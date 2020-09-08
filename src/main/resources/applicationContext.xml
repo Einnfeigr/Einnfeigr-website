@@ -17,25 +17,25 @@
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
 >
 
-	<bean id="dashboardController" class="main.dashboard.DashboardController" />
-	<bean id="imageStorageService" class="main.dashboard.ImageStorageService" />
+	<bean id="dashboardController"    class="main.dashboard.DashboardController" />
+	<bean id="imageStorageService"    class="main.dashboard.ImageStorageService" />
 	<bean id="imagePreviewController" class="main.img.ImagePreviewController" />
-	<bean id="securityController" class="main.SecurityController" />
-	<bean id="pageController" class="main.PageController" />
-	<bean id="driveUtils" class="main.drive.DriveUtils" >
-		<constructor-arg value="Google drive api key" />
+	<bean id="securityController"     class="main.SecurityController" />
+	<bean id="pageController"         class="main.page.PageController" />
+	<bean id="driveUtils"             class="main.drive.DriveUtils" >
+		<constructor-arg value="Google Drive Api Key" />
 	</bean>
-	<bean id="driveDao"					class="main.drive.DriveDao" >
+	<bean id="driveDao"               class="main.drive.DriveDao" >
 		<constructor-arg ref="driveUtils" />
 	</bean>
-	<bean id="imageDataController" 		class="main.img.ImageDataController" >
+	<bean id="imageDataController" 	  class="main.img.ImageDataController" >
 		<constructor-arg ref="driveDao" />
 	</bean>
-	<bean id="sectionController" 		class="main.section.SectionController" >
+	<bean id="albumController"        class="main.album.AlbumController" >
 		<constructor-arg ref="driveDao" />
 	</bean>
-	<bean id="initializator" class="main.misc.Initializator" />
-	<bean id="notifier" class="main.misc.Notifier" />
+	<bean id="initializator"          class="main.misc.Initializator" />
+	<bean id="notifier"               class="main.misc.Notifier" />
 	
 	<task:scheduled-tasks scheduler="scheduler">
 		<task:scheduled ref="notifier" method="notifyServer" 
