@@ -12,10 +12,6 @@ public class RequestBuilder {
 	
 	private Request request;
 	
-	public void reset() {
-		this.request = null;
-	}
-	
 	public RequestBuilder method(String method) {
 		if(!isMethod(method)) {
 			throw new IllegalArgumentException("Given value is not a method");
@@ -128,6 +124,8 @@ public class RequestBuilder {
 	}
 	
 	public Request build() {
+		Request request = this.request;
+		this.request = null;
 		return request;
 	}
 	
