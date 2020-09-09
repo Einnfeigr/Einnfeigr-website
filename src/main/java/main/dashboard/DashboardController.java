@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,14 +33,66 @@ import main.template.TemplateFactory;
 @RestController
 public class DashboardController {
 	
+	private static String currentUserCode;
 	private static final Logger logger = 
 			LoggerFactory.getLogger(DashboardController.class);
 	
 	@Autowired
 	private ImageStorageService storageService;
 	
+	@RequestMapping(value="/dashboard/login")
+	public ModelAndView redirectToLogin(ModelMap model) {
+		model.addAttribute("attribute", "redirectWithRedirectPrefix");
+		String redirectUrl = "https://accounts.google.com/o/oauth2/v2/auth?"
+			  +"client_id="+System.getenv("clientId")+"&"
+			  +"response_type=code&"
+			  +"state=state_parameter_passthrough_value&"
+			  +"scope=https%3A//www.googleapis.com/auth/drive.file&"
+			  +"redirect_uri="+System.getenv("currentUrl")+"/dashboard&"
+			  +"prompt=consent&"
+			  +"include_granted_scopes=true";
+		return new ModelAndView("redirect:"+redirectUrl, model);
+		
+	}
+	
+	@RequestMapping(value="/dashboard/code/set", method=RequestMethod.GET)
+	public ModelAndView setCodeLoginForm() {
+		return new ModelAndView("pages/dashboard/code/set/login");
+	}
+	
+	@RequestMapping(value="/dashboard/code/get", method=RequestMethod.GET)
+	public ModelAndView getCodeLoginForm() {
+		return new ModelAndView("pages/dashboard/code/get/login");
+	}
+	
+	@RequestMapping(value="/dashboard/code/get", method=RequestMethod.POST)
+	public ResponseEntity<String> getCode(@RequestParam String password) {
+		if(password.equals(System.getenv("adminPassword"))) {
+			return new ResponseEntity<String>(currentUserCode, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Wrong password", 
+					HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	@RequestMapping(value="/dashboard/code/set", method=RequestMethod.POST)
+	public ResponseEntity<String> setCode(@RequestParam String password, 
+			@RequestParam String code) {
+		if(password.equals(System.getenv("adminPassword"))) {
+			currentUserCode = code;
+			return new ResponseEntity<String>("Code have been set",
+					HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Wrong password", 
+					HttpStatus.UNAUTHORIZED);
+		}
+	}
 	@RequestMapping(value="/dashboard", method=RequestMethod.GET)
-	public ModelAndView showMain() {
+	public ModelAndView showMain(
+			@RequestParam(value="code", required=false) String code) {
+		if(code != null) {
+			
+		}
 		ModelAndView mav =  new ModelAndView("index");
 		try {
 			Template template = TemplateFactory.buildTemplate(

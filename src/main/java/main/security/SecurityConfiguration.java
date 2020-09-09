@@ -21,7 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	  	auth
 	  		.inMemoryAuthentication()
 	        .withUser("studiedlist")
-	        .password(encoder.encode("A3a2qZbxFF"))
+	        .password(encoder.encode(System.getenv("adminPassword")))
 	        .roles("USER", "ADMIN"); 
 	}
 
@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.loginPage("/login")
 			.loginProcessingUrl("/login")
 			.defaultSuccessUrl("/dashboard")
-			.failureUrl("/failed")
+			.failureUrl("/loginFailed")
 			.and()
 			.logout()
 			.logoutUrl("/logout")
