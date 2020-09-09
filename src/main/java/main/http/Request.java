@@ -13,12 +13,11 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 public class Request {
 	
 	private final static Logger logger = 
-			LoggerFactory.getLogger(StandardRequestBuilder.class);
+			LoggerFactory.getLogger(Request.class);
 	
 	private String method;
 	private String address;
@@ -30,72 +29,60 @@ public class Request {
 	
 	Request() {}
 
-	public Request method(String method) {
-		if(!isMethod(method)) {
-			throw new IllegalArgumentException("Given value is not a method");
-		}
+	void setMethod(String method) {
 		this.method = method;
-		return this;
+	}
+
+	public String getMethod() {
+		return method;
 	}
 	
-	private boolean isMethod(String text) {
-		boolean matches = false;
-		for(RequestMethod requestMethod : RequestMethod.values()) {
-			if(requestMethod.name().equals(text)) {
-				matches = true;
-			}
-		}
-		return matches;
-	}
-	
-	public Request address(String address) {
-		if(!isValidAddress(address)) {
-			throw new IllegalArgumentException("Given address is not valid");
-		}
+	void setAddress(String address) {
 		this.address = address;
-		return this;
-	}
-
-	public boolean isValidAddress(String address) {
-		return address.contains("http://") || address.contains("https://") 
-				&& address.contains("/");
 	}
 	
-	public Request content(String content) {
-		if(params != null && !method.equals("GET")) {
-			throw new IllegalStateException(
-					"Cannot set both content and params");
-		}
+	public String getAddress() {
+		return address;
+	}
+
+	void setContent(String content) {
 		this.content = content;
-		return this;
+	}
+	
+	public String getContent() {
+		return content;
 	}
 
-	public Request contentType(String contentType) {
-		if(params != null && !method.equals("GET")) {
-			throw new IllegalStateException(
-					"Cannot set both params and content type");
-		}
+	void setContentType(String contentType) {
 		this.contentType = contentType;
-		return this;
 	}
 
-	public Request authorization(String authorization) {
+	public String getContentType() {
+		return contentType;
+	}
+	
+	void setAuthorization(String authorization) {
 		this.authorization = authorization;
-		return this;
 	}
 
-	public Request headers(Map<String, String> headers) {
+	public String getAuthorization() {
+		return authorization;
+	}
+	
+	void setHeaders(Map<String, String> headers) {
 		this.headers = headers;
-		return this;
 	}
 
-	public Request parameters(Map<String, String> parameters) { 
-		if(content != null && !method.equals("GET")) {
-			throw new IllegalStateException(
-					"Cannot set both params and content");
-		}
-		this.params = parameters;
-		return this;
+	public Map<String, String> getHeaders() {
+		return headers;
+	}
+	
+	void setParams(Map<String, String> params) {
+		this.params = params;
+	}
+	
+	public Map<String, String> getParams() {
+		return params;
 	}
 
 	public Response perform() throws IOException {

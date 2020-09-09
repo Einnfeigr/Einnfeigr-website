@@ -25,7 +25,6 @@ import main.drive.DriveDao;
 import main.drive.DriveUtils;
 import main.http.Request;
 import main.http.RequestBuilder;
-import main.http.StandardRequestBuilder;
 import main.img.ImageData;
 import main.img.ImageUtils;
 import main.security.SecurityConfiguration;
@@ -57,7 +56,7 @@ public class DriveTest {
 	
 	@Test 
 	public void exchangeToken() throws IOException {
-		RequestBuilder builder = new StandardRequestBuilder();
+		RequestBuilder builder = new RequestBuilder();
 		Map<String, String> content = new HashMap<>();
 		content.put("client_id", "client_id");
 		content.put("client_secret", "client_secret");
@@ -65,22 +64,26 @@ public class DriveTest {
 		content.put("code", "user_code");
 		content.put("grant_type", "authorization_code");
 		Request request = builder.post("https://oauth2.googleapis.com/token")
-				.content(new Gson().toJson(content));
+				.content(new Gson().toJson(content))
+				.build();
 		logger.info(request.perform().getContent());
 	}
 	
 	@Test
 	public void startWatch() throws IOException {
-		RequestBuilder builder = new StandardRequestBuilder();
+		RequestBuilder builder = new RequestBuilder();
 		Map<String, String> content = new HashMap<>();
 		content.put("id", "channel_id");
 		content.put("type", "webhook");
 		content.put("address", System.getenv("currentUrl")
 				+"/api/drive/callback");
-		Request request = builder.post("https://www.googleapis.com/drive/v3/files/"+DriveUtils.rootId+"/watch/")
+		Request request = builder.post(
+					"https://www.googleapis.com/drive/v3/files/"
+					+DriveUtils.rootId+"/watch/")
 				.content(new Gson().toJson(content))
 				.authorization("Bearer user_id")
-				.contentType("application/json");
+				.contentType("application/json")
+				.build();
 		logger.info(request.perform().getContent());
 	}
 }

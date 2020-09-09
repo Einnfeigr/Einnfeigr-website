@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.http.RequestBuilder;
-import main.http.StandardRequestBuilder;
 
 public class Notifier {
 
@@ -13,7 +12,7 @@ public class Notifier {
 	
 	public void notifyServer() { 
 		try {
-			RequestBuilder builder = new StandardRequestBuilder();
+			RequestBuilder builder = new RequestBuilder();
 			String url = System.getenv("currentUrl");
 			if(url != null) {
 				builder.performGet(url);

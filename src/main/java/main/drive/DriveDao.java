@@ -18,7 +18,6 @@ import com.google.gson.reflect.TypeToken;
 import main.album.Album;
 import main.exception.RequestException;
 import main.http.RequestBuilder;
-import main.http.StandardRequestBuilder;
 import main.img.ImageData;
 import main.img.ImageDataComparator;
 
@@ -28,7 +27,7 @@ public class DriveDao {
 	private Map<String, List<DriveFile>> folderCache;
 	private DriveUtils driveUtils;
 	private static RequestBuilder requestBuilder = 
-			new StandardRequestBuilder();
+			new RequestBuilder();
 	
 	private final static Logger logger = 
 			LoggerFactory.getLogger(DriveDao.class);

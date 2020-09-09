@@ -24,7 +24,6 @@ import main.drive.DriveUtils;
 import main.exception.ControllerException;
 import main.http.Request;
 import main.http.RequestBuilder;
-import main.http.StandardRequestBuilder;
 import main.misc.Util;
 import main.template.Template;
 import main.template.TemplateFactory;
@@ -101,7 +100,7 @@ public class DashboardController {
 		if(!id.equals(System.getenv("drive.channelId"))) {
 			return ResponseEntity.badRequest().body("Invalid id");
 		}
-		RequestBuilder builder = new StandardRequestBuilder();
+		RequestBuilder builder = new RequestBuilder();
 		Map<String, String> content = new HashMap<>();
 		content.put("id", id);
 		content.put("type", "webhook");
@@ -113,7 +112,8 @@ public class DashboardController {
 				.method("POST")
 				.content(new Gson().toJson(content))
 				.authorization("Bearer ")
-				.contentType("application/json");
+				.contentType("application/json")
+				.build();
 		return ResponseEntity.ok().body(request.perform().getContent());
 	}
 }

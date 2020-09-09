@@ -18,14 +18,14 @@ public class DriveUtils {
 	}
 	
 	public String generateRequestUrl(DriveMethods method, String id) {
-		switch(method.ordinal()) {
-		case(0):
+		switch(method) {
+		case FILE_LIST:
 			return "https://www.googleapis.com/drive/v2/files?q=%27"+id
 					+"%27+in+parents&key="+key;
-		case(1):
+		case FILE_GET:
 			return "https://www.googleapis.com/drive/v2/files/"+id
 					+"?key="+key;
-		case(2):
+		case FILE_INSERT:
 			return "https://www.googleapis.com/upload/drive/v2/files";
 		default:
 			return null;	
