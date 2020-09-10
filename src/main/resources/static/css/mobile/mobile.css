@@ -44,3 +44,8 @@ htnl.expanded .main .title {
 	margin: 0;
 	top: 0;
 }
+
+.previews img {
+	width: 40vw;
+	height: 28vw;
+}

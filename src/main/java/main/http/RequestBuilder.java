@@ -62,7 +62,7 @@ public class RequestBuilder {
 	}
 
 	public RequestBuilder authorization(String authorization) {
-		request.getAuthorization();
+		request.setAuthorization(authorization);
 		return this;
 	}
 

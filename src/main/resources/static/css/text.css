@@ -5,6 +5,7 @@
 	min-height: 100vh;
 	min-height: calc(var(--vh, 1vh) * 100);
 	padding: 35px;
+	padding-top: calc(90px + 35px);
 }
 
 .textDiv h1 {

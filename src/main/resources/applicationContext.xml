@@ -22,9 +22,7 @@
 	<bean id="imagePreviewController" class="main.img.ImagePreviewController" />
 	<bean id="securityController"     class="main.security.SecurityController" />
 	<bean id="pageController"         class="main.page.PageController" />
-	<bean id="driveUtils"             class="main.drive.DriveUtils" >
-		<constructor-arg value="Google Drive Api Key" />
-	</bean>
+	<bean id="driveUtils"             class="main.drive.DriveUtils" />
 	<bean id="driveDao"               class="main.drive.DriveDao" >
 		<constructor-arg ref="driveUtils" />
 	</bean>

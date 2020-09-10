@@ -56,12 +56,13 @@ public class DriveTest {
 	
 	@Test 
 	public void exchangeToken() throws IOException {
+		String code = "";
 		RequestBuilder builder = new RequestBuilder();
 		Map<String, String> content = new HashMap<>();
-		content.put("client_id", "client_id");
-		content.put("client_secret", "client_secret");
-		content.put("redirect_uri", "redirect_uri");
-		content.put("code", "user_code");
+		content.put("client_id", "");
+		content.put("client_secret", "");
+		content.put("redirect_uri", "https://einnfeigr-website.herokuapp.com/login");
+		content.put("code", code+"&");
 		content.put("grant_type", "authorization_code");
 		Request request = builder.post("https://oauth2.googleapis.com/token")
 				.content(new Gson().toJson(content))
@@ -73,15 +74,16 @@ public class DriveTest {
 	public void startWatch() throws IOException {
 		RequestBuilder builder = new RequestBuilder();
 		Map<String, String> content = new HashMap<>();
-		content.put("id", "channel_id");
+		content.put("kind", "api#channel");
+		content.put("id", System.getenv("drive.channelId"));
 		content.put("type", "webhook");
-		content.put("address", System.getenv("currentUrl")
-				+"/api/drive/callback");
+		content.put("address", 
+				"https://einnfeigr-website.herokuapp.com/api/drive/callback");
 		Request request = builder.post(
 					"https://www.googleapis.com/drive/v3/files/"
 					+DriveUtils.rootId+"/watch/")
 				.content(new Gson().toJson(content))
-				.authorization("Bearer user_id")
+				.authorization("Bearer")
 				.contentType("application/json")
 				.build();
 		logger.info(request.perform().getContent());

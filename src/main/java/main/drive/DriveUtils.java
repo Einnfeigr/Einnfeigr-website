@@ -2,19 +2,21 @@ package main.drive;
 
 public class DriveUtils {
 	
-	private static String authToken;
+	private TokenBunch tokenBunch;
 	private static String key;
 	public static final String rootId = "1zTDcH9LuuZ0KUI2c3K6f-r5pAUt_mrpa";
 	
-	public DriveUtils(String key) {
-		if(key.toLowerCase().equals("google drive api key")) {
-			key = System.getenv("GoogleDriveApiKey");
-		}
-		DriveUtils.key = key;
+	public DriveUtils() {
+		tokenBunch = new TokenBunch();
+		DriveUtils.key = System.getenv("drive.apiKey");
 	}
 	
-	public String getAuthToken() {
-		return authToken;
+	public String getUserCode() {
+		return tokenBunch.getUserCode();
+	}
+
+	public void setUserCode(String userCode) {
+		tokenBunch.setUserCode(userCode);
 	}
 	
 	public String generateRequestUrl(DriveMethods method, String id) {
@@ -32,6 +34,10 @@ public class DriveUtils {
 		}
 		
 	}   
+	
+	public String getAccessToken() {
+		return tokenBunch.getAccessToken();
+	}
 	
 	public static String getDownloadUrl(String id) {
 		return "https://drive.google.com/uc?id="+id+"&export=download";

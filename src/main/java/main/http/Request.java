@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -86,6 +87,7 @@ public class Request {
 	}
 
 	public Response perform() throws IOException {
+		Map<String, List<String>> requestProps = null;
 		String responseContent;
 		if(params != null) {
 			if(method.equals("GET")) {
@@ -119,10 +121,18 @@ public class Request {
 		} catch(IOException e) {
 			responseContent = readContent(connection.getErrorStream());
 		}
+		connection.disconnect();
 		if(logger.isDebugEnabled()) {
 			logger.debug("performed "+method+" request on address '"
 					+address+"'"
 					+" with response code "+connection.getResponseCode());
+			logger.debug("headers:");
+			for(Entry<String, List<String>> entry : connection.getHeaderFields().entrySet()) {
+				logger.debug(entry.getKey()+":");
+				for(String str : entry.getValue()) {
+					logger.debug("	"+str);
+				}
+			}
 			logger.debug(responseContent.toString());
 		}
 		return new Response(connection.getResponseMessage(),

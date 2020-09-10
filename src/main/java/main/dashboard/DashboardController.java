@@ -33,9 +33,12 @@ import main.template.TemplateFactory;
 @RestController
 public class DashboardController {
 	
-	private static String currentUserCode;
+	private static final String title = "Панель управления";
 	private static final Logger logger = 
 			LoggerFactory.getLogger(DashboardController.class);
+	
+	@Autowired
+	private DriveUtils driveUtils;
 	
 	@Autowired
 	private ImageStorageService storageService;
@@ -48,7 +51,7 @@ public class DashboardController {
 			  +"response_type=code&"
 			  +"state=state_parameter_passthrough_value&"
 			  +"scope=https%3A//www.googleapis.com/auth/drive.file&"
-			  +"redirect_uri="+System.getenv("currentUrl")+"/dashboard&"
+			  +"redirect_uri="+System.getenv("currentUrl")+"/login&"
 			  +"prompt=consent&"
 			  +"include_granted_scopes=true";
 		return new ModelAndView("redirect:"+redirectUrl, model);
@@ -57,18 +60,28 @@ public class DashboardController {
 	
 	@RequestMapping(value="/dashboard/code/set", method=RequestMethod.GET)
 	public ModelAndView setCodeLoginForm() {
-		return new ModelAndView("pages/dashboard/code/set/login");
+		try {
+			Template template = TemplateFactory.buildTemplate(
+					"templates/pages/dashboard/code/set");
+			ModelAndView mav = new ModelAndView("index");
+			mav.getModel().put("page", template.compile());
+			mav.getModel().put("title", title); 
+			return mav;
+		} catch(Exception e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			throw new ControllerException(e);
+		}
 	}
 	
 	@RequestMapping(value="/dashboard/code/get", method=RequestMethod.GET)
 	public ModelAndView getCodeLoginForm() {
-		return new ModelAndView("pages/dashboard/code/get/login");
+		return new ModelAndView("pages/dashboard/code/get");
 	}
 	
 	@RequestMapping(value="/dashboard/code/get", method=RequestMethod.POST)
 	public ResponseEntity<String> getCode(@RequestParam String password) {
 		if(password.equals(System.getenv("adminPassword"))) {
-			return new ResponseEntity<String>(currentUserCode, HttpStatus.OK);
+			return new ResponseEntity<String>(driveUtils.getUserCode(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("Wrong password", 
 					HttpStatus.UNAUTHORIZED);
@@ -79,7 +92,7 @@ public class DashboardController {
 	public ResponseEntity<String> setCode(@RequestParam String password, 
 			@RequestParam String code) {
 		if(password.equals(System.getenv("adminPassword"))) {
-			currentUserCode = code;
+			driveUtils.setUserCode(code);
 			return new ResponseEntity<String>("Code have been set",
 					HttpStatus.OK);
 		} else {
@@ -87,23 +100,19 @@ public class DashboardController {
 					HttpStatus.UNAUTHORIZED);
 		}
 	}
+	
 	@RequestMapping(value="/dashboard", method=RequestMethod.GET)
-	public ModelAndView showMain(
-			@RequestParam(value="code", required=false) String code) {
-		if(code != null) {
-			
-		}
+	public ModelAndView showMain() {
 		ModelAndView mav =  new ModelAndView("index");
 		try {
 			Template template = TemplateFactory.buildTemplate(
 					"templates/pages/dashboard/main");
 			mav.getModel().put("page", template.compile());
-			mav.getModel().put("title", "Панель управления");
+			mav.getModel().put("title", title);
 			return mav;
 		} catch (Exception e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-			ControllerException exception = new ControllerException(e);
-			throw exception;
+			throw new ControllerException(e);
 		}
 	}
 	
@@ -148,11 +157,39 @@ public class DashboardController {
 
 	}
 	
+	/*@RequestMapping(value="/dashboard/exchange", method=RequestMethod.GET)
+	public ModelAndView showExchangeForm() {
+		
+	}
+	
+	@RequestMapping(value="/dashboard/exchange", method=RequestMethod.POST)
+	public ResponseEntity<String> exchange() {
+		
+	}*/
+	
 	@RequestMapping(value="/dashboard/watch", method=RequestMethod.GET)
-	public ResponseEntity<String> startWatch(@RequestParam String id)
-			throws IOException {
+	public ModelAndView showStartWatchForm() {
+		try {
+			ModelAndView mav = new ModelAndView("index");
+			Template template = TemplateFactory.buildTemplate(
+					"templates/pages/dashboard/watch");
+			mav.getModel().put("title", title);
+			mav.getModel().put("page", template.compile());
+			return mav;
+		} catch(Exception e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			throw new ControllerException(e);
+		}
+	}
+	
+	@RequestMapping(value="/dashboard/watch", method=RequestMethod.POST)
+	public ResponseEntity<String> startWatch(
+			@RequestParam(required=false) String id) throws IOException {
+		if(id != null) {
+			id = id.trim();
+		}
 		if(!id.equals(System.getenv("drive.channelId"))) {
-			return ResponseEntity.badRequest().body("Invalid id");
+			return ResponseEntity.badRequest().body("Invalid id ("+id+")");
 		}
 		RequestBuilder builder = new RequestBuilder();
 		Map<String, String> content = new HashMap<>();
@@ -160,12 +197,13 @@ public class DashboardController {
 		content.put("type", "webhook");
 		content.put("address", System.getenv("currentUrl")
 				+"/api/drive/callback");
+		logger.info("current user code: "+driveUtils.getUserCode());
 		Request request = builder.blank()
 				.address("https://www.googleapis.com/drive/v3/files/"+
 					DriveUtils.rootId+"/watch/")
 				.method("POST")
 				.content(new Gson().toJson(content))
-				.authorization("Bearer ")
+				.authorization("Bearer "+driveUtils.getUserCode())
 				.contentType("application/json")
 				.build();
 		return ResponseEntity.ok().body(request.perform().getContent());
