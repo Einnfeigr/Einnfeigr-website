@@ -3,26 +3,49 @@
 			onclick="showPage('/portfolio/albums/{{id}}/')"
 		{{/previews}}
 >	
-	{{#images}}
+	{{^previews}}
 		<div class="textDiv">
-		<a class="back" onclick="showPage('/portfolio/')" >
-			Вернуться к портфолио
-		</a>
-		{{#back}}
-		|
-		<a class="back" onclick="showPage('{{back}}')" >
-			Назад
-		</a>
-		{{/back}}
-		<h1 class="centered">{{name}}</h1>
-		{{#albums}}
-			<div class="centered"><h2 class="centered">Вложенные альбомы</h1>{{{albums}}}</div>
-		{{/albums}}
-		<div class="images" >{{{images}}}</div>
+			<a class="back" onclick="showPage('/portfolio/')" >
+				Вернуться к портфолио
+			</a>
+			{{#back}}
+			|
+			<a class="back" onclick="showPage('{{back}}')" >
+				Назад
+			</a>
+			{{/back}}
+			<h1 class="centered">{{name}}</h1>
+			{{#description}}
+				<div class="description">
+					{{{description}}}
+				</div>
+			{{/description}}
+			{{#albums}}
+				<br>
+				<div class="centered">
+					<h2 class="centered">
+						Вложенные альбомы
+					</h2>
+					{{{albums}}}
+				</div>
+				<br>
+			{{/albums}}
+			{{#images}}
+				<h2 class="centered">
+					Фотографии
+				</h2>
+				<div class="images">
+					{{{images}}}
+				</div>
+			{{/images}}
 		</div>	
-	{{/images}}
+	{{/previews}}
 	{{#previews}}
-		<div class="previews">{{{previews}}}</div>
-		<div class="name">{{name}}</div>
+		<div class="previews">
+			{{{previews}}}
+		</div>
+		<div class="name">
+			{{name}}
+		</div>
 	{{/previews}}
 </div>

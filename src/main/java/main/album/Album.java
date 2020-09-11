@@ -9,6 +9,7 @@ public class Album {
 	
 	private List<ImageData> images;
 	private List<Album> albums;
+	private String parent;
 	private String id;
 	private String name;
 	
@@ -30,6 +31,12 @@ public class Album {
 	}
 	public void addAlbum(Album album) {
 		albums.add(album);
+	}
+	public String getParent() {
+		return parent;
+	}
+	public void setParent(String parent) {
+		this.parent = parent;
 	}
 	public String getId() {
 		return id;

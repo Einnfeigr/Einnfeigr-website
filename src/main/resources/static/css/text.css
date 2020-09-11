@@ -84,7 +84,6 @@ body {
 a {
 	color: inherit;
 	text-decoration: none;
-	cursor: hand;
 	border-bottom: 1px dotted white;
 	padding: 0 0 2px 0;
 }

@@ -11,6 +11,7 @@
 	bottom: 0;
 	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: repeat(3, 1fr);
+	padding-bottom: 27px;
 }
 
 .footer span {
@@ -19,6 +20,7 @@
 }
 
 .footer h5 {
+	font-size: 0.68rem;
 	margin: 0;
 	color: rgba(255,255,255,0.4);
 	font-weight: lighter;

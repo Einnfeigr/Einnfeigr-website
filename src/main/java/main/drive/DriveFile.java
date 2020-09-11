@@ -36,7 +36,7 @@ public class DriveFile {
 	}
 	
 	public String getParentId() {
-		if(parents.size() > 0) {
+		if(parents != null && parents.size() > 0) {
 			return parents.get(0).get("id");
 		} 
 		return null;

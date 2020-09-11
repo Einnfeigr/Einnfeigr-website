@@ -28,6 +28,10 @@ public class AlbumTemplate extends EssentialTemplate<TemplateData> {
 			Template template = TemplateFactory.buildTemplate(album.getAlbums());
 			data.setAlbums(template.compile());
 		}
+		if(album.getParent() != null 
+				&& !album.getParent().equals(DriveUtils.rootId)) {
+			data.setBack("/portfolio/albums/"+album.getParent());
+		}
 		setData(data);
 	}	
 	

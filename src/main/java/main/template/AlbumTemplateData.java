@@ -8,6 +8,7 @@ public class AlbumTemplateData implements TemplateData {
 	String images;
 	String id;
 	String albums;
+	String back;
 
 	public String getName() {
 		return name;
@@ -39,5 +40,13 @@ public class AlbumTemplateData implements TemplateData {
 	
 	public void setAlbums(String albums) {
 		this.albums = albums;
+	}
+	
+	public String getBack() {
+		return back;
+	}
+	
+	public void setBack(String back) {
+		this.back = back;
 	}
 }

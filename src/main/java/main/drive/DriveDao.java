@@ -191,6 +191,7 @@ public class DriveDao {
 		Comparator<ImageData> comparator = new ImageDataComparator();
 		imageList.sort(comparator);
 		album.setImages(imageList);
+		album.setParent(file.getParentId());
 		return album;
 	}
 	
