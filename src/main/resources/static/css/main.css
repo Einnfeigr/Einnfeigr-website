@@ -47,6 +47,14 @@
 	margin: auto;
 }
 
+.main .images {
+	flex-wrap: wrap;
+}
+
+.main .images img {
+	width: calc(100% / 3 - 10px);
+}
+
 .latest img {
 	margin: 10px;
  	object-fit: cover;
