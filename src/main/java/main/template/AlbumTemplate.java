@@ -23,6 +23,11 @@ public class AlbumTemplate extends EssentialTemplate<TemplateData> {
 		data.setName(album.getName());
 		data.setId(album.getId());
 		data.setImages(parseImages(album, album.getImages().size()));
+		List<Album> albums = album.getAlbums();
+		if(albums != null && albums.size() > 0) {
+			Template template = TemplateFactory.buildTemplate(album.getAlbums());
+			data.setAlbums(template.compile());
+		}
 		setData(data);
 	}	
 	

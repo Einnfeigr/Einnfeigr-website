@@ -4,10 +4,22 @@
 		{{/previews}}
 >	
 	{{#images}}
+		<div class="textDiv">
 		<a class="back" onclick="showPage('/portfolio/')" >
 			Вернуться к портфолио
 		</a>
-		<div class="images" >{{{images}}}</div>	
+		{{#back}}
+		|
+		<a class="back" onclick="showPage('{{back}}')" >
+			Назад
+		</a>
+		{{/back}}
+		<h1 class="centered">{{name}}</h1>
+		{{#albums}}
+			<div class="centered"><h2 class="centered">Вложенные альбомы</h1>{{{albums}}}</div>
+		{{/albums}}
+		<div class="images" >{{{images}}}</div>
+		</div>	
 	{{/images}}
 	{{#previews}}
 		<div class="previews">{{{previews}}}</div>
