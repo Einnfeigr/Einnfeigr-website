@@ -142,14 +142,14 @@ public class DriveDao {
 				map =  new Gson().fromJson(content, token);
 				files = map.get("items");
 				folderCache.put(id, files);
+				for(DriveFile file : files) {
+					if(file.getTitle().equals(DESCRIPTION_FILE_NAME)) {
+						descriptions.put(id, file);
+					}
+				}
 			} catch(JsonSyntaxException e) {
 				logger.error("cannot parse json: \n "+content);
 				logger.error("exception is: ", e);
-			}
-			for(DriveFile file : files) {
-				if(file.getTitle().equals(DESCRIPTION_FILE_NAME)) {
-					descriptions.put(id, file);
-				}
 			}
 		} catch(RequestException e) {
 			logger.error(url, e);
