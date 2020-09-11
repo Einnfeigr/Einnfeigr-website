@@ -1,3 +1,7 @@
+.main .textDiv {
+	padding-top: 35px;
+}
+
 .main .title {
 	display: flex;
 	flex-flow: column;

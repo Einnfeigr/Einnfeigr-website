@@ -1,3 +1,8 @@
+body {
+	font-weight: 300;
+	font-size: 115%;
+}
+
 .textDiv {
 	box-sizing: border-box;
 	background: white;
@@ -6,6 +11,10 @@
 	min-height: calc(var(--vh, 1vh) * 100);
 	padding: 35px;
 	padding-top: calc(90px + 35px);
+}
+
+.textDiv p, .textDiv .images{
+	padding-right: 30vw;
 }
 
 .textDiv h1 {
@@ -121,4 +130,16 @@ a {
 
 .error .textDiv, .login .textDiv, .dashboard .textDiv {
 	padding-top: 125px;
+}
+
+li {
+	margin: 2px;
+}
+
+li::marker {
+	content: "-";
+}
+
+ul.titled, ol.titled {
+	margin-top: 0;
 }
