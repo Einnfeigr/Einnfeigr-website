@@ -9,6 +9,7 @@ public class Album {
 	
 	private List<ImageData> images;
 	private List<Album> albums;
+	private String description;
 	private String parent;
 	private String id;
 	private String name;
@@ -32,6 +33,13 @@ public class Album {
 	public void addAlbum(Album album) {
 		albums.add(album);
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public String getParent() {
 		return parent;
 	}

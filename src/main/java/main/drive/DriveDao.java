@@ -17,14 +17,17 @@ import com.google.gson.reflect.TypeToken;
 
 import main.album.Album;
 import main.exception.RequestException;
+import main.http.Request;
 import main.http.RequestBuilder;
 import main.img.ImageData;
 import main.img.ImageDataComparator;
 
 public class DriveDao {
 	
+	private final static String DESCRIPTION_FILE_NAME = "description.txt";
 	private Map<String, DriveFile> fileCache;
 	private Map<String, List<DriveFile>> folderCache;
+	private Map<String, DriveFile> descriptions;
 	private DriveUtils driveUtils;
 	private static RequestBuilder requestBuilder = 
 			new RequestBuilder();
@@ -39,6 +42,7 @@ public class DriveDao {
 	private DriveDao(DriveUtils driveUtils) {
 		fileCache = new HashMap<>();
 		folderCache = new HashMap<>();
+		descriptions = new HashMap<>();
 		this.driveUtils = driveUtils;
 	}
 
@@ -126,6 +130,7 @@ public class DriveDao {
 		if(folderCache.containsKey(id)) {
 			return folderCache.get(id);
 		}
+		Map<String,List<DriveFile>> map;
 		List<DriveFile> files = null;
 		String url = driveUtils.generateRequestUrl(DriveMethods.FILE_LIST, id);
 		String content;
@@ -133,7 +138,6 @@ public class DriveDao {
 			content = requestBuilder.performGet(url,
 					"fields","items(id,mimeType,title,parents(id))",
 					"orderby","name");
-			Map<String,List<DriveFile>> map;
 			try {
 				map =  new Gson().fromJson(content, token);
 				files = map.get("items");
@@ -141,6 +145,11 @@ public class DriveDao {
 			} catch(JsonSyntaxException e) {
 				logger.error("cannot parse json: \n "+content);
 				logger.error("exception is: ", e);
+			}
+			for(DriveFile file : files) {
+				if(file.getTitle().equals(DESCRIPTION_FILE_NAME)) {
+					descriptions.put(id, file);
+				}
 			}
 		} catch(RequestException e) {
 			logger.error(url, e);
@@ -186,12 +195,25 @@ public class DriveDao {
 		Album album = new Album();
 		album.setId(file.getId());
 		album.setName(file.getTitle());
-		List<ImageData> imageList = parseFiles(
-				getDirectoryContent(file.getId()), false);
+		List<ImageData> imageList = new ArrayList<>();
+		parseFiles(getDirectoryContent(file.getId()), false).stream()
+				.filter(data -> data.getTitle().contains(".jpg") 
+						|| data.getTitle().contains(".jpeg"))
+				.forEach(data -> imageList.add(data));
 		Comparator<ImageData> comparator = new ImageDataComparator();
 		imageList.sort(comparator);
 		album.setImages(imageList);
 		album.setParent(file.getParentId());
+		if(descriptions.containsKey(file.getId())) {
+			DriveFile descFile = descriptions.get(file.getId());
+			RequestBuilder builder = new RequestBuilder();
+			Request request = builder
+					.get()
+					.address(DriveUtils.getDownloadUrl(descFile.getId()))
+					.build();
+			album.setDescription(request.perform().getContent());
+			
+		}
 		return album;
 	}
 	

@@ -32,6 +32,9 @@ public class AlbumTemplate extends EssentialTemplate<TemplateData> {
 				&& !album.getParent().equals(DriveUtils.rootId)) {
 			data.setBack("/portfolio/albums/"+album.getParent());
 		}
+		if(album.getDescription() != null) {
+			data.setDescription(album.getDescription());
+		}
 		setData(data);
 	}	
 	
