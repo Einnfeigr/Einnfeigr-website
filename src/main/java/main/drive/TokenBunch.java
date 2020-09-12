@@ -38,6 +38,7 @@ public class TokenBunch {
 		} else if(isExpired()) {
 			refreshCode();
 		}
+		logger.info("accessToken: "+accessToken);
 		return accessToken;
 	}
 	
@@ -84,6 +85,7 @@ public class TokenBunch {
 				refreshToken = jsonEntries.get("refreshToken");
 				setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
 			}
+			logger.info("code has been refreshed");
 		} catch(IOException | NumberFormatException e) {
 			logger.debug(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
@@ -109,6 +111,7 @@ public class TokenBunch {
 				refreshToken = jsonEntries.get("refreshToken");
 				setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
 			}
+			logger.info("Code has been exchanged");
 		} catch(IOException | NumberFormatException e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
