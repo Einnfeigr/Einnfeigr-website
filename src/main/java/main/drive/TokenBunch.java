@@ -99,7 +99,7 @@ public class TokenBunch {
 		content.put("client_id", "");
 		content.put("client_secret", "");
 		content.put("redirect_uri", System.getenv("currentUrl")+"login");
-		content.put("code", userCode+"&");
+		content.put("code", userCode.replaceFirst("/", "%2F")+"&");
 		content.put("grant_type", "authorization_code");
 		request = generateOauthRequest(content);
 		try {
