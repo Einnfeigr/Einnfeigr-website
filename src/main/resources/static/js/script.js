@@ -55,21 +55,21 @@ function hideImagePreview(id) {
 function showPage(address) {
 	$('.loading').show();
 	$('.previewBackground').fadeIn(50);
+	var ver = '';
+	var version = checkVersion();
+	if(version != '') {
+		ver = '?ver='+version;
+	}
 	$.ajax({
-		url: address,
+		url: address+ver,
 		beforeSend: function(request) {
 		    request.setRequestHeader("target", "body");
-		    request.setRequestHeader("ver", ver);
-		 },
+		},
 		type: 'GET',
 		success: function(a) {
-			var ver = '';
-			var version = checkVersion();
-			if(version != '') {
-				ver = '?ver='+version;
-			}
 			$('.page').remove();
-			window.history.pushState(address, a.title+" | einnfeigr", address+ver);
+			window.history.pushState(address, a.title+" | einnfeigr", address
+					+ver);
 			document.title = a.title+' | einnfeigr';
 			$('.pageArea').append(a.content);
 			$('.previewBackground').fadeOut(500);

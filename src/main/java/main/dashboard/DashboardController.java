@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -156,17 +157,7 @@ public class DashboardController {
 		}
 
 	}
-	
-	/*@RequestMapping(value="/dashboard/exchange", method=RequestMethod.GET)
-	public ModelAndView showExchangeForm() {
-		
-	}
-	
-	@RequestMapping(value="/dashboard/exchange", method=RequestMethod.POST)
-	public ResponseEntity<String> exchange() {
-		
-	}*/
-	
+
 	@RequestMapping(value="/dashboard/watch", method=RequestMethod.GET)
 	public ModelAndView showStartWatchForm() {
 		try {
@@ -184,12 +175,16 @@ public class DashboardController {
 	
 	@RequestMapping(value="/dashboard/watch", method=RequestMethod.POST)
 	public ResponseEntity<String> startWatch(
-			@RequestParam(required=false) String id) throws IOException {
-		if(id != null) {
-			id = id.trim();
-		}
-		if(!id.equals(System.getenv("drive.channelId"))) {
+			@RequestParam(required=false) String id,
+			@RequestParam(required=false) String password) throws IOException {
+		if(id == null || 
+				!(id = id.trim()).equals(System.getenv("drive.channelId"))) {
 			return ResponseEntity.badRequest().body("Invalid id ("+id+")");
+		}
+		if(password == null || !(password = password.trim())
+				.equals(System.getenv("adminPassword")) ) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body("Invalid password");
 		}
 		RequestBuilder builder = new RequestBuilder();
 		Map<String, String> content = new HashMap<>();
@@ -203,7 +198,7 @@ public class DashboardController {
 					DriveUtils.rootId+"/watch/")
 				.method("POST")
 				.content(new Gson().toJson(content))
-				.authorization("Bearer "+driveUtils.getUserCode())
+				.authorization("Bearer "+driveUtils.getAccessToken())
 				.contentType("application/json")
 				.build();
 		return ResponseEntity.ok().body(request.perform().getContent());
