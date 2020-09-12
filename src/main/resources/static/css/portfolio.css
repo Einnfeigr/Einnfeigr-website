@@ -1,3 +1,7 @@
+.textDiv img {
+	cursor: pointer;
+}
+
 .portfolio .textDiv {
 	color: white;
 	padding-top: 90px;

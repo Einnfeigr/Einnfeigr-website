@@ -21,6 +21,7 @@ import main.http.Request;
 import main.http.RequestBuilder;
 import main.img.ImageData;
 import main.img.ImageDataComparator;
+import main.misc.Util;
 
 public class DriveDao {
 	
@@ -121,6 +122,8 @@ public class DriveDao {
 		} catch(RequestException e) {
 			logger.error(url, e);
 			logger.error(e.getResponse().getContent());
+		} catch(NullPointerException e) {
+			logger.error(url, e);
 		}
 		return file;
 	}
@@ -139,7 +142,13 @@ public class DriveDao {
 					"fields","items(id,mimeType,title,parents(id))",
 					"orderby","name");
 			try {
+				if(content == null) {
+					throw new NullPointerException(content);
+				}
 				map =  new Gson().fromJson(content, token);
+				if(map == null) {
+					throw new NullPointerException(content);
+				}
 				files = map.get("items");
 				folderCache.put(id, files);
 				for(DriveFile file : files) {
@@ -154,6 +163,9 @@ public class DriveDao {
 		} catch(RequestException e) {
 			logger.error(url, e);
 			logger.error(e.getResponse().getContent());
+		} catch(NullPointerException e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			return new ArrayList<DriveFile>();
 		}
 		return files;
 	}

@@ -59,6 +59,7 @@ function showPage(address) {
 		url: address,
 		beforeSend: function(request) {
 		    request.setRequestHeader("target", "body");
+		    request.setRequestHeader("ver", ver);
 		 },
 		type: 'GET',
 		success: function(a) {

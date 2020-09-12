@@ -15,6 +15,8 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import main.misc.Util;
+
 public class Request {
 	
 	private final static Logger logger = 
@@ -87,7 +89,6 @@ public class Request {
 	}
 
 	public Response perform() throws IOException {
-		Map<String, List<String>> requestProps = null;
 		String responseContent;
 		if(params != null) {
 			if(method.equals("GET")) {
@@ -119,6 +120,7 @@ public class Request {
 		try {
 			responseContent = readContent(connection.getInputStream());
 		} catch(IOException e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			responseContent = readContent(connection.getErrorStream());
 		}
 		connection.disconnect();
@@ -127,7 +129,8 @@ public class Request {
 					+address+"'"
 					+" with response code "+connection.getResponseCode());
 			logger.debug("headers:");
-			for(Entry<String, List<String>> entry : connection.getHeaderFields().entrySet()) {
+			for(Entry<String, List<String>> entry : connection.getHeaderFields()
+					.entrySet()) {
 				logger.debug(entry.getKey()+":");
 				for(String str : entry.getValue()) {
 					logger.debug("	"+str);
@@ -143,9 +146,7 @@ public class Request {
 		StringBuilder content = new StringBuilder();
 		try(BufferedReader reader = new BufferedReader(new InputStreamReader(
 				inputStream))) {
-			do {
-				content.append(reader.readLine()+"\n");
-			} while(reader.ready());
+			reader.lines().forEach(l -> content.append(l+"\n"));
 		}
 		return content.toString();
 	}
