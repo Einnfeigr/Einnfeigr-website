@@ -1,7 +1,10 @@
 package main.drive;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import main.exception.RequestException;
 import main.http.Request;
 import main.http.RequestBuilder;
 import main.misc.Util;
@@ -96,12 +100,21 @@ public class TokenBunch {
 		Map<String, String> jsonEntries;
 		Request request;
 		Map<String, String> content = new HashMap<>();
-		content.put("client_id", "");
-		content.put("client_secret", "");
+		String code;
+		try {
+			code = URLEncoder
+					.encode(userCode, StandardCharsets.UTF_8.toString())+"&";
+		} catch(UnsupportedEncodingException e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			code = userCode;
+		}
+		content.put("client_id", System.getenv("clientId"));
+		content.put("client_secret", System.getenv("clientSecret"));
 		content.put("redirect_uri", System.getenv("currentUrl")+"login");
-		content.put("code", userCode.replaceFirst("/", "%2F")+"&");
+		content.put("code", code);
 		content.put("grant_type", "authorization_code");
 		request = generateOauthRequest(content);
+		logger.info(code);
 		try {
 			jsonEntries = gson.fromJson(request.perform().getContent(), token);
 			if(jsonEntries.containsKey("refreshToken") 
@@ -112,6 +125,8 @@ public class TokenBunch {
 				setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
 			}
 			logger.info("Code has been exchanged");
+		} catch(RequestException e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e.getContent());
 		} catch(IOException | NumberFormatException e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}

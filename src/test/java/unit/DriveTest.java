@@ -35,7 +35,7 @@ import main.security.SecurityConfiguration;
 public class DriveTest {
 
 	private final static Logger logger = 
-			LoggerFactory.getLogger(DriveDaoTest.class);
+			LoggerFactory.getLogger(DriveTest.class);
 	
 	@Autowired
 	DriveDao dao;
