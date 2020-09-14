@@ -111,7 +111,7 @@ public class TokenBunch {
 		}
 		content.put("client_id", System.getenv("clientId"));
 		content.put("client_secret", System.getenv("clientSecret"));
-		content.put("redirect_uri", System.getenv("currentUrl")+"login");
+		content.put("redirect_uri", System.getenv("currentUrl")+"/login");
 		content.put("code", userCode);
 		content.put("grant_type", "authorization_code");
 		request = generateOauthRequest(content);
