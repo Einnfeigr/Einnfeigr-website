@@ -1,17 +1,17 @@
 body {
+	font-family: 'Fira Sans', sans-serif;
 	font-weight: 300;
 	font-size: 115%;
 }
 
 .textDiv {
-	box-sizing: border-box;
-	background: white;
-	width: 100vw;
-	overflow-x: hidden;
-	min-height: 100vh;
-	min-height: calc(var(--vh, 1vh) * 100);
-	padding: 35px;
 	padding-top: calc(90px + 35px);
+	box-sizing: border-box;
+	overflow-x: hidden;
+	background: white;
+	min-height: 100vh;
+	padding: 35px;
+	width: 100vw;
 }
 
 .textDiv p, .textDiv .images{
@@ -19,23 +19,17 @@ body {
 }
 
 .textDiv h1 {
-	font-weight: 300;
+	font-weight: inherit;
 	text-align: left;
 }
 
 .textDiv h2 {
-	font-weight: 300;
+	font-weight: inherit;
 }
 
 .textDiv .centered {
 	width: 100%;
 	text-align: center;
-}
-
-.textDiv h4 {
-	width: 70%;
-	line-height: 170%;
-	font-weight: 300;
 }
 
 .textDiv .note {
@@ -51,9 +45,9 @@ body {
 }
 
 .textDiv .images {
+	justify-content: center;
 	display: flex;
 	gap: 10px;
-	justify-content: center;
 }
 
 .textDiv .images img {
@@ -61,8 +55,8 @@ body {
 }
 
 .textDiv .image {
-	display: grid;
 	grid-template-rows: 1fr auto;
+	display: grid;
 }
 
 .textDiv .image h5 {
@@ -83,10 +77,10 @@ body {
 }
 
 a {
-	color: inherit;
-	text-decoration: none;
 	border-bottom: 1px dotted white;
+	text-decoration: none;
 	padding: 0 0 2px 0;
+	color: inherit;
 }
 
 .textDiv a {
@@ -99,14 +93,14 @@ a {
 }
 
 .title {
+	text-shadow: 1px 1px 7px rgba(0,0,0,0.55);
 	height: calc(45vh - 90px);
+	justify-content: center;
 	text-align: center;
 	position: fixed;
-	z-index: -1;
-	color: white;
 	display: flex;
-	justify-content: center;
-	text-shadow: 1px 1px 7px rgba(0,0,0,0.55);
+	color: white;
+	z-index: -1;
 }
 
 .title .text {

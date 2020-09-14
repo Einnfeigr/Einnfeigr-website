@@ -31,12 +31,16 @@ htnl.expanded .main .title {
 	padding: 7px;
 }
 
-.textDiv h4 {
+.textDiv p {
 	width: 100%;
 }
 
 .main .backgroundImage {
 	margin: 0;
+}
+
+.background {
+	height: calc(var(--vh, 1vh) * 45);
 }
 
 .backgroundImage {
@@ -45,4 +49,6 @@ htnl.expanded .main .title {
 	top: 0;
 }
 
-
+.textDiv {
+	min-height: calc(var(--vh, 1vh) * 100);
+}
