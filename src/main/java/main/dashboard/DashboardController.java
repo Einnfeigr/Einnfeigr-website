@@ -49,7 +49,6 @@ public class DashboardController {
 		String redirectUrl = "https://accounts.google.com/o/oauth2/v2/auth?"
 			  +"client_id="+System.getenv("clientId")+"&"
 			  +"response_type=code&"
-			  +"prompt=consent&"
 			  +"access_type=offline&"
 			  +"state=state_parameter_passthrough_value&"
 			  +"scope=https%3A//www.googleapis.com/auth/drive.file&"
