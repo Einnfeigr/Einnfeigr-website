@@ -32,8 +32,11 @@ public class TokenBunch {
 	private String userCode;
 	private long expiresIn;
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
+	public TokenBunch() {
+		String refreshToken = System.getenv("refreshToken");
+		if(refreshToken != null) {
+			this.refreshToken = refreshToken;
+		}
 	}
 	
 	public String getAccessToken() {
@@ -82,16 +85,14 @@ public class TokenBunch {
 		request = generateOauthRequest(content);
 		try {	
 			jsonEntries = gson.fromJson(request.perform().getContent(), token);
-			if(jsonEntries.containsKey("refreshToken") 
-					&& jsonEntries.containsKey("accessToken")
-					&& jsonEntries.containsKey("expiresIn")) {
-				accessToken = jsonEntries.get("accessToken");
-				refreshToken = jsonEntries.get("refreshToken");
-				setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
-			}
+			accessToken = jsonEntries.get("accessToken");
+			refreshToken = jsonEntries.get("refreshToken");
+			setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
 			logger.info("code has been refreshed");
+			logger.info("AccessToken: "+accessToken);
+			logger.info("RefreshToken: "+refreshToken);
 		} catch(IOException | NumberFormatException e) {
-			logger.debug(Util.EXCEPTION_LOG_MESSAGE, e);
+			logger.info(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
 	}
 	
@@ -111,20 +112,20 @@ public class TokenBunch {
 		content.put("client_id", System.getenv("clientId"));
 		content.put("client_secret", System.getenv("clientSecret"));
 		content.put("redirect_uri", System.getenv("currentUrl")+"login");
-		content.put("code", code);
+		content.put("code", userCode);
 		content.put("grant_type", "authorization_code");
 		request = generateOauthRequest(content);
-		logger.info(code);
+		logger.info(userCode);
 		try {
-			jsonEntries = gson.fromJson(request.perform().getContent(), token);
-			if(jsonEntries.containsKey("refreshToken") 
-					&& jsonEntries.containsKey("accessToken")
-					&& jsonEntries.containsKey("expiresIn")) {
-				accessToken = jsonEntries.get("accessToken");
-				refreshToken = jsonEntries.get("refreshToken");
-				setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
-			}
+			String response = request.perform().getContent();
+			logger.info(response);
+			jsonEntries = gson.fromJson(response, token);
+			accessToken = jsonEntries.get("access_token");
+			refreshToken = jsonEntries.get("refresh_token");
+			setExpiresIn(Integer.valueOf(jsonEntries.get("expires_in")));
 			logger.info("Code has been exchanged");
+			logger.info("AccessToken: "+accessToken);
+			logger.info("RefreshToken: "+refreshToken);
 		} catch(RequestException e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e.getContent());
 		} catch(IOException | NumberFormatException e) {
