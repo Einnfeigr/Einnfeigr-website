@@ -1,7 +1,9 @@
 package main.drive.dao;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import main.drive.DriveFile;
+import main.drive.DriveFileConverter;
 import main.drive.DriveMethods;
 import main.drive.DriveUtils;
 import main.exception.RequestException;
@@ -34,6 +37,7 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 		this.rootId = rootId;
 	}
 	
+	@Override
 	public String getRoot() {
 		return rootId;
 	}
@@ -78,6 +82,11 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 		this.folderConverter = folderConverter;
 	}
 
+	@Override
+	public InputStream getFileContent(String id) throws IOException {
+		return new URL(DriveUtils.getDownloadUrl(id)).openStream();
+	}
+	
 	protected List<DriveFile> getDriveFolderContent(String id)
 			throws IOException {
 		Map<String,List<DriveFile>> map;

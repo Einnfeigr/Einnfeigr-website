@@ -9,7 +9,8 @@ public class ImagePreviewFileFilter implements FileFilter {
 	@Override
 	public boolean isValid(File file) {
 		String extension;
-		if(file.isDirectory() || (extension = Util.getExtension(file)) == null) {
+		if(file.isDirectory() 
+				|| (extension = Util.getExtension(file.getName())) == null) {
 			return false;
 		}
 		String name = file.getName();

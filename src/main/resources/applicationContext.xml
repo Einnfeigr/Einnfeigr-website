@@ -32,16 +32,11 @@
 	<bean id="albumController"        class="main.album.AlbumController" >
 		<constructor-arg ref="portfolioDriveDao" />
 	</bean>
-	<bean id="initializator"          class="main.misc.Initializator" />
 	<bean id="notifier"               class="main.misc.Notifier" />
 	
 	<task:scheduled-tasks scheduler="scheduler">
 		<task:scheduled ref="notifier" method="notifyServer" 
 			fixed-delay="1200000" />
-    	<task:scheduled ref="imageDataController" method="update" 
-    		fixed-delay="1800000" />
-    	<task:scheduled ref="imagePreviewController" method="updatePreviews" 
-    		fixed-delay="1800000" />
 	</task:scheduled-tasks>
 	
 	<task:scheduler id="scheduler" pool-size="10" />

@@ -194,7 +194,7 @@ public class Util {
     				"Can't find file '"+src.getAbsolutePath()+"'");
     	}
     	try(InputStream is = new FileInputStream(src)) {
-    		copyImage(getExtension(src), is, dest);
+    		copyImage(getExtension(src.getName()), is, dest);
     	} catch(Exception e) {
     		logger.error(EXCEPTION_LOG_MESSAGE, e);
     		throw new IllegalArgumentException(e);
@@ -212,8 +212,8 @@ public class Util {
     	}
     }
     
-    public static String getExtension(File file) {
-    	String[] spl = file.getName().split("\\.");
+    public static String getExtension(String name) {
+    	String[] spl = name.split("\\.");
     	if(spl.length < 2) {
     		return null;
     	}

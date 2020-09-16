@@ -1,10 +1,7 @@
 package main.drive;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,14 +98,6 @@ public class TokenBunch {
 		Map<String, String> jsonEntries;
 		Request request;
 		Map<String, String> content = new HashMap<>();
-		String code;
-		try {
-			code = URLEncoder
-					.encode(userCode, StandardCharsets.UTF_8.toString())+"&";
-		} catch(UnsupportedEncodingException e) {
-			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-			code = userCode;
-		}
 		content.put("client_id", System.getenv("clientId"));
 		content.put("client_secret", System.getenv("clientSecret"));
 		content.put("redirect_uri", System.getenv("currentUrl")+"/login");

@@ -1,20 +1,33 @@
 package main.drive.dao;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
+
 import org.slf4j.LoggerFactory;
 
 import main.drive.DriveFile;
+import main.drive.DriveFileConverter;
+import main.drive.DriveUtils;
 import main.drive.preview.PreviewSize;
+import main.http.Request;
+import main.http.RequestBuilder;
 import main.img.ImageData;
 import main.misc.Util;
 
-public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>> {
-	
+public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>> 
+		implements WritableDriveDao<ImageData, BufferedImage> {
+
 	private Map<PreviewSize, String> sizeFolders;
 	
 	private PreviewDriveDao() {
@@ -63,6 +76,27 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>> 
 	@Override
 	public List<ImageData> getFolderContent(String id) throws IOException {
 		return null;
+	}
+	
+	@Override
+	public void writeFile(ImageData file, BufferedImage image) 
+			throws IOException {
+		StringBuilder content = new StringBuilder();
+		String url = DriveUtils.getUploadUrl();
+		String extension = Util.getExtension(file.getTitle());
+		try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
+			ImageIO.write(image, extension, ios);
+			try(BufferedReader br = new BufferedReader(new InputStreamReader(
+					new ByteArrayInputStream(baos.toByteArray())))) {
+				br.lines().forEach(l -> content.append(l+"\n"));
+			}
+	    }
+		Request request = RequestBuilder.getInstance()
+				.post(url)
+				.contentType("image/"+extension)
+				.build();
+		request.perform();
 	}
 	
 	public List<ImageData> getAllPreviewsBySize(PreviewSize size) 

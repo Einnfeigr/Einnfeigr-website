@@ -1,8 +1,6 @@
-package main.drive.dao;
+package main.drive;
 
 import java.io.IOException;
-
-import main.drive.DriveFile;
 
 public interface DriveFileConverter<T> {
 

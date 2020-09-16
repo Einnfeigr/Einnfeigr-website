@@ -41,4 +41,9 @@ public class DriveUtils {
 	public static String getDownloadUrl(String id) {
 		return "https://drive.google.com/uc?id="+id+"&export=download";
 	}
+	
+	public static String getUploadUrl() {
+		return "https://www.googleapis.com/upload/drive/v3/files"
+				+ "?uploadType=resumable";
+	}
 }
