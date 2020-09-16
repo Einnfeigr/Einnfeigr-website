@@ -8,8 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import main.drive.DriveDao;
-import main.drive.DriveUtils;
+import main.drive.dao.PortfolioDriveDao;
 import main.img.ImageDataController;
 import main.misc.Util;
 
@@ -20,9 +19,9 @@ public class AlbumController {
 	
 	private static Album rootDirectory;
 	private static Map<String, Album> albums;
-	private DriveDao dao;
+	private PortfolioDriveDao dao;
 	
-	public AlbumController(DriveDao dao) {
+	public AlbumController(PortfolioDriveDao dao) {
 		this.dao = dao;
 		loadAlbums();
 	}
@@ -47,7 +46,7 @@ public class AlbumController {
 			List<Album> albumList = dao.getAllFolders();
 			albums = new HashMap<>();
 			albumList.forEach(s -> {
-				if(s.getId().equals(DriveUtils.rootId)) {
+				if(s.getId().equals(PortfolioDriveDao.getRootId())) {
 					rootDirectory = s;
 				}
 				albums.put(s.getId(), s);

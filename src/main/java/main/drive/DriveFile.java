@@ -6,9 +6,11 @@ import java.util.Map;
 public class DriveFile {
 
 	private String id;
-	private String mimeType;
 	private String title;
+	private String mimeType;
+	private Boolean isDirectory;
 	private List<Map<String, String>> parents;
+	private List<DriveFile> children;
 	
 	public String getId() {
 		return id;
@@ -34,7 +36,18 @@ public class DriveFile {
 	public void setParents(List<Map<String, String>> parents) {
 		this.parents = parents;
 	}
-	
+	public List<DriveFile> getChildren() {
+		if(!isDirectory) { 
+			throw new IllegalStateException("File is not folder");
+		}
+		return children;
+	}
+	public void setChildren(List<DriveFile> children) {
+		if(!isDirectory) { 
+			throw new IllegalStateException("File is not folder");
+		}
+		this.children = children;
+	}
 	public String getParentId() {
 		if(parents != null && parents.size() > 0) {
 			return parents.get(0).get("id");
@@ -42,7 +55,10 @@ public class DriveFile {
 		return null;
 	}
 	public boolean isDirectory() {
-		return mimeType.equals("application/vnd.google-apps.folder");
+		if(isDirectory == null) {
+			isDirectory = mimeType.equals("application/vnd.google-apps.folder");
+		}
+		return isDirectory;
 	}
 	
 }

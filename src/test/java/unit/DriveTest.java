@@ -21,8 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.google.gson.Gson;
 
 import main.ProjectConfiguration;
-import main.drive.DriveDao;
 import main.drive.DriveUtils;
+import main.drive.dao.PortfolioDriveDao;
 import main.http.Request;
 import main.http.RequestBuilder;
 import main.img.ImageData;
@@ -38,7 +38,7 @@ public class DriveTest {
 			LoggerFactory.getLogger(DriveTest.class);
 	
 	@Autowired
-	DriveDao dao;
+	PortfolioDriveDao dao;
 	
 	@Test
 	public void createImagePreviewTest() throws IOException {
@@ -81,7 +81,7 @@ public class DriveTest {
 				"https://einnfeigr-website.herokuapp.com/api/drive/callback");
 		Request request = builder.post(
 					"https://www.googleapis.com/drive/v3/files/"
-					+DriveUtils.rootId+"/watch/")
+					+PortfolioDriveDao.getRootId()+"/watch/")
 				.content(new Gson().toJson(content))
 				.authorization("Bearer")
 				.contentType("application/json")

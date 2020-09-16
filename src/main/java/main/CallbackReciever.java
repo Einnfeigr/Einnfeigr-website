@@ -4,16 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import main.drive.DriveDao;
+import main.drive.dao.PortfolioDriveDao;
 
 @RestController
 public class CallbackReciever {
 
 	@Autowired
-	DriveDao driveDao;
+	PortfolioDriveDao driveDao;
 	
 	@RequestMapping("api/drive/callback")
 	public void handleCallback() {
-		driveDao.resetCache();
+		driveDao.clearCache();
 	}
 }

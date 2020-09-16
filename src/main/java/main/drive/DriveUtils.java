@@ -4,8 +4,7 @@ public class DriveUtils {
 	
 	private TokenBunch tokenBunch;
 	private static String key;
-	public static final String rootId = "1zTDcH9LuuZ0KUI2c3K6f-r5pAUt_mrpa";
-	
+
 	public DriveUtils() {
 		tokenBunch = new TokenBunch();
 		DriveUtils.key = System.getenv("drive.apiKey");

@@ -5,6 +5,7 @@ import java.util.List;
 
 import main.album.Album;
 import main.drive.DriveUtils;
+import main.drive.dao.PortfolioDriveDao;
 import main.img.ImageData;
 import main.template.data.ImageTemplateData;
 import main.template.data.TemplateData;
@@ -29,7 +30,7 @@ public class AlbumTemplate extends EssentialTemplate<TemplateData> {
 			data.setAlbums(template.compile());
 		}
 		if(album.getParent() != null 
-				&& !album.getParent().equals(DriveUtils.rootId)) {
+				&& !album.getParent().equals(PortfolioDriveDao.getRootId())) {
 			data.setBack("/portfolio/albums/"+album.getParent());
 		}
 		if(album.getDescription() != null) {

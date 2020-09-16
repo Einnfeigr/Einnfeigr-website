@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import main.drive.DriveDao;
+import main.drive.dao.PortfolioDriveDao;
 import main.misc.Util;
 
 public class ImageDataController {
@@ -19,9 +19,9 @@ public class ImageDataController {
 
 	private static final int LATEST_COUNT = 10;
 	
-	private DriveDao dao;
+	private PortfolioDriveDao dao;
 	
-	public ImageDataController(DriveDao dao) {
+	public ImageDataController(PortfolioDriveDao dao) {
 		this.dao = dao;
 		update();
 	}

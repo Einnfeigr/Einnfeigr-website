@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import main.drive.DriveDao;
+import main.drive.dao.PortfolioDriveDao;
 import main.exception.PreviewException;
 
 public class ImagePreviewController {
 	
 	@Autowired
-	static DriveDao driveDao;
+	static PortfolioDriveDao driveDao;
 	
 	private final static Logger logger = 
 			LoggerFactory.getLogger(ImagePreviewController.class);

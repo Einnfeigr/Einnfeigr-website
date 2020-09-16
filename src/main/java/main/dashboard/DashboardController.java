@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 
 import main.drive.DriveUtils;
+import main.drive.dao.PortfolioDriveDao;
 import main.exception.ControllerException;
 import main.http.Request;
 import main.http.RequestBuilder;
@@ -195,7 +196,7 @@ public class DashboardController {
 		logger.info("current user code: "+driveUtils.getUserCode());
 		Request request = builder.blank()
 				.address("https://www.googleapis.com/drive/v3/files/"+
-					DriveUtils.rootId+"/watch/")
+					PortfolioDriveDao.getRootId()+"/watch/")
 				.method("POST")
 				.content(new Gson().toJson(content))
 				.authorization("Bearer "+driveUtils.getAccessToken())

@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import main.ProjectConfiguration;
 import main.album.Album;
-import main.drive.DriveDao;
+import main.drive.dao.PortfolioDriveDao;
 import main.img.ImageData;
 import main.security.SecurityConfiguration;
 
@@ -28,7 +28,7 @@ public class DriveDaoTest {
 			LoggerFactory.getLogger(DriveDaoTest.class);
 	
 	@Autowired
-	DriveDao dao;
+	PortfolioDriveDao dao;
 	
 	@Test
 	public void getAllFilesTest() throws IOException {
