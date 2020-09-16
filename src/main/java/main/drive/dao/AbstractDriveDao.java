@@ -34,6 +34,10 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 		this.rootId = rootId;
 	}
 	
+	public String getRoot() {
+		return rootId;
+	}
+	
 	protected Logger getLogger() {
 		return logger;
 	}
@@ -81,7 +85,7 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 		String url = driveUtils.generateRequestUrl(DriveMethods.FILE_LIST, id);
 		String content;
 		try {
-			content = requestBuilder.performGet(url,
+			content = RequestBuilder.performGet(url,
 					"fields","items(id,mimeType,title,parents(id))",
 					"orderby","name");
 			try {
@@ -158,7 +162,7 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 		String url = driveUtils.generateRequestUrl(DriveMethods.FILE_GET, id);
 		String content;
 		try {
-			content = getRequestBuilder()
+			content = RequestBuilder
 					.performGet(url, "fields", "id,mimeType,title");
 			file = new Gson().fromJson(content, DriveFile.class);
 		} catch(RequestException e) {

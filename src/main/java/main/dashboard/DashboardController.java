@@ -187,7 +187,7 @@ public class DashboardController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 					.body("Invalid password");
 		}
-		RequestBuilder builder = new RequestBuilder();
+		RequestBuilder builder = RequestBuilder.getInstance();
 		Map<String, String> content = new HashMap<>();
 		content.put("id", id);
 		content.put("type", "webhook");

@@ -12,10 +12,9 @@ public class Notifier {
 	
 	public void notifyServer() { 
 		try {
-			RequestBuilder builder = new RequestBuilder();
 			String url = System.getenv("currentUrl");
 			if(url != null) {
-				builder.performGet(url);
+				RequestBuilder.performGet(url);
 				logger.info("server has been notified");
 			} else {
 				logger.warn("server cannot be notified because url is null");

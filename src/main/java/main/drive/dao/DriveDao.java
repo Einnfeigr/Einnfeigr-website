@@ -9,7 +9,7 @@ public interface DriveDao<F, D> {
 	
 	List<D> getAllFolders() throws IOException;
 	
-	String getRoot() throws IOException;
+	String getRoot();
 	
 	F getFile(String id) throws IOException;
 	

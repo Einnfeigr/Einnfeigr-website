@@ -30,17 +30,16 @@ public class PortfolioDriveDao extends CachedDriveDao<ImageData, Album> {
 		super("1zTDcH9LuuZ0KUI2c3K6f-r5pAUt_mrpa");
 		descriptions = new HashMap<>();
 		setDriveUtils(driveUtils);
-		setRequestBuilder(new RequestBuilder());
+		setRequestBuilder(RequestBuilder.getInstance());
 		setLogger(LoggerFactory.getLogger(PortfolioDriveDao.class));
-		setFileConverter(new DriveFileConverter<ImageData>() {
-			public ImageData convert(DriveFile file) {
-				ImageData data = new ImageData();
-				data.setId(file.getId());
-				data.setTitle(file.getTitle());
-				return data;
-			}
-		});
-		setFolderConverter(new DriveFileConverter<Album>() {
+		DriveFileConverter<ImageData> fileConverter = (file) -> {
+			ImageData data = new ImageData();
+			data.setId(file.getId());
+			data.setTitle(file.getTitle());
+			return data;
+		};
+		setFileConverter(fileConverter);
+		DriveFileConverter<Album> folderConverter = new DriveFileConverter<Album>() {
 			public Album convert(DriveFile file) throws IOException {
 				if(!file.isDirectory()) {
 					throw new IllegalArgumentException(
@@ -70,7 +69,7 @@ public class PortfolioDriveDao extends CachedDriveDao<ImageData, Album> {
 				});
 				if(descriptions.containsKey(file.getId())) {
 					DriveFile descFile = descriptions.get(file.getId());
-					RequestBuilder builder = new RequestBuilder();
+					RequestBuilder builder = RequestBuilder.getInstance();
 					Request request = builder
 							.get()
 							.address(DriveUtils.getDownloadUrl(descFile
@@ -81,12 +80,13 @@ public class PortfolioDriveDao extends CachedDriveDao<ImageData, Album> {
 				}
 				return album;
 			}
-		});
+		};
+		setFolderConverter(folderConverter);
 	}
 	
 	public List<ImageData> getLatest() throws  IOException {
 		String content;
-		content = getRequestBuilder().performGet(getDriveUtils()
+		content = RequestBuilder.performGet(getDriveUtils()
 				.generateRequestUrl(DriveMethods.FILE_LIST, rootId),
 				"orderby","createdTime","fields","items(id)");
 		Map<String,List<ImageData>> map = new Gson().fromJson(

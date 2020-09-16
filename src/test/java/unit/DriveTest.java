@@ -57,7 +57,7 @@ public class DriveTest {
 	@Test 
 	public void exchangeToken() throws IOException {
 		String code = "";
-		RequestBuilder builder = new RequestBuilder();
+		RequestBuilder builder = RequestBuilder.getInstance();
 		Map<String, String> content = new HashMap<>();
 		content.put("client_id", "");
 		content.put("client_secret", "");
@@ -72,7 +72,7 @@ public class DriveTest {
 	
 	@Test
 	public void startWatch() throws IOException {
-		RequestBuilder builder = new RequestBuilder();
+		RequestBuilder builder = RequestBuilder.getInstance();
 		Map<String, String> content = new HashMap<>();
 		content.put("kind", "api#channel");
 		content.put("id", System.getenv("drive.channelId"));

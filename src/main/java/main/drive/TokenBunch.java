@@ -24,7 +24,7 @@ public class TokenBunch {
 	private final static Logger logger = 
 			LoggerFactory.getLogger(TokenBunch.class);
 	
-	private static final RequestBuilder builder = new RequestBuilder();
+	private static final RequestBuilder builder = RequestBuilder.getInstance();
 	private static final Gson gson = new Gson();
 	private String refreshToken;
 	private String accessToken;
