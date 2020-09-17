@@ -3,6 +3,7 @@ package main.http;
 import java.io.IOException;
 
 import main.exception.RequestException;
+import main.misc.Util;
 
 public abstract class RequestBuilder implements Builder {
 	
@@ -28,7 +29,7 @@ public abstract class RequestBuilder implements Builder {
 	public static String performGet(String address, String... params) 
 			throws IOException {
 		Response response = initializer.get(address)
-				.params(RequestUtils.stringsToMap(params))
+				.params(Util.stringsToMap(params))
 				.build()
 				.perform();
 		if(response.getCode() == 200) {
@@ -51,7 +52,7 @@ public abstract class RequestBuilder implements Builder {
 	public static String performPost(String address, String... params) 
 			throws IOException, RequestException {
 		Response response = initializer.post(address)
-				.params(RequestUtils.stringsToMap(params))
+				.params(Util.stringsToMap(params))
 				.build()
 				.perform();
 		if(response.getCode() == 200) {
@@ -61,6 +62,7 @@ public abstract class RequestBuilder implements Builder {
 		}
 	}
 }
+
 interface Builder {
 	RequestFiller blank();
 	RequestFiller get();
@@ -70,5 +72,3 @@ interface Builder {
 	RequestFiller post(String address);
 	RequestFiller post(String address, String... params);
 }
-
-

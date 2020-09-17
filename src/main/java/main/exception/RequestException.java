@@ -12,7 +12,7 @@ public class RequestException extends IOException {
 	
 	public RequestException(Response response) {
 		super("caused by "+response.getCode()+" "+response.getResponseMessage()+
-				" response status");
+				" response status \n"+response.getContent());
 		this.response = response;
 	}
 	

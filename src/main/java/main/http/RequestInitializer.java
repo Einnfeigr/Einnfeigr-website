@@ -1,5 +1,7 @@
 package main.http;
 
+import main.misc.Util;
+
 public class RequestInitializer extends RequestBuilder {
 	
 	@Override
@@ -19,7 +21,7 @@ public class RequestInitializer extends RequestBuilder {
 	
 	@Override
 	public RequestFiller get(String address, String... params) {
-		return get(address).params(RequestUtils.stringsToMap(params));
+		return get(address).params(Util.stringsToMap(params));
 	}
 
 	@Override
@@ -34,6 +36,6 @@ public class RequestInitializer extends RequestBuilder {
 	
 	@Override
 	public RequestFiller post(String address, String... params) {
-		return post(address).params(RequestUtils.stringsToMap(params));
+		return post(address).params(Util.stringsToMap(params));
 	}
 }
