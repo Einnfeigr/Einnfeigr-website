@@ -38,7 +38,11 @@ public class DriveUtils {
 		return tokenBunch.getAccessToken();
 	}
 	
-	public static String getDownloadUrl(String id) {
+	public static String getServerDownloadUrl(String id) {
+		return "https://www.googleapis.com/drive/v2/files/"+id+"?alt=media";
+	}
+	
+	public static String getClientDownloadUrl(String id) {
 		return "https://drive.google.com/uc?id="+id+"&export=download";
 	}
 	

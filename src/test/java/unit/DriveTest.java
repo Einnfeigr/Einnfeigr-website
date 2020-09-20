@@ -44,7 +44,7 @@ public class DriveTest {
 	public void createImagePreviewTest() throws IOException {
 		for(ImageData data : dao.getAllFiles()) {
 			BufferedImage image = ImageIO.read(new URL(
-					DriveUtils.getDownloadUrl(data.getId())));
+					DriveUtils.getClientDownloadUrl(data.getId())));
 			logger.info("width: "+image.getWidth()
 					+" | height: "+image.getHeight());
 			image = ImageUtils.resizeBySmaller(image, 100);

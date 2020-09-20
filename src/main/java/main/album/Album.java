@@ -3,10 +3,9 @@ package main.album;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.MediaData;
 import main.img.ImageData;
 
-public class Album implements MediaData {
+public class Album {
 	
 	private List<ImageData> images;
 	private List<Album> albums;

@@ -19,17 +19,19 @@ import org.slf4j.LoggerFactory;
 import main.drive.DriveFile;
 import main.drive.DriveFileConverter;
 import main.drive.DriveUtils;
-import main.drive.preview.PreviewSize;
 import main.http.Request;
 import main.http.RequestBuilder;
 import main.img.ImageData;
+import main.img.preview.PreviewSize;
 import main.misc.Util;
 
 public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>> 
 		implements WritableDriveDao<ImageData, BufferedImage> {
 
 	private Map<PreviewSize, String> sizeFolders;
-
+	private static final String META_FILE_ID = "";
+	private String meta;
+	
 	private PreviewDriveDao(DriveUtils driveUtils) {
 		super("11JiCs--a_HlVPJhyZB8ZuV9NBcS-CqDe");
 		setLogger(LoggerFactory.getLogger(PreviewDriveDao.class));
@@ -42,7 +44,6 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>>
 			return data;
 		};
 		setFileConverter(fileConverter);
-		
 		sizeFolders = new HashMap<>();
 		List<DriveFile> files;
 		try {
@@ -57,6 +58,7 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>>
 		} catch(IOException e) {
 			getLogger().error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
+		loadMeta();
 	}
 	
 	@Override
@@ -99,6 +101,19 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>>
 				.contentType("image/"+extension)
 				.build();
 		request.perform();
+	}
+	
+	private void loadMeta() {
+		try {
+			meta = RequestBuilder.performGet(DriveUtils.getServerDownloadUrl(
+					META_FILE_ID));
+		} catch (IOException e) {
+			getLogger().error(Util.EXCEPTION_LOG_MESSAGE, e);
+		}
+	}
+	
+	private Map<String, String> getMeta(PreviewSize size) {
+		return null;
 	}
 	
 	public List<ImageData> getAllPreviewsBySize(PreviewSize size) 

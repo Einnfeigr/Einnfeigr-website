@@ -1,4 +1,4 @@
-package main.drive.preview;
+package main.img.preview;
 
 public enum PreviewSize {
 	SMALL, MEDIUM, LARGE

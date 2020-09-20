@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import main.page.PageTemplateData;
 import main.template.Template;
 import main.template.TemplateFactory;
+import main.template.data.PageTemplateData;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -50,7 +50,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 			responseData.setTitle("Ошибка");
 			responseData.setPage(template.compile());
 			template = TemplateFactory.buildTemplate(responseTemplatePath,
-					responseData);
+					responseData.toMap());
 			bodyOfResponse = template.compile();
 		    return handleExceptionInternal(ex, bodyOfResponse, 
 		  	      new HttpHeaders(), HttpStatus.OK, request);

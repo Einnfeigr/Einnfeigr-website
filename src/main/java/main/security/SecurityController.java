@@ -13,9 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 import main.drive.DriveUtils;
 import main.exception.ControllerException;
 import main.misc.Util;
-import main.page.PageTemplateData;
 import main.template.Template;
 import main.template.TemplateFactory;
+import main.template.data.PageTemplateData;
 
 @Component
 @RestController

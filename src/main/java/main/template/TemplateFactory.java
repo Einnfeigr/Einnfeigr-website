@@ -6,7 +6,6 @@ import java.util.Map;
 
 import main.album.Album;
 import main.img.ImageData;
-import main.template.data.TemplateData;
 
 public class TemplateFactory {
 
@@ -24,15 +23,11 @@ public class TemplateFactory {
 	}
 	
 	public static Template buildTemplate(String path, Map<String,String> data) {
-		return fillTemplate(new EssentialTemplate<>(data), path);
+		return fillTemplate(new EssentialTemplate(data), path);
 	}
-	
-	public static Template buildTemplate(String path, TemplateData data) {
-		return fillTemplate(new EssentialTemplate<>(data), path);
-	}
-	
+
 	public static Template buildTemplate(String templatePath) {
-		return fillTemplate(new AbstractTemplate(), templatePath);
+		return fillTemplate(new EssentialTemplate(), templatePath);
 	}
 	
 	private static Template fillTemplate(Template template, String path) {

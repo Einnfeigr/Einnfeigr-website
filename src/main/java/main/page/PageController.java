@@ -1,14 +1,19 @@
 package main.page;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
@@ -37,10 +42,30 @@ public class PageController {
 	private final static Logger logger = 
 			LoggerFactory.getLogger(PageController.class);
 	
+	private final Map<String, String> names = new HashMap<>();
+	
 	@Autowired
 	ImageDataController dataController;
 	@Autowired 
 	AlbumController albumController;
+	
+	public PageController() {
+		updateNames();
+	}
+	
+	public void updateNames() {
+		try {
+			Resource resource = new ClassPathResource("pages.properties");
+			BufferedReader input = new BufferedReader(new InputStreamReader(
+					resource.getInputStream(), "UTF-8"));
+			Properties props = new Properties();
+			props.load(input);
+			props.entrySet().stream().forEach(e -> names.put(
+					String.valueOf(e.getKey()), String.valueOf(e.getValue())));
+		} catch (IOException e) {
+			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+		}
+	}
 	
     @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET,
     		produces = "application/json", headers = "target=body")
@@ -96,45 +121,31 @@ public class PageController {
     }
     
     private Map<String, String> getPageData(String page) throws IOException {
+    	if(!names.containsKey(page)) {
+	    	logger.error("Invalid page address: "+page);
+			throw new NotFoundException("Invalid page address: "+page);
+    	}
+    	String pagePath;
+    	Template textTemplate = null;
     	Map<String, String> data = new HashMap<>();
-    	switch(page) {
-			case("main"):
-	        	data.put("page", compileMain());
-				data.put("title", "Главная");	
-				break;
-			case("portfolio"):
-				Template template = TemplateFactory.createAlbumListTemplate(
-						albumController.getRootAlbums());
-				data.put("text", template.compile());
-	        	data.put("page", TemplateFactory.buildTemplate(
-	        			"templates/pages/portfolio", data).compile());
-				data.put("title", "Портфолио");
-				break;
-			case("retouch"):
-				data.put("text", TemplateFactory.buildTemplate(
-						"static/text/ru/retouch").compile());
-				data.put("page", TemplateFactory.buildTemplate(
-						"templates/pages/retouch", data).compile());
-				data.put("title", "Ретушь");
-				break;
-			case("about"):
-				data.put("text", TemplateFactory.buildTemplate(
-						"static/text/ru/about").compile());
-				data.put("page", TemplateFactory.buildTemplate( 
-						"templates/pages/about", data).compile());
-				data.put("title", "Обо всем");
-				break;
-			case("contacts"):
-				data.put("text", TemplateFactory.buildTemplate(
-						"static/text/ru/contacts").compile()); 
-				data.put("text", TemplateFactory.buildTemplate(
-						"templates/pages/contacts").compile());
-				data.put("title", "Контакты");
-				break;
-			default: 
-				logger.error("Invalid page address: "+page);
-				throw new NotFoundException("Invalid page address: "+page);
-    	} 	
+    	if(page.equals("main")) {
+	    	data.put("page", compileMain());	
+    	}
+    	if(page.equals("portfolio")) {
+	    	textTemplate = TemplateFactory.createAlbumListTemplate(
+	    			albumController.getRootAlbums());
+    	}
+    	if(textTemplate == null) {
+    		textTemplate = TemplateFactory.buildTemplate(
+    				"templates/text/ru/"+page);
+    	}
+    	pagePath = "templates/pages/"+page;
+		if(!data.containsKey("page")) {
+    		data.put("text", textTemplate.compile());
+	    	data.put("page", TemplateFactory.buildTemplate(pagePath, data)
+	    			.compile());
+    	}
+    	data.put("title", names.get(page));
     	return data;
     }
     
@@ -191,7 +202,7 @@ public class PageController {
 				textData.put("latest", template.compile());
 			}
     		template = TemplateFactory.buildTemplate(
-    				"static/text/ru/main", textData);
+    				"templates/text/ru/main", textData);
     		pageData.put("text", template.compile());
     		template = TemplateFactory.buildTemplate(
     				"templates/pages/main", pageData);

@@ -18,7 +18,7 @@ public class TemplateFiller {
 	}
 	
 	public Template build() {
-		EssentialTemplate<Map<String, String>> template = new EssentialTemplate<>(); 
+		EssentialTemplate template = new EssentialTemplate(); 
 		template.setData(params);
 		template.setTemplatePath(path);
 		return template;

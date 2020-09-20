@@ -1,16 +1,15 @@
-package main.page;
+package main.template.data;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import main.template.data.TemplateData;
 
 public class PageTemplateData implements TemplateData {
 	
+	private Map<String, String> textData;
+	private Boolean isMobile;
 	private String title;
 	private String text;
 	private String page;
-	private Map<String, String> textData;
-	private Boolean isMobile;
 	
 	public String getTitle() {
 		return title;
@@ -41,6 +40,17 @@ public class PageTemplateData implements TemplateData {
 	}
 	public void setMobile(Boolean isMobile) {
 		this.isMobile = isMobile;
+	}
+	
+	public Map<String, String> toMap() {
+		Map<String, String> map = new HashMap<>();
+		map.put("title", title);
+		map.put("text", text);
+		map.put("page", page);
+		if(isMobile) {
+			map.put("isMobile", "true");
+		}
+		return map;
 	}
 	
 }

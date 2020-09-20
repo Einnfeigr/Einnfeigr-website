@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import main.album.Album;
-import main.drive.DriveUtils;
 import main.drive.dao.PortfolioDriveDao;
 import main.img.ImageData;
 import main.template.data.ImageTemplateData;
 
-public class AlbumTemplate extends EssentialTemplate<Map<String, String>> {
+public class AlbumTemplate extends EssentialTemplate {
 	
 	protected String imageTemplatePath = "templates/misc/img/image.mustache";
 	
@@ -54,10 +53,10 @@ public class AlbumTemplate extends EssentialTemplate<Map<String, String>> {
 			if(x >= imagesList.size()) {
 				url = "/img/placeholder.png";
 			} else {
-				url = DriveUtils.getDownloadUrl(imagesList.get(x).getId());
+				url = "/image/"+(imagesList.get(x).getId());
 			}
 			Template template = TemplateFactory.buildTemplate(
-					imageTemplatePath, new ImageTemplateData(url));
+					imageTemplatePath, new ImageTemplateData(url).toMap());
 			images.append(template.compile());
 		} 
 		return images.toString(); 

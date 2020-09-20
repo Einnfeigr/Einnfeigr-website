@@ -84,7 +84,7 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 
 	@Override
 	public InputStream getFileContent(String id) throws IOException {
-		return new URL(DriveUtils.getDownloadUrl(id)).openStream();
+		return new URL(DriveUtils.getClientDownloadUrl(id)).openStream();
 	}
 	
 	protected List<DriveFile> getDriveFolderContent(String id)

@@ -2,14 +2,17 @@ package main.template;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-public class AbstractTemplate implements Template {
+public abstract class AbstractTemplate implements Template {
 
 	String path;
+	Map<String, Template> partials = new HashMap<>();
 	
 	@Override
 	public void setTemplatePath(String templatePath) {	
@@ -19,6 +22,11 @@ public class AbstractTemplate implements Template {
 	@Override
 	public String getTemplatePath() {
 		return path;
+	}
+	
+	@Override
+	public void addPartial(String name, Template template) {
+		partials.put(name, template);
 	}
 	
 	@Override

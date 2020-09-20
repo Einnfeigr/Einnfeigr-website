@@ -1,9 +1,8 @@
 package main.img;
 
-import main.MediaData;
 import main.drive.DriveUtils;
 
-public class ImageData implements MediaData {
+public class ImageData {
 
 	private String id;
 	private String title;
@@ -21,6 +20,6 @@ public class ImageData implements MediaData {
 		this.title = name;
 	}
 	public String getUrl() {
-		return DriveUtils.getDownloadUrl(id);
+		return DriveUtils.getClientDownloadUrl(id);
 	}
 }
