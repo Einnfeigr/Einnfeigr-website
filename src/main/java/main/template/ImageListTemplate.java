@@ -11,6 +11,10 @@ public class ImageListTemplate extends AbstractTemplate {
 	
 	ImageListTemplate() {}
 
+	ImageListTemplate(List<String> urls) {
+		this.urls = urls;
+	}
+	
 	public void setUrls(List<String> urls) {
 		this.urls = urls;
 	}
@@ -22,8 +26,9 @@ public class ImageListTemplate extends AbstractTemplate {
 		}
 		StringBuilder sb = new StringBuilder("");
 		for(String url : urls) {
+			
 			Template template = TemplateFactory.buildTemplate(
-					new ImageTemplateData(url), "templates/misc/img/image");
+					 "templates/misc/img/image", new ImageTemplateData(url));
 			sb.append(template.compile());
 		}
 		return sb.toString();

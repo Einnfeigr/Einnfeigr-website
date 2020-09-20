@@ -9,22 +9,22 @@ import com.github.mustachejava.MustacheFactory;
 
 public class AbstractTemplate implements Template {
 
-	String templatePath;
+	String path;
 	
 	@Override
 	public void setTemplatePath(String templatePath) {	
-		this.templatePath = templatePath;
+		this.path = templatePath;
 	}
 	
 	@Override
 	public String getTemplatePath() {
-		return templatePath;
+		return path;
 	}
 	
 	@Override
 	public String compile() throws IOException {
 	   	MustacheFactory factory = new DefaultMustacheFactory();
-	   	Mustache mustache = factory.compile(templatePath);
+	   	Mustache mustache = factory.compile(path);
 	   	StringWriter writer = new StringWriter();
 	   	mustache.execute(writer, "").flush();
 	   	return writer.toString();

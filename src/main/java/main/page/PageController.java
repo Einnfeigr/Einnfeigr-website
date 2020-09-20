@@ -27,7 +27,6 @@ import main.exception.TemplateException;
 import main.img.ImageData;
 import main.img.ImageDataController;
 import main.misc.Util;
-import main.template.AlbumPageTemplateData;
 import main.template.AlbumTemplate;
 import main.template.Template;
 import main.template.TemplateFactory;
@@ -57,9 +56,9 @@ public class PageController {
     			name = "main";
     		}
 	    	Page page = new Page();
-	    	PageTemplateData data = getPageData(name, device, ver);
-	    	page.setTitle(data.getTitle());
-	    	page.setContent(data.getPage());
+	    	Map<String, String> data = getPageData(name);
+	    	page.setTitle(data.get("title"));
+	    	page.setContent(data.get("page"));
 	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
     	} catch(Exception e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
@@ -81,10 +80,11 @@ public class PageController {
     			name = "main";
     		}
 	  		ModelAndView mav = new ModelAndView("index");
-      		PageTemplateData data = getPageData(name, device, ver);
-	        mav.getModel().put("title", data.getTitle());
-			mav.getModel().put("page", data.getPage());
-			mav.getModel().put("isMobile", data.isMobile());
+      		Map<String, String> data = getPageData(name);
+      		if(isMobile(device, ver)) {
+      			data.put("isMobile", "true");
+      		}
+      		mav.getModel().putAll(data);
 	    	return mav;
     	} catch(NotFoundException e) {
     		throw e;
@@ -95,38 +95,41 @@ public class PageController {
 		}
     }
     
-    private PageTemplateData getPageData(String page, Device device, String ver) 
-    		throws IOException {
-    	PageTemplateData data = new PageTemplateData();
-    	data.setMobile(isMobile(data, device, ver));
+    private Map<String, String> getPageData(String page) throws IOException {
+    	Map<String, String> data = new HashMap<>();
     	switch(page) {
 			case("main"):
-	        	data = compileMain(data);
-				data.setTitle("Главная");	
+	        	data.put("page", compileMain());
+				data.put("title", "Главная");	
 				break;
 			case("portfolio"):
-				Template template = TemplateFactory.buildTemplate(
+				Template template = TemplateFactory.createAlbumListTemplate(
 						albumController.getRootAlbums());
-				data.setText(template.compile());
-	        	data = loadPage(data, null, 
-						"templates/pages/portfolio");
-				data.setTitle("Портфолио");
+				data.put("text", template.compile());
+	        	data.put("page", TemplateFactory.buildTemplate(
+	        			"templates/pages/portfolio", data).compile());
+				data.put("title", "Портфолио");
 				break;
 			case("retouch"):
-				data = loadPage(new PageTemplateData(), 
-						"static/text/ru/retouch", 
-						"templates/pages/retouch");
-				data.setTitle("Ретушь");
+				data.put("text", TemplateFactory.buildTemplate(
+						"static/text/ru/retouch").compile());
+				data.put("page", TemplateFactory.buildTemplate(
+						"templates/pages/retouch", data).compile());
+				data.put("title", "Ретушь");
 				break;
 			case("about"):
-				data = loadPage(data, "static/text/ru/about", 
-						"templates/pages/about");
-				data.setTitle("Обо всем");
+				data.put("text", TemplateFactory.buildTemplate(
+						"static/text/ru/about").compile());
+				data.put("page", TemplateFactory.buildTemplate( 
+						"templates/pages/about", data).compile());
+				data.put("title", "Обо всем");
 				break;
 			case("contacts"):
-				data = loadPage(data, "static/text/ru/contacts", 
-						"templates/pages/contacts");
-				data.setTitle("Контакты");
+				data.put("text", TemplateFactory.buildTemplate(
+						"static/text/ru/contacts").compile()); 
+				data.put("text", TemplateFactory.buildTemplate(
+						"templates/pages/contacts").compile());
+				data.put("title", "Контакты");
 				break;
 			default: 
 				logger.error("Invalid page address: "+page);
@@ -161,17 +164,14 @@ public class PageController {
     		@PathVariable() String id,
     		@RequestParam(required=false) String ver) throws TemplateException {
     	ModelAndView mav = null;
-    	PageTemplateData data = new AlbumPageTemplateData();
       	try {
       		mav = new ModelAndView("index");
-      		data.setMobile(isMobile(data, device, ver));
 	    	Album album = albumController.getAlbum(id);
 	    	Template template = new AlbumTemplate(album);
-	    	data.setPage(template.compile());
-	    	data.setTitle(Util.toUpperCase(album.getName()));
 	    	mav.getModel().put("name", album.getName());
-	        mav.getModel().put("title", data.getTitle());
-			mav.getModel().put("page", data.getPage());
+	        mav.getModel().put("title", Util.toUpperCase(album.getName()));
+			mav.getModel().put("page", template.compile());
+			mav.getModel().put("isMobile", isMobile(device, ver));
 			return mav;
     	} catch (Exception e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
@@ -180,48 +180,29 @@ public class PageController {
 		}
     }
     
-    private PageTemplateData compileMain(PageTemplateData data) {
+    private String compileMain() {
     	Template template;
 		try {
     		Map<String, String> textData = new HashMap<>();
     		Map<String, String> pageData = new HashMap<>();
 			List<ImageData> dataList = dataController.getLatestImages();
 			if(dataList != null && dataList.size() > 0) {
-				template = TemplateFactory.buildTemplate(dataList);
+				template = TemplateFactory.createImageListTemplate(dataList);
 				textData.put("latest", template.compile());
 			}
-    		template = TemplateFactory.buildTemplate(textData,
-    				"static/text/ru/main");
+    		template = TemplateFactory.buildTemplate(
+    				"static/text/ru/main", textData);
     		pageData.put("text", template.compile());
-    		template = TemplateFactory.buildTemplate(pageData,
-    				"templates/pages/main");
-    		data.setPage(template.compile());
+    		template = TemplateFactory.buildTemplate(
+    				"templates/pages/main", pageData);
+    		return template.compile();
     	} catch(IOException | IllegalArgumentException e) {
     		logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-    	}
-    	return data;
-    }
-    
-    private PageTemplateData loadPage(PageTemplateData data, String textPath, 
-    		String pagePath) throws IOException {
-    	Template template;
-    	if(data == null || pagePath == null) {
-        	throw new NullPointerException("Null passed as argument");
+        	return null;
         }
-    	if(textPath != null) {
-    		if(data.getTextData() == null) {
-    			data.setTextData(new HashMap<>());
-    		}
-    		template = TemplateFactory.buildTemplate(data.getTextData(),
-    				textPath);
-    		data.setText(template.compile());
-    	}
-    	template = TemplateFactory.buildTemplate(data, pagePath);
-    	data.setPage(template.compile());
-        return data;
     }
-    
-    private boolean isMobile(PageTemplateData data, Device device, String ver) {
+ 
+    private boolean isMobile(Device device, String ver) {
     	if(ver == null) {
     		ver = "";
     	}

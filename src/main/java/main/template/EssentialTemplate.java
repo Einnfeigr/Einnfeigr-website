@@ -13,6 +13,10 @@ public class EssentialTemplate<T> extends AbstractTemplate {
 	
 	EssentialTemplate() {}
 	
+	EssentialTemplate(T data) {
+		this.data = data;
+	}
+	
 	public void setData(T data) {
 		this.data = data;
 	}
@@ -24,7 +28,7 @@ public class EssentialTemplate<T> extends AbstractTemplate {
 	@Override
 	public String compile() throws IOException {
 	   	MustacheFactory factory = new DefaultMustacheFactory();
-	   	Mustache mustache = factory.compile(templatePath);
+	   	Mustache mustache = factory.compile(path);
 	   	StringWriter writer = new StringWriter();
 	   	mustache.execute(writer, data).flush();
 	   	return writer.toString();

@@ -1,5 +1,8 @@
 package main.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +28,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 			Template template;
 			String bodyOfResponse;
 			String responseTemplatePath;
-			PageTemplateData pageData = new PageTemplateData();
+			Map<String, String> map = new HashMap<>();
 			if(ex instanceof ControllerException) {
 				String textPath;
 				if(ex instanceof NotFoundException) {
@@ -34,7 +37,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 					textPath = "static/text/ru/error/error";
 				}
 				template = TemplateFactory.buildTemplate(textPath);
-				pageData.setText(template.compile());
+				map.put("text", template.compile());
 			}
 			if(request.getParameter("path") == null) {
 				responseTemplatePath = "templates/index";
@@ -42,12 +45,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 				responseTemplatePath = "templates/placeholder";
 			}
 			String pagePath = "templates/pages/error/error";
-			template = TemplateFactory.buildTemplate(pageData, pagePath);
+			template = TemplateFactory.buildTemplate(pagePath, map);
 			PageTemplateData responseData = new PageTemplateData();
 			responseData.setTitle("Ошибка");
 			responseData.setPage(template.compile());
-			template = TemplateFactory.buildTemplate(responseData,
-					responseTemplatePath);
+			template = TemplateFactory.buildTemplate(responseTemplatePath,
+					responseData);
 			bodyOfResponse = template.compile();
 		    return handleExceptionInternal(ex, bodyOfResponse, 
 		  	      new HttpHeaders(), HttpStatus.OK, request);

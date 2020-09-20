@@ -1,8 +1,9 @@
 package main.img;
 
+import main.MediaData;
 import main.drive.DriveUtils;
 
-public class ImageData {
+public class ImageData implements MediaData {
 
 	private String id;
 	private String title;

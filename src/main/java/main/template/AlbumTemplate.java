@@ -1,16 +1,17 @@
 package main.template;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import main.album.Album;
 import main.drive.DriveUtils;
 import main.drive.dao.PortfolioDriveDao;
 import main.img.ImageData;
 import main.template.data.ImageTemplateData;
-import main.template.data.TemplateData;
 
-public class AlbumTemplate extends EssentialTemplate<TemplateData> {
+public class AlbumTemplate extends EssentialTemplate<Map<String, String>> {
 	
 	protected String imageTemplatePath = "templates/misc/img/image.mustache";
 	
@@ -19,25 +20,30 @@ public class AlbumTemplate extends EssentialTemplate<TemplateData> {
 	}
 	
 	public AlbumTemplate(Album album) throws IOException {
+		Map<String, String> data = new HashMap<>();
 		setTemplatePath("templates/misc/albums/album.mustache");
-		AlbumTemplateData data = new AlbumTemplateData();
-		data.setName(album.getName());
-		data.setId(album.getId());
-		data.setImages(parseImages(album, album.getImages().size()));
+		data.put("name", album.getName());
+		data.put("id", album.getId());
+		data.put("images", parseImages(album));
 		List<Album> albums = album.getAlbums();
 		if(albums != null && albums.size() > 0) {
-			Template template = TemplateFactory.buildTemplate(album.getAlbums());
-			data.setAlbums(template.compile());
+			Template template = TemplateFactory.createAlbumListTemplate(
+					album.getAlbums());
+			data.put("albums", template.compile());
 		}
 		if(album.getParent() != null 
 				&& !album.getParent().equals(PortfolioDriveDao.getRootId())) {
-			data.setBack("/portfolio/albums/"+album.getParent());
+			data.put("back", "/portfolio/albums/"+album.getParent());
 		}
 		if(album.getDescription() != null) {
-			data.setDescription(album.getDescription());
+			data.put("descrption", album.getDescription());
 		}
 		setData(data);
 	}	
+	
+	protected String parseImages(Album album) throws IOException {
+		return parseImages(album, album.getImages().size());
+	}
 	
 	protected String parseImages(Album album, int count) 
 			throws IOException {
@@ -51,7 +57,7 @@ public class AlbumTemplate extends EssentialTemplate<TemplateData> {
 				url = DriveUtils.getDownloadUrl(imagesList.get(x).getId());
 			}
 			Template template = TemplateFactory.buildTemplate(
-					new ImageTemplateData(url), imageTemplatePath);
+					imageTemplatePath, new ImageTemplateData(url));
 			images.append(template.compile());
 		} 
 		return images.toString(); 

@@ -29,10 +29,12 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>>
 		implements WritableDriveDao<ImageData, BufferedImage> {
 
 	private Map<PreviewSize, String> sizeFolders;
-	
-	private PreviewDriveDao() {
+
+	private PreviewDriveDao(DriveUtils driveUtils) {
 		super("11JiCs--a_HlVPJhyZB8ZuV9NBcS-CqDe");
 		setLogger(LoggerFactory.getLogger(PreviewDriveDao.class));
+		setDriveUtils(driveUtils);
+		setRequestBuilder(RequestBuilder.getInstance());
 		DriveFileConverter<ImageData> fileConverter = (file) -> {
 			ImageData data = new ImageData();
 			data.setId(file.getId());

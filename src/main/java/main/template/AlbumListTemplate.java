@@ -1,7 +1,9 @@
 package main.template;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import main.album.Album;
 
@@ -10,6 +12,10 @@ public class AlbumListTemplate extends AbstractTemplate {
 	private List<Album> albums;
 		
 	AlbumListTemplate() {}
+	
+	AlbumListTemplate(List<Album> albums) {
+		this.albums = albums;
+	}
 	
 	public void setAlbums(List<Album> albums) {
 		this.albums = albums;
@@ -23,9 +29,9 @@ public class AlbumListTemplate extends AbstractTemplate {
 					new AlbumPreviewTemplate(album);
 			albumsContent.append(albumTemplate.compile());
 		}
-		Template albumsTemplate = TemplateFactory.buildTemplate(
-				new AlbumListTemplateData(albumsContent.toString()),
-				templatePath);
+		Map<String, String> map = new HashMap<>();
+		map.put("albums", albumsContent.toString());
+		Template albumsTemplate = TemplateFactory.buildTemplate(path, map);
 		return albumsTemplate.compile();
 	}
 }
