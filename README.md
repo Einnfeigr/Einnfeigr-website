@@ -15,9 +15,6 @@ Terms of the first release are:
 * [x] latest downloads on main page
 * [ ] all pages filled with content
 * [ ] all main units covered with tests
-  * [ ] util
-  * [ ] mvc controllers
-  * [ ] image data and preview controllers
 * [ ] work with google drive
 * [x] images previews
 * [x] logging
