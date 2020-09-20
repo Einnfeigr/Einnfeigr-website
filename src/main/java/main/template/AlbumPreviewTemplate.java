@@ -8,11 +8,11 @@ public class AlbumPreviewTemplate extends AlbumTemplate {
 
 	public AlbumPreviewTemplate(Album album) throws IOException {
 		super(album);
+		imageTemplatePath = "templates/misc/albums/preview";
 		data.remove("images");
 		data.put("id", album.getId());
 		data.put("name", album.getName());
 		data.put("previews", parseImages(album, 3));
-		imageTemplatePath = "templates/misc/albums/preview";
 	}
 	
 }

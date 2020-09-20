@@ -5,13 +5,13 @@ body {
 }
 
 .textDiv {
-	padding-top: calc(90px + 35px);
+	padding: 35px;
 	box-sizing: border-box;
 	overflow-x: hidden;
 	background: white;
 	min-height: 100vh;
-	padding: 35px;
 	width: 100vw;
+	padding-top: calc(90px + 35px);
 }
 
 .textDiv p, .textDiv .images{

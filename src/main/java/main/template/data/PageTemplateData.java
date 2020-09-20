@@ -47,7 +47,7 @@ public class PageTemplateData implements TemplateData {
 		map.put("title", title);
 		map.put("text", text);
 		map.put("page", page);
-		if(isMobile) {
+		if(isMobile != null) {
 			map.put("isMobile", "true");
 		}
 		return map;

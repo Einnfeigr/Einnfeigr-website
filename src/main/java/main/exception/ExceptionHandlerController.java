@@ -32,9 +32,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 			if(ex instanceof ControllerException) {
 				String textPath;
 				if(ex instanceof NotFoundException) {
-					textPath = "static/text/ru/error/notFound";
+					textPath = "templates/text/ru/error/notFound";
 				} else {
-					textPath = "static/text/ru/error/error";
+					textPath = "templates/text/ru/error/error";
 				}
 				template = TemplateFactory.buildTemplate(textPath);
 				map.put("text", template.compile());

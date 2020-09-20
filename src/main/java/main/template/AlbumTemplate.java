@@ -12,7 +12,7 @@ import main.template.data.ImageTemplateData;
 
 public class AlbumTemplate extends EssentialTemplate {
 	
-	protected String imageTemplatePath = "templates/misc/img/image.mustache";
+	protected String imageTemplatePath = "templates/misc/img/image";
 	
 	protected AlbumTemplate() {
 		setTemplatePath("templates/misc/albums/album.mustache");
