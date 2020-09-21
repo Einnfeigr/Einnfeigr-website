@@ -16,6 +16,8 @@ import javax.imageio.stream.ImageOutputStream;
 
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+
 import main.drive.DriveFile;
 import main.drive.DriveFileConverter;
 import main.drive.DriveUtils;
@@ -25,12 +27,11 @@ import main.img.ImageData;
 import main.img.preview.PreviewSize;
 import main.misc.Util;
 
-public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>> 
-		implements WritableDriveDao<ImageData, BufferedImage> {
+public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>> {
 
 	private Map<PreviewSize, String> sizeFolders;
 	private static final String META_FILE_ID = "";
-	private String meta;
+	private PreviewMeta meta;
 	
 	private PreviewDriveDao(DriveUtils driveUtils) {
 		super("11JiCs--a_HlVPJhyZB8ZuV9NBcS-CqDe");
@@ -45,9 +46,16 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>>
 		};
 		setFileConverter(fileConverter);
 		sizeFolders = new HashMap<>();
+		//parsePreviews();
+	}
+	
+	private void parsePreviews() {
 		List<DriveFile> files;
 		try {
 			files = getDriveFolderContent(rootId);
+			if(files == null || files.size() < 1) {
+				return;
+			}
 			for(PreviewSize size : PreviewSize.values()) {
 				for(DriveFile file : files) {
 					if(file.getTitle().equalsIgnoreCase(size.toString())) {
@@ -82,8 +90,7 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>>
 		return null;
 	}
 	
-	@Override
-	public void writeFile(ImageData file, BufferedImage image) 
+	public void writeImage(ImageData file, BufferedImage image) 
 			throws IOException {
 		StringBuilder content = new StringBuilder();
 		String url = DriveUtils.getUploadUrl();
@@ -105,15 +112,16 @@ public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>>
 	
 	private void loadMeta() {
 		try {
-			meta = RequestBuilder.performGet(DriveUtils.getServerDownloadUrl(
-					META_FILE_ID));
+			meta = new Gson().fromJson(RequestBuilder.performGet(
+					DriveUtils.getServerDownloadUrl(META_FILE_ID)),
+					meta.getClass());
 		} catch (IOException e) {
 			getLogger().error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
 	}
-	
-	private Map<String, String> getMeta(PreviewSize size) {
-		return null;
+
+	private void writeMeta() {
+		writeDriveFile(META_FILE_ID, new Gson().toJson(meta));
 	}
 	
 	public List<ImageData> getAllPreviewsBySize(PreviewSize size) 

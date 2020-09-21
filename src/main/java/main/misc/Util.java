@@ -4,21 +4,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gson.Gson;
 
 import main.exception.RequestException;
 import main.http.Request;
 import main.http.RequestBuilder;
 import main.http.Response;
-import main.img.ImagePreviewController;
 
 public class Util {
 	
-	private final static Logger logger = 
-			LoggerFactory.getLogger(ImagePreviewController.class);
 	public final static String EXCEPTION_LOG_MESSAGE = 
 			"Exception has been caught";
     

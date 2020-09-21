@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.drive.DriveUtils;
+import main.drive.dao.PortfolioDriveDao;
 import main.http.RequestBuilder;
 import main.misc.Util;
 
@@ -19,7 +20,11 @@ public class DriveImageController implements ImageController {
 
 	private Logger logger = LoggerFactory.getLogger(DriveImageController.class);
 	private Map<String, String> cache = new HashMap<>();
-	private boolean isCachingUnavailable;
+	private static boolean isCachingAvailable = true;
+	
+	public DriveImageController() {
+		getImage(PortfolioDriveDao.getRootId());
+	}
 	
 	@Override
 	public ModelAndView getPreview(String size, String id) {
@@ -29,7 +34,7 @@ public class DriveImageController implements ImageController {
 	@Override 
 	public ModelAndView getImage(@PathVariable String id) {
 		String content;
-		if(isCachingUnavailable) {
+		if(!isCachingAvailable) {
 			return new ModelAndView("redirect:"+
 					DriveUtils.getClientDownloadUrl(id));
 		}
@@ -42,7 +47,7 @@ public class DriveImageController implements ImageController {
 				content = RequestBuilder.performGet(url);
 				cache.put(id, content);	
 			} catch(IOException e) {
-				isCachingUnavailable = true;
+				isCachingAvailable = false;
 				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 				return new ModelAndView("redirect:"+
 						DriveUtils.getClientDownloadUrl(id));

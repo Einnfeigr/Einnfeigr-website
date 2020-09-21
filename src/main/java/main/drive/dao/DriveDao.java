@@ -12,5 +12,6 @@ public interface DriveDao<F, D> {
 	List<D> getAllFolders() throws IOException;
 	List<F> getFolderContent(String id) throws IOException;
 	InputStream getFileContent(String id) throws IOException;
+	void writeFile(String id, String content) throws IOException;
 	
 }

@@ -121,8 +121,6 @@ public class Request {
 			responseContent = readContent(connection.getInputStream());
 		} catch(IOException e) {
 			responseContent = readContent(connection.getErrorStream());
-			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-			logger.error(responseContent);
 		}
 		connection.disconnect();
 		if(logger.isDebugEnabled()) {

@@ -1,5 +1,9 @@
 package main.security;
 
+import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,16 +17,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	 @Override
+	private final static Logger logger = 
+			LoggerFactory.getLogger(SecurityConfiguration.class);
+	
+	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
-			 throws Exception {
-	  	PasswordEncoder encoder = 
-	    PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	  	auth
-	  		.inMemoryAuthentication()
-	        .withUser("studiedlist")
-	        .password(encoder.encode(System.getenv("adminPassword")))
-	        .roles("USER", "ADMIN"); 
+			throws Exception {
+		String password = System.getenv("adminPassword");
+		if(password == null) {
+			Random random = new Random();
+			password = String.valueOf(random.nextLong());
+			logger.info("Current password: "+password);
+		}
+		PasswordEncoder encoder = 
+				 PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		auth
+			.inMemoryAuthentication()
+			.withUser("studiedlist")
+			.password(encoder.encode(password))
+			.roles("USER", "ADMIN"); 
 	}
 
 	@Override

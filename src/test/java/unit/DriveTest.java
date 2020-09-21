@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -23,6 +25,7 @@ import com.google.gson.Gson;
 import main.ProjectConfiguration;
 import main.drive.DriveUtils;
 import main.drive.dao.PortfolioDriveDao;
+import main.drive.dao.PreviewMeta;
 import main.http.Request;
 import main.http.RequestBuilder;
 import main.img.ImageData;
@@ -87,5 +90,18 @@ public class DriveTest {
 				.contentType("application/json")
 				.build();
 		logger.info(request.perform().getContent());
+	}
+	
+	@Test
+	public void testPreviewMeta() {
+		List<String> sizes = new ArrayList<>();
+		sizes.add("a");
+		sizes.add("b");
+		sizes.add("c");
+		PreviewMeta meta = new PreviewMeta(sizes);
+		logger.info(new Gson().toJson(meta)
+				.replace("{", "{\n")
+				.replace("}", "}\n")
+				.replace(",", ",\n"));
 	}
 }

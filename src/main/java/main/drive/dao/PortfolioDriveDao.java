@@ -73,7 +73,7 @@ public class PortfolioDriveDao extends CachedDriveDao<ImageData, Album> {
 					RequestBuilder builder = RequestBuilder.getInstance();
 					Request request = builder
 							.get()
-							.address(DriveUtils.getServerDownloadUrl(descFile
+							.address(DriveUtils.getClientDownloadUrl(descFile
 									.getId()))
 							.build();
 					album.setDescription(request.perform().getContent());

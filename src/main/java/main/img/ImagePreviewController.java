@@ -32,11 +32,12 @@ public class ImagePreviewController {
 	
 	public void generatePreview(ImageData image) 
 			throws IOException,PreviewException {
-		BufferedInputStream bis = new BufferedInputStream(portfolioDao.getFileContent(image.getId()));
+		BufferedInputStream bis = new BufferedInputStream(portfolioDao
+				.getFileContent(image.getId()));
 		BufferedImage bufferedImage;
 		bufferedImage = ImageUtils.resizeBySmaller(ImageIO.read(bis),
 				SMALLER_SIDE);
-		previewDao.writeFile(image, bufferedImage);
+		previewDao.writeImage(image, bufferedImage);
 	}
 	
 	public void generatePreviews() throws IOException {

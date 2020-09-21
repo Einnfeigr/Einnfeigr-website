@@ -87,6 +87,15 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 		return new URL(DriveUtils.getClientDownloadUrl(id)).openStream();
 	}
 	
+	@Override
+	public void writeFile(String id, String content) {
+		writeDriveFile(id, content);
+	}
+	
+	protected void writeDriveFile(String id, String content) {
+		String url = DriveUtils.getUploadUrl();
+	}
+	
 	protected List<DriveFile> getDriveFolderContent(String id)
 			throws IOException {
 		Map<String,List<DriveFile>> map;
@@ -174,14 +183,17 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 			content = RequestBuilder
 					.performGet(url, "fields", "id,mimeType,title");
 			file = new Gson().fromJson(content, DriveFile.class);
+			if(file == null) {
+				return null;
+			}
+			if(file.isDirectory()) {
+				file.setChildren(getDriveFolderContent(id));
+			}
 		} catch(RequestException e) {
 			getLogger().error(url, e);
 			getLogger().error(e.getResponse().getContent());
 		} catch(NullPointerException e) {
 			getLogger().error(url, e);
-		}
-		if(file.isDirectory()) {
-			file.setChildren(getDriveFolderContent(id));
 		}
 		return file;
 	}
