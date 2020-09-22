@@ -195,7 +195,7 @@ public class DashboardController {
 				+"/api/drive/callback");
 		logger.info("current user code: "+driveUtils.getUserCode());
 		Request request = builder.blank()
-				.address("https://www.googleapis.com/drive/v3/files/"+
+				.address("https://www.googleapis.com/drive/v2/files/"+
 					PortfolioDriveDao.getRootId()+"/watch/")
 				.method("POST")
 				.content(new Gson().toJson(content))

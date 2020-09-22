@@ -38,8 +38,10 @@ public class TokenBunch {
 	
 	public String getAccessToken() {
 		if(refreshToken == null) {
+			logger.info("exchanging code");
 			exchangeCode();
 		} else if(isExpired()) {
+			logger.info("refreshing code");
 			refreshCode();
 		}
 		logger.info("accessToken: "+accessToken);
@@ -75,13 +77,15 @@ public class TokenBunch {
 		Request request;
 		Map<String, String> jsonEntries;
 		Map<String, String> content = new HashMap<>();
-		content.put("client_id", "");
-		content.put("client_secret", "");
+		content.put("client_id", System.getenv("clientId"));
+		content.put("client_secret", System.getenv("clientSecret"));
 		content.put("grant_type", "refresh_token");
 		content.put("refresh_token", refreshToken);
 		request = generateOauthRequest(content);
 		try {	
-			jsonEntries = gson.fromJson(request.perform().getContent(), token);
+			String contentString = request.perform().getContent();
+			jsonEntries = gson.fromJson(contentString, token);
+			logger.info(contentString);
 			accessToken = jsonEntries.get("accessToken");
 			refreshToken = jsonEntries.get("refreshToken");
 			setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
