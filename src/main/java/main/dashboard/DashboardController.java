@@ -52,7 +52,7 @@ public class DashboardController {
 			  +"response_type=code&"
 			  +"access_type=offline&"
 			  +"state=state_parameter_passthrough_value&"
-			  +"scope=https%3A//www.googleapis.com/auth/drive.file&"
+			  +"scope=https%3A//www.googleapis.com/auth/drive&"
 			  +"redirect_uri="+System.getenv("currentUrl")+"/login&"
 			  +"prompt=consent&"
 			  +"include_granted_scopes=true";
@@ -195,7 +195,7 @@ public class DashboardController {
 				+"/api/drive/callback");
 		logger.info("current user code: "+driveUtils.getUserCode());
 		Request request = builder.blank()
-				.address("https://www.googleapis.com/drive/v2/files/"+
+				.address("https://www.googleapis.com/drive/v3/files/"+
 					PortfolioDriveDao.getRootId()+"/watch/")
 				.method("POST")
 				.content(new Gson().toJson(content))
