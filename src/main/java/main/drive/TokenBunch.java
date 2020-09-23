@@ -127,8 +127,6 @@ public class TokenBunch {
 			logger.info("Code has been exchanged");
 			logger.info("AccessToken: "+accessToken);
 			logger.info("RefreshToken: "+refreshToken);
-		} catch(RequestException e) {
-			logger.error(Util.EXCEPTION_LOG_MESSAGE, e.getContent());
 		} catch(IOException | NumberFormatException e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 		}
