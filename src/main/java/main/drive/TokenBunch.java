@@ -2,11 +2,14 @@ package main.drive;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -27,8 +30,10 @@ public class TokenBunch {
 	private String accessToken;
 	private String authToken;
 	private String userCode;
-	private long expiresIn;
 
+	@Autowired
+	private TaskScheduler scheduler;
+	
 	public TokenBunch() {
 		String refreshToken = System.getenv("refreshToken");
 		if(refreshToken != null) {
@@ -37,12 +42,9 @@ public class TokenBunch {
 	}
 	
 	public String getAccessToken() {
-		if(refreshToken == null) {
+		if(accessToken == null) {
 			logger.info("exchanging code");
 			exchangeCode();
-		} else if(isExpired()) {
-			logger.info("refreshing code");
-			refreshCode();
 		}
 		logger.info("accessToken: "+accessToken);
 		return accessToken;
@@ -64,14 +66,6 @@ public class TokenBunch {
 		this.userCode = userCode;
 	}
 	
-	private void setExpiresIn(long expiresIn) {
-		this.expiresIn = System.currentTimeMillis()+expiresIn*1000;
-	}
-	
-	public boolean isExpired() {
-		return expiresIn < System.currentTimeMillis();
-	}
-	
 	private void refreshCode() {
 		Type token = new TypeToken<Map<String, String>>() {}.getType();	
 		Request request;
@@ -83,12 +77,19 @@ public class TokenBunch {
 		content.put("refresh_token", refreshToken);
 		request = generateOauthRequest(content);
 		try {	
+			Long startTime = System.currentTimeMillis();
 			String contentString = request.perform().getContent();
 			jsonEntries = gson.fromJson(contentString, token);
 			logger.info(contentString);
 			accessToken = jsonEntries.get("accessToken");
 			refreshToken = jsonEntries.get("refreshToken");
-			setExpiresIn(Integer.valueOf(jsonEntries.get("expiresIn")));
+			Date date = new Date();
+			Long endTime = System.currentTimeMillis();
+			Long delay = endTime-startTime;
+			Long expirationTime = (Long.valueOf(jsonEntries.get("expiresIn")));
+			date.setTime(System.currentTimeMillis()+(expirationTime-delay));
+			Runnable task = () -> refreshCode();
+			scheduler.schedule(task, date);
 			logger.info("code has been refreshed");
 			logger.info("AccessToken: "+accessToken);
 			logger.info("RefreshToken: "+refreshToken);
@@ -110,12 +111,19 @@ public class TokenBunch {
 		request = generateOauthRequest(content);
 		logger.info(userCode);
 		try {
+			Long startTime = System.currentTimeMillis();
 			String response = request.perform().getContent();
 			logger.info(response);
 			jsonEntries = gson.fromJson(response, token);
 			accessToken = jsonEntries.get("access_token");
 			refreshToken = jsonEntries.get("refresh_token");
-			setExpiresIn(Integer.valueOf(jsonEntries.get("expires_in")));
+			Date date = new Date();
+			Long endTime = System.currentTimeMillis();
+			Long delay = endTime-startTime;
+			Long expirationTime = (Long.valueOf(jsonEntries.get("expiresIn")));
+			date.setTime(System.currentTimeMillis()+(expirationTime-delay));
+			Runnable task = () -> refreshCode();
+			scheduler.schedule(task, date);
 			logger.info("Code has been exchanged");
 			logger.info("AccessToken: "+accessToken);
 			logger.info("RefreshToken: "+refreshToken);

@@ -115,8 +115,6 @@ public class DriveUtils {
 		logger.info("Current time: "+System.currentTimeMillis());
 		logger.info("Trigger time: "+date.getTime());
 		scheduler.schedule(task, date);
-		date = new Date();
-		date.setTime(System.currentTimeMillis()+5000);
 		channelIds.put(fileId, channelId);
 	}
 }

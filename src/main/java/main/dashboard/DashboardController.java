@@ -74,7 +74,6 @@ public class DashboardController {
 		if(!password.equals(System.getenv("adminPassword"))) {
 			return new ResponseEntity<String>("Wrong password", 
 					HttpStatus.UNAUTHORIZED);
-			
 		}			
 		try {
 			driveUtils.setUserCode(code);

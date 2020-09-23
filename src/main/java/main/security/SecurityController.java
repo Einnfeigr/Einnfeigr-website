@@ -35,14 +35,14 @@ public class SecurityController {
 	public ModelAndView login(@RequestParam(required=false) String code) {
 		if(code != null) {
 			try {
-			Map<String, String> data = new HashMap<>();
-			data.put("code", code);
-			ModelAndView mav = new ModelAndView("index");
-			String page = TemplateFactory.buildTemplate(
-					"/templates/misc/confirmPass.mustache", data).compile();
-			mav.getModel().put("title", "Подтверждение пароля");
-			mav.getModel().put("page", page);
-			return mav;
+				Map<String, String> data = new HashMap<>();
+				data.put("code", code);
+				ModelAndView mav = new ModelAndView("index");
+				String page = TemplateFactory.buildTemplate(
+						"/templates/misc/confirmPass.mustache", data).compile();
+				mav.getModel().put("title", "Подтверждение пароля");
+				mav.getModel().put("page", page);
+				return mav;
 			} catch(IOException e) {
 				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			}
