@@ -40,6 +40,7 @@ public class SecurityController {
 			ModelAndView mav = new ModelAndView("index");
 			String page = TemplateFactory.buildTemplate(
 					"/templates/misc/confirmPass.mustache", data).compile();
+			mav.getModel().put("title", "Подтверждение пароля");
 			mav.getModel().put("page", page);
 			return mav;
 			} catch(IOException e) {
