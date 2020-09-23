@@ -1,5 +1,9 @@
 package main.security;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +34,17 @@ public class SecurityController {
 	@RequestMapping(value="/login", method= RequestMethod.GET)
 	public ModelAndView login(@RequestParam(required=false) String code) {
 		if(code != null) {
-			driveUtils.setUserCode(code);
-			return new ModelAndView("redirect:/"+"dashboard");
+			try {
+			Map<String, String> data = new HashMap<>();
+			data.put("code", code);
+			ModelAndView mav = new ModelAndView("index");
+			String page = TemplateFactory.buildTemplate(
+					"/templates/misc/confirmPass.mustache", data).compile();
+			mav.getModel().put("page", page);
+			return mav;
+			} catch(IOException e) {
+				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
+			}
 		}
 		try {
 			ModelAndView mav = new ModelAndView("index");
