@@ -81,6 +81,7 @@ public class DriveUtils {
 		Map<String, String> content = new HashMap<>();
 		content.put("id", channelId);
 		content.put("type", "webhook");
+		content.put("expiration", "3600000");
 		content.put("address", System.getenv("currentUrl")
 				+"/api/drive/callback");
 		Request request = builder.blank()
