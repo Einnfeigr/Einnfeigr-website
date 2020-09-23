@@ -112,6 +112,9 @@ public class DriveUtils {
 		Long delay = endTime-startTime;
 		date.setTime(System.currentTimeMillis()+(expirationTime-delay));
 		scheduler.schedule(task, date);
+		date = new Date();
+		date.setTime(System.currentTimeMillis()+5000);
+		scheduler.schedule(() -> logger.info("5 second timer!"), date);
 		channelIds.put(fileId, channelId);
 	}
 }
