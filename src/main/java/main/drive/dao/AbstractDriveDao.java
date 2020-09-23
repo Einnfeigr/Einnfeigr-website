@@ -189,6 +189,7 @@ public abstract class AbstractDriveDao<F, D> implements DriveDao<F, D> {
 			if(file.isDirectory()) {
 				file.setChildren(getDriveFolderContent(id));
 			}
+			logger.info("Obtained "+id+" file data by request");
 		} catch(RequestException e) {
 			getLogger().error(url, e);
 			getLogger().error(e.getResponse().getContent());

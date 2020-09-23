@@ -14,7 +14,6 @@ import org.springframework.scheduling.TaskScheduler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import main.dashboard.DashboardController;
 import main.http.Request;
 import main.http.RequestBuilder;
 
@@ -24,7 +23,7 @@ public class DriveUtils {
 	private TaskScheduler scheduler;
 	
 	private static final Logger logger = 
-			LoggerFactory.getLogger(DashboardController.class);
+			LoggerFactory.getLogger(DriveUtils.class);
 	
 	private TokenBunch tokenBunch;
 	private static String key;
