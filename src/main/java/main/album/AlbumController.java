@@ -18,7 +18,7 @@ public class AlbumController {
 			LoggerFactory.getLogger(ImageDataController.class);
 	
 	private static Album rootDirectory;
-	private static Map<String, Album> albums;
+	private static Map<String, Album> albums = new HashMap<>();;
 	private PortfolioDriveDao dao;
 	
 	public AlbumController(PortfolioDriveDao dao) {
@@ -44,7 +44,7 @@ public class AlbumController {
 	public void loadAlbums() {
 		try {
 			List<Album> albumList = dao.getAllFolders();
-			albums = new HashMap<>();
+			albums.clear();
 			albumList.forEach(s -> {
 				if(s.getId().equals(PortfolioDriveDao.getRootId())) {
 					rootDirectory = s;
@@ -53,11 +53,7 @@ public class AlbumController {
 			});
 		} catch(IOException e) {
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
-		} finally {
-			if(albums == null) {
-				albums = new HashMap<>();
-			}
-		}
+		} 
 	}
 	
 }

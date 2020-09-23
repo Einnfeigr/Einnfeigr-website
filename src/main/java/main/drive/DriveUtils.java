@@ -98,6 +98,8 @@ public class DriveUtils {
 		Runnable task = () -> {
 			try {
 				registerWatchService(channelId, fileId);
+				logger.info("Watch service for file "+fileId+" has been "
+						+ "refreshed");
 			} catch (IOException e) {
 				logger.error("Unable to refresh watch service for file "+fileId);
 				logger.error("Exception is: ", e);

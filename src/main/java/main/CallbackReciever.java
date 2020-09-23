@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.album.AlbumController;
 import main.drive.dao.PortfolioDriveDao;
 import main.drive.dao.PreviewDriveDao;
 import main.img.preview.DriveImageController;
@@ -17,13 +18,15 @@ public class CallbackReciever {
 	
 	@Autowired
 	PortfolioDriveDao portfolioDriveDao;
-	
 	@Autowired
 	PreviewDriveDao previewDriveDao;
+	@Autowired
+	AlbumController albumController;
 	
 	@RequestMapping("api/drive/callback")
 	public void handleCallback() {
 		portfolioDriveDao.clearCache();
 		previewDriveDao.clearCache();
+		albumController.loadAlbums();
 	}
 }
