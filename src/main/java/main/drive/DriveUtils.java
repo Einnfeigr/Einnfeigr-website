@@ -30,7 +30,7 @@ public class DriveUtils {
 	private static Map<String, String> channelIds = new HashMap<>();
 
 	public DriveUtils() {
-		tokenBunch = new TokenBunch();
+		tokenBunch = new TokenBunch(scheduler);
 		DriveUtils.key = System.getenv("drive.apiKey");
 	}
 	
