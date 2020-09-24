@@ -63,6 +63,7 @@ public class DashboardController {
 			mav.getModel().put("title", title); 
 			return mav;
 		} catch(Exception e) {
+			logger.info("error");
 			logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 			throw new ControllerException(e);
 		}
@@ -107,7 +108,6 @@ public class DashboardController {
 					HttpStatus.UNAUTHORIZED);
 		}
 	}
-	
 	
 	@RequestMapping(value="/dashboard", method=RequestMethod.GET)
 	public ModelAndView showMain() {
