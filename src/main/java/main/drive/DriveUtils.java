@@ -25,12 +25,12 @@ public class DriveUtils {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(DriveUtils.class);
 	
+	@Autowired
 	private TokenBunch tokenBunch;
 	private static String key;
 	private static Map<String, String> channelIds = new HashMap<>();
 
 	public DriveUtils() {
-		tokenBunch = new TokenBunch(scheduler);
 		DriveUtils.key = System.getenv("drive.apiKey");
 	}
 	

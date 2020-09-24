@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 
 import com.google.gson.Gson;
@@ -28,11 +29,12 @@ public class TokenBunch {
 	private String accessToken;
 	private String authToken;
 	private String userCode;
+	
+	@Autowired
 	private TaskScheduler scheduler;
 	
 	
-	public TokenBunch(TaskScheduler scheduler) {
-		this.scheduler = scheduler;
+	public TokenBunch() {
 		String refreshToken = System.getenv("refreshToken");
 		if(refreshToken != null) {
 			this.refreshToken = refreshToken;
