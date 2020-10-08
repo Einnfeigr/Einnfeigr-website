@@ -123,3 +123,7 @@ html {
 	height: auto;
 	width: auto;
 }
+
+video {
+	min-height: 100vh;	
+}
