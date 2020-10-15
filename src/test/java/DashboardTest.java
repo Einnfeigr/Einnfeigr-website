@@ -49,19 +49,13 @@ public class DashboardTest {
 	@Test
 	public void codeRetrieveAndExchange() throws Exception {
 		mvc.perform(MockMvcRequestBuilders
-				.get("/login?code="+System.getenv("userCode"))
+				.post("/dashboard/code/set")
+				.param("code", System.getenv("userCode"))
+				.param("password", System.getenv("adminPassword"))
 				).andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-		assertThat(driveUtils.getAccessToken()).isNotEmpty();
-	}
-	
-	@WithMockUser(value = "studiedlist")
-	@Test
-	public void startWatch() throws Exception {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/dashboard/watch")
 				.param("password", System.getenv("adminPassword"))
-				.param("id", System.getenv("drive.channelId"))
 				).andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
 }

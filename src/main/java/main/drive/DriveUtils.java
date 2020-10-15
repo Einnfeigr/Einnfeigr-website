@@ -95,9 +95,9 @@ public class DriveUtils {
 		Type token = new TypeToken<Map<String,String>>() {}.getType();	
 		Map<String, String> data;
 		String responseContent = request.perform().getContent();
+		logger.info(responseContent);
 		data = new Gson().fromJson(responseContent, token);
 		Long expirationTime = Long.valueOf(data.get("expiration"));
-		logger.info(responseContent);
 		Runnable task = () -> {
 			try {
 				registerWatchService(channelId, fileId);

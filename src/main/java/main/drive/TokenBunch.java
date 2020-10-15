@@ -14,6 +14,7 @@ import org.springframework.scheduling.TaskScheduler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import main.exception.RequestException;
 import main.http.Request;
 import main.http.RequestBuilder;
 import main.misc.Util;
@@ -108,13 +109,19 @@ public class TokenBunch {
 		content.put("redirect_uri", System.getenv("currentUrl")+"/login");
 		content.put("code", userCode);
 		content.put("grant_type", "authorization_code");
+		logger.info(content.toString());
 		request = generateOauthRequest(content);
 		logger.info(userCode);
 		try {
 			Long startTime = System.currentTimeMillis();
 			String response = request.perform().getContent();
-			logger.info(response);
 			jsonEntries = gson.fromJson(response, token);
+			logger.info(jsonEntries.toString());
+			if(!jsonEntries.containsKey("access_token") 
+					|| !jsonEntries.containsKey("refresh_token")
+					|| !jsonEntries.containsKey("expires_in")) {
+				throw new IOException(response);
+			}
 			accessToken = jsonEntries.get("access_token");
 			refreshToken = jsonEntries.get("refresh_token");
 			Date date = new Date();
