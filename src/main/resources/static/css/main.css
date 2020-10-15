@@ -65,3 +65,8 @@
  	cursor: pointer;
  	box-shadow: 1px 1px 10px rgba(0,0,0,0.3);
 }
+
+.backgroundImage video {
+	min-height: 100vh;	
+	min-width: 100vw;
+}

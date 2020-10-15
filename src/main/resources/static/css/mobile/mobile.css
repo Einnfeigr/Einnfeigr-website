@@ -46,9 +46,36 @@ htnl.expanded .main .title {
 .backgroundImage {
 	position: absolute;
 	margin: 0;
+	min-width: 100vw;
+	min-height: calc(var(--vh, 1vh) * 45);
 	top: 0;
 }
 
 .textDiv {
 	min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.textDiv .images {
+	padding-right: 0;
+}
+
+.textDiv .images img {
+	width: 85%;
+}
+
+.textDiv {
+	padding-top: 90px;
+}
+
+.albums {
+	justify-content: center;
+}
+
+.previews {
+	width: auto;
+}
+
+.previews img {
+	width: 45vw;
+	height: 30vw;
 }
