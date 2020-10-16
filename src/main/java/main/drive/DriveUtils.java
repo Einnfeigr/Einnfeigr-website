@@ -62,7 +62,8 @@ public class DriveUtils {
 	}
 	
 	public static String getServerDownloadUrl(String id) {
-		return "https://www.googleapis.com/drive/v2/files/"+id+"?alt=media";
+		return "https://www.googleapis.com/drive/v2/files/"+id+"?alt=media&key="
+				+System.getenv("drive.apiKey");
 	}
 	
 	public static String getClientDownloadUrl(String id) {
