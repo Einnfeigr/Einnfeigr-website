@@ -17,11 +17,10 @@
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
 >
 
-	<bean id="dashboardController"    class="main.dashboard.DashboardController" />
+	<bean id="dashboardController"    class="main.controller.view.DashboardController" />
 	<bean id="tokenBunch"			  class="main.drive.TokenBunch"				/>
 	<bean id="securityController"     class="main.security.SecurityController" />
 	<bean id="imagePreviewController" class="main.img.ImagePreviewController" />
-	<bean id="pageController"         class="main.page.PageController" />
 	<bean id="driveUtils"             class="main.drive.DriveUtils" />
 	<bean id="previewDriveDao"        class="main.drive.dao.PreviewDriveDao" >
 		<constructor-arg ref="driveUtils" />

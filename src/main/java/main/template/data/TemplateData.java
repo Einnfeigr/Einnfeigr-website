@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface TemplateData {
 	
-	Map<String, String> toMap();
+	Map<String, Object> toMap();
 	
 }

@@ -26,11 +26,9 @@ public class ImageListTemplate extends AbstractTemplate {
 		}
 		StringBuilder sb = new StringBuilder("");
 		for(String url : urls) {
-			
-			Template template = TemplateFactory.buildTemplate(
+			sb.append(TemplateFactory.buildTemplate(
 					"templates/misc/img/image", new ImageTemplateData(url)
-					.toMap());
-			sb.append(template.compile());
+					.toMap()));
 		}
 		return sb.toString();
 	}

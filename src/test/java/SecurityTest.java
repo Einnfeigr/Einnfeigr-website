@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import main.ProjectConfiguration;
-import main.dashboard.DashboardController;
+import main.controller.view.DashboardController;
 import main.security.SecurityConfiguration;
 import main.security.SecurityController;
 

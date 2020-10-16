@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import main.drive.DriveUtils;
 import main.exception.ControllerException;
 import main.misc.Util;
-import main.template.Template;
 import main.template.TemplateFactory;
 import main.template.data.PageTemplateData;
 
@@ -35,11 +34,11 @@ public class SecurityController {
 	public ModelAndView login(@RequestParam(required=false) String code) {
 		if(code != null) {
 			try {
-				Map<String, String> data = new HashMap<>();
+				Map<String, Object> data = new HashMap<>();
 				data.put("code", code);
 				ModelAndView mav = new ModelAndView("index");
 				String page = TemplateFactory.buildTemplate(
-						"/templates/misc/confirmPass.mustache", data).compile();
+						"/templates/misc/confirmPass.mustache", data);
 				mav.getModel().put("title", "Подтверждение пароля");
 				mav.getModel().put("page", page);
 				return mav;
@@ -52,9 +51,8 @@ public class SecurityController {
 			PageTemplateData data = new PageTemplateData();
 			data.setMobile(false);
 			data.setTitle("Вход");
-			Template template = TemplateFactory.buildTemplate(
-					"templates/pages/login");
-			data.setPage(template.compile());
+			data.setPage(TemplateFactory.buildTemplate(
+					"templates/pages/login"));
 			mav.getModel().put("title", data.getTitle());
 			mav.getModel().put("page", data.getPage());
 			return mav;

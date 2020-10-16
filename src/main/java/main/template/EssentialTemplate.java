@@ -10,19 +10,19 @@ import com.github.mustachejava.Mustache;
 
 public class EssentialTemplate extends AbstractTemplate {
 	
-	Map<String, String> data;
+	Map<String, Object> data;
 	
 	EssentialTemplate() {}
 	
-	EssentialTemplate(Map<String, String> data) {
+	EssentialTemplate(Map<String, Object> data) {
 		this.data = data;
 	}
 	
-	public void setData(Map<String, String> data) {
+	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
 	
-	public Map<String, String> getData() {
+	public Map<String, Object> getData() {
 		return data;
 	}
 	

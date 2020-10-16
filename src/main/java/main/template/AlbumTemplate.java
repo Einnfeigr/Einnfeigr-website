@@ -19,7 +19,7 @@ public class AlbumTemplate extends EssentialTemplate {
 	}
 	
 	public AlbumTemplate(Album album) throws IOException {
-		Map<String, String> data = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
 		setTemplatePath("templates/misc/albums/album.mustache");
 		data.put("name", album.getName());
 		data.put("id", album.getId());
@@ -55,9 +55,8 @@ public class AlbumTemplate extends EssentialTemplate {
 			} else {
 				url = "/image/"+(imagesList.get(x).getId());
 			}
-			Template template = TemplateFactory.buildTemplate(
-					imageTemplatePath, new ImageTemplateData(url).toMap());
-			images.append(template.compile());
+			images.append(TemplateFactory.buildTemplate(
+					imageTemplatePath, new ImageTemplateData(url).toMap()));
 		} 
 		return images.toString(); 
 	}

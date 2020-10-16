@@ -18,13 +18,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import main.controller.view.img.preview.PreviewSize;
 import main.drive.DriveFile;
 import main.drive.DriveFileConverter;
 import main.drive.DriveUtils;
 import main.http.Request;
 import main.http.RequestBuilder;
 import main.img.ImageData;
-import main.img.preview.PreviewSize;
 import main.misc.Util;
 
 public class PreviewDriveDao extends CachedDriveDao<ImageData, List<ImageData>> {

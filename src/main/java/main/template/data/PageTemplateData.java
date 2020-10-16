@@ -42,8 +42,8 @@ public class PageTemplateData implements TemplateData {
 		this.isMobile = isMobile;
 	}
 	
-	public Map<String, String> toMap() {
-		Map<String, String> map = new HashMap<>();
+	public Map<String, Object> toMap() {
+		Map<String, Object> map = new HashMap<>();
 		map.put("title", title);
 		map.put("text", text);
 		map.put("page", page);

@@ -6,7 +6,7 @@ import java.util.Map;
 public class TemplateFiller {
 
 	private String path;
-	private Map<String, String> params;
+	private Map<String, Object> params;
 	
 	TemplateFiller(String path) {
 		this.path = path;

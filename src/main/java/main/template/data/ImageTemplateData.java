@@ -13,8 +13,8 @@ public class ImageTemplateData implements TemplateData {
 		imgPath = previewPath;
 	}
 	
-	public Map<String, String> toMap() {
-		Map<String, String> map = new HashMap<>();
+	public Map<String, Object> toMap() {
+		Map<String, Object> map = new HashMap<>();
 		map.put("imgPath", imgPath);
 		map.put("previewPath", previewPath);
 		return map;

@@ -29,9 +29,8 @@ public class AlbumListTemplate extends AbstractTemplate {
 					new AlbumPreviewTemplate(album);
 			albumsContent.append(albumTemplate.compile());
 		}
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("albums", albumsContent.toString());
-		Template albumsTemplate = TemplateFactory.buildTemplate(path, map);
-		return albumsTemplate.compile();
+		return TemplateFactory.buildTemplate(path, map);
 	}
 }

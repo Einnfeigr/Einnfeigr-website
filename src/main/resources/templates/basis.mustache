@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{{^excludeBasis}}
+	<html lang="en">
+	    <head>
+	    	{{>/misc/components/head}}
+	    </head>
+	    <body>
+	    	{{>/misc/components/header}}
+	    	{{>/misc/components/preloader}}
+			<div class="pageArea">
+{{/excludeBasis}}
+			{{{page}}}
+{{^excludeBasis}}
+			</div>
+			{{>/misc/components/footer}}
+	    </body>
+	</html>
+{{/excludeBasis}}

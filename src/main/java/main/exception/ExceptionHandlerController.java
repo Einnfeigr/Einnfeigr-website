@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import main.template.Template;
 import main.template.TemplateFactory;
 import main.template.data.PageTemplateData;
 
@@ -25,10 +24,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleConflict(RuntimeException ex,
 			WebRequest request) {
 		try {
-			Template template;
 			String bodyOfResponse;
 			String responseTemplatePath;
-			Map<String, String> map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>();
 			if(ex instanceof ControllerException) {
 				String textPath;
 				if(ex instanceof NotFoundException) {
@@ -36,8 +34,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 				} else {
 					textPath = "templates/text/ru/error/error";
 				}
-				template = TemplateFactory.buildTemplate(textPath);
-				map.put("text", template.compile());
+				map.put("text", TemplateFactory.buildTemplate(textPath));
 			}
 			if(request.getParameter("path") == null) {
 				responseTemplatePath = "templates/index";
@@ -45,13 +42,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 				responseTemplatePath = "templates/placeholder";
 			}
 			String pagePath = "templates/pages/error/error";
-			template = TemplateFactory.buildTemplate(pagePath, map);
 			PageTemplateData responseData = new PageTemplateData();
 			responseData.setTitle("Ошибка");
-			responseData.setPage(template.compile());
-			template = TemplateFactory.buildTemplate(responseTemplatePath,
+			responseData.setPage(TemplateFactory.buildTemplate(pagePath, map));
+			bodyOfResponse = TemplateFactory.buildTemplate(responseTemplatePath,
 					responseData.toMap());
-			bodyOfResponse = template.compile();
 		    return handleExceptionInternal(ex, bodyOfResponse, 
 		  	      new HttpHeaders(), HttpStatus.OK, request);
 		} catch (Exception e) {

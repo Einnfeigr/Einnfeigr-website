@@ -1,12 +1,9 @@
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -15,13 +12,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import main.ProjectConfiguration;
-import main.dashboard.DashboardController;
+import main.controller.view.DashboardController;
 import main.drive.DriveUtils;
-import main.exception.NotFoundException;
-import main.page.PageController;
 import main.security.SecurityConfiguration;
-import main.security.SecurityController;
-import unit.DriveTest;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers= {DashboardController.class})

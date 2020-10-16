@@ -12,13 +12,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import main.ProjectConfiguration;
+import main.controller.view.ViewController;
 import main.exception.NotFoundException;
-import main.page.PageController;
 import main.security.SecurityConfiguration;
 import main.security.SecurityController;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers= {PageController.class})
+@WebMvcTest(controllers= {ViewController.class})
 @ContextConfiguration(
 		classes= {ProjectConfiguration.class, SecurityConfiguration.class})
 public class PageTest {
