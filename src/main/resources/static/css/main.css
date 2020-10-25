@@ -1,8 +1,8 @@
-.main .textDiv {
+.fullscreen .textDiv {
 	padding-top: 35px;
 }
 
-.main .title {
+.fullscreen .title {
 	display: flex;
 	flex-flow: column;
 	justify-content: center;
@@ -13,26 +13,26 @@
 	height: calc(var(--vh, 1vh) * 100);
 }
 
-.main .title h1 {
+.fullscreen .title h1 {
 	cursor: default;
 }
 
-.main .title .buttons {
+.fullscreen .title .buttons {
 	cursor: default;
 }
 
-.main .background {
+.fullscreen .background {
 	padding-top: 0;
 	height: 100vh;
 	height: calc(var(--vh, 1vh) * 100);
 }
 
-.main .wrapper {
+.fullscreen .wrapper {
 	grid-template-rows: 100vh minmax(100px, auto);
 	display: grid;
 }
 
-.main .backgroundImage {
+.fullscreen .backgroundImage {
 	bottom: 0;
 	height: 100vh;
 	margin-top: -100vh;
@@ -47,11 +47,11 @@
 	margin: auto;
 }
 
-.main .images {
+.fullscreen .images {
 	flex-wrap: wrap;
 }
 
-.main .images img {
+.fullscreen .images img {
 	width: calc(100% / 3 - 10px);
 }
 

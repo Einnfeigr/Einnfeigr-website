@@ -52,7 +52,7 @@ body {
 
 .textDiv .images img {
 	width: calc(100% - 10px);
-	object-fit: cover;
+	/object-fit: cover;
 }
 
 .textDiv .image {

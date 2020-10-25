@@ -10,11 +10,11 @@ html.expanded .nav {
 	left: 0;
 }
 
-htnl.expanded .title {
+html.expanded .title {
 	left: 250px;
 }
 
-htnl.expanded .main .title {
+html.expanded .main .title {
 	left: 0;
 }
 
@@ -23,8 +23,8 @@ htnl.expanded .main .title {
 	width: 100vw;
 }
 
-.title h1 {
-	font-size: 2.5em;
+.background .title h1 {
+	font-size: revert;
 }
 
 .textDiv {
@@ -43,12 +43,28 @@ htnl.expanded .main .title {
 	height: calc(var(--vh, 1vh) * 45);
 }
 
+.fullscreen .background {
+	height: calc(var(--vh, 1vh) * 100);
+}
+
 .backgroundImage {
 	position: absolute;
 	margin: 0;
 	min-width: 100vw;
 	min-height: calc(var(--vh, 1vh) * 45);
 	top: 0;
+	margin-top: 0;
+	max-width: auto;
+}
+
+.fullscreen .backgroundImage {
+	min-height: calc(var(--vh, 1vh) * 100);
+	margin-top: 0;
+	max-width: auto;
+}
+
+.fullscreen .backgroundImage img {
+	height: calc(var(--vh, 1vh) * 100);
 }
 
 .textDiv {
@@ -60,7 +76,9 @@ htnl.expanded .main .title {
 }
 
 .textDiv .images img {
-	width: 85%;
+	height: 100%;
+	width: 70vw;
+	margin: 10px;
 }
 
 .textDiv {
@@ -73,6 +91,16 @@ htnl.expanded .main .title {
 
 .previews {
 	width: auto;
+}
+
+.backgroundImage {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+}
+
+.backgroundImage video {
+	min-width: auto;
 }
 
 .previews img {

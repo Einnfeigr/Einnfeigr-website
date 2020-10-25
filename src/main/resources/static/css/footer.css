@@ -60,8 +60,11 @@
 }
 
 .footer div.navLinks {
+	display: flex;
 	justify-content: flex-start;
+	flex-flow: column;
 	flex-wrap: wrap;
+	height: 100%;
 }
 
 .navLinks h5 {

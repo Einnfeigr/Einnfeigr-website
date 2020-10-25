@@ -81,7 +81,7 @@ public class PageController {
     			name = "main";
     		}
 	    	Page page = new Page();
-	    	Map<String, String> data = getPageData(name);
+	    	Map<String, String> data = getPageData(name, isMobile(device, ver));
 	    	page.setTitle(data.get("title"));
 	    	page.setContent(data.get("page"));
 	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
@@ -105,10 +105,7 @@ public class PageController {
     			name = "main";
     		}
 	  		ModelAndView mav = new ModelAndView("index");
-      		Map<String, String> data = getPageData(name);
-      		if(isMobile(device, ver)) {
-      			data.put("isMobile", "true");
-      		}
+      		Map<String, String> data = getPageData(name, isMobile(device, ver));
       		mav.getModel().putAll(data);
 	    	return mav;
     	} catch(NotFoundException e) {
@@ -120,7 +117,8 @@ public class PageController {
 		}
     }
     
-    private Map<String, String> getPageData(String page) throws IOException {
+    private Map<String, String> getPageData(String page, boolean isMobile)
+    		throws IOException {
     	if(!names.containsKey(page)) {
 	    	logger.error("Invalid page address: "+page);
 			throw new NotFoundException("Invalid page address: "+page);
@@ -128,8 +126,11 @@ public class PageController {
     	String pagePath;
     	Template textTemplate = null;
     	Map<String, String> data = new HashMap<>();
+    	if(isMobile) {
+    		data.put("isMobile", "true");
+    	}
     	if(page.equals("main")) {
-	    	data.put("page", compileMain());	
+	    	data.put("page", compileMain(data));	
     	}
     	if(page.equals("portfolio")) {
 	    	textTemplate = TemplateFactory.createAlbumListTemplate(
@@ -137,7 +138,7 @@ public class PageController {
     	}
     	if(textTemplate == null) {
     		textTemplate = TemplateFactory.buildTemplate(
-    				"templates/text/ru/"+page);
+    				"templates/text/ru/"+page, data);
     	}
     	pagePath = "templates/pages/"+page;
 		if(!data.containsKey("page")) {
@@ -191,11 +192,11 @@ public class PageController {
 		}
     }
     
-    private String compileMain() {
+    private String compileMain(Map<String, String> data) {
     	Template template;
 		try {
     		Map<String, String> textData = new HashMap<>();
-    		Map<String, String> pageData = new HashMap<>();
+    		Map<String, String> pageData = data;
 			List<ImageData> dataList = dataController.getLatestImages();
 			if(dataList != null && dataList.size() > 0) {
 				template = TemplateFactory.createImageListTemplate(dataList);
