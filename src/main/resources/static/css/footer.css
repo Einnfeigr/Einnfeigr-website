@@ -7,11 +7,17 @@
 	height: 130px;
 	width: 100vw;
 	background-color: rgb(35,35,35);
-	display: grid;
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
 	bottom: 0;
-	grid-template-columns: repeat(3, 1fr);
-	grid-template-rows: repeat(3, 1fr);
 	padding-bottom: 27px;
+}
+
+.footer > div {	
+	justify-content: space-between;
+	display: flex;
+	flex-flow: column;
 }
 
 .footer span {
@@ -20,7 +26,7 @@
 }
 
 .footer h5 {
-	font-size: 0.68rem;
+	font-size: 0.68em;
 	margin: 0;
 	color: rgba(255,255,255,0.4);
 	font-weight: lighter;
@@ -29,9 +35,7 @@
 
 .versw {
 	white-space: nowrap;
-	grid-column: 1;
-	grid-row: 3;
-	justify-content: flex-start;
+	text-align: center;
 }
 
 .versw h5 {
@@ -43,4 +47,26 @@
 	grid-row: 3;
 	justify-content: flex-end;
 	text-align: right;
+}
+
+.smIcons {
+	gap: 5px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.smIcon {
+	height: 1.35em;
+}
+
+.footer div.navLinks {
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+
+.navLinks h5 {
+	color: white;
+	font-weight: 300;
+	margin: 5px;
+	font-style: normal;
 }

@@ -27,7 +27,7 @@ body {
 	font-weight: inherit;
 }
 
-.textDiv .centered {
+.centered {
 	width: 100%;
 	text-align: center;
 }
@@ -84,8 +84,11 @@ a {
 	color: inherit;
 }
 
+a.borderless {
+	border-bottom: none;
+}
+
 .textDiv a {
-	line-height: 170%;
 	border-bottom: 1px dotted black;
 }
 

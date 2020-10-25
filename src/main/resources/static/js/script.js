@@ -71,9 +71,10 @@ function showPage(address) {
 			window.history.pushState(address, a.title+" | einnfeigr", address
 					+ver);
 			document.title = a.title+' | einnfeigr';
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
 			$('.pageArea').append(a.content);
-			$('.previewBackground').fadeOut(500);
-			setTimeout(500, function() {
+			$('.previewBackground').fadeOut(500, function() {
 				$('.loading').hide();
 			});
 		},

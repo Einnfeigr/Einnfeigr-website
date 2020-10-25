@@ -1,9 +1,41 @@
 <div class="footer">
-	<span class="versw">
-		<h5><a onclick="switchVersion('{{^isMobile}}mobile{{/isMobile}}{{#isMobile}}desktop{{/isMobile}}')">	
-			{{^isMobile}}мобильная версия{{/isMobile}}
-			{{#isMobile}}версия для компьютера{{/isMobile}}
-		</a></h5>
-	</span>
-	<span class="poweredBy"><h5>powered by einnfeigr</h5></span>
+	<div>
+		<div class="navLinks">
+			<h5>
+				<a onclick="showPage('/photo')">Фотографии</a>
+			</h5>
+			<h5>
+				<a onclick="showPage('/retouch')">Ретушь</a>
+			</h5>
+			<h5>
+				<a onclick="showPage('/tips')">Заметки</a>
+			</h5>
+			<h5>
+				<a onclick="showPage('/portfolio')">Портфолио</a>
+			</h5>
+			<h5>
+				<a onclick="showPage('/faq')">FAQ</a>
+			</h5>
+		</div>
+	</div>
+	<div>
+		<span class="versw">
+			<h5>
+				<a onclick="switchVersion('{{^isMobile}}mobile{{/isMobile}}{{#isMobile}}desktop{{/isMobile}}')">	
+					{{^isMobile}}мобильная версия{{/isMobile}}
+					{{#isMobile}}версия для компьютера{{/isMobile}}
+				</a>
+			</h5>
+		</span>
+		<div class="smIcons">
+			<a class="borderless" target="_blank"
+					href="https://www.instagram.com/einnfeigr/">
+				<img src="/img/footer/igIcon.svg" class="smIcon" />
+			</a>
+			<a class="borderless" target="_blank" href="https://www.youtube.com/channel/UC2HBbv3JWcpdfA3XHXxpvRg">
+				<img src="/img/footer/ytIcon.svg" class="smIcon" />
+			</a>
+		</div>
+		<span class="poweredBy"><h5>powered by einnfeigr</h5></span>
+	</div>
 </div>

@@ -22,6 +22,12 @@ html {
 	background: rgba(0,0,0,0.2);
 }
 
+.background {
+	background-image: url("/img/overlay.png");
+	background-size: 3.5px;
+	background-repeat: repeat;
+}
+
 .backgroundImage {
 	bottom: calc(100vh - 45vw);
 	margin-top: -55vw;
@@ -123,3 +129,4 @@ html {
 	height: auto;
 	width: auto;
 }
+
