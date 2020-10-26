@@ -1,11 +1,9 @@
 var loaded;
 
 $(document).ready(function() {
-	$(".backgroundImage video").resume();
 	$(window).on('popstate', function() {
 		location.reload(true);
 	});
-
 	$('.previewBackground').removeClass('hidden');
 	if(loaded == true) {
 		$('.previewBackground').fadeOut(500, function() {
