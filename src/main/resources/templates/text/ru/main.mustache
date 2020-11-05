@@ -4,11 +4,24 @@
 	 Сайт является моей визитной карточкой одновременно в двух направлениях: 
 	 фотографии и веб разработке
 </p>
+<p>
+	Все фотографии, размещенные на сайте, сделаны мной. Вы можете свободно 
+	скачивать их и делиться где угодно, при условии того, что на фотографии есть
+	 моя вотермарка.
+</p>
+{{#sinceCreated}}
+	Einnfeigr существует уже {{sinceCreated}}
+{{/sinceCreated}}
 {{#latestLoaded}}
-<h2 class="centered">Последние работы</h2>
-<p class="centered">Остальные работы можно найти в <a onclick="showPage('/portfolio')">портфолио</a></p>
-{{!
-<div class="latest">
-	{{{latestLoaded}}}
-</div>
+	<h2 class="centered">Последние работы</h2>
+	<p class="centered">
+		Остальные работы можно найти в 
+		<a onclick="showPage('/portfolio')">
+			портфолио
+		</a>
+	</p>
+	{{!
+	<div class="latest">
+		{{{latestLoaded}}}
+	</div>
 {{/latestLoaded}}

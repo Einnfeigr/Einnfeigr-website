@@ -27,7 +27,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 		try {
 			Template template;
 			String bodyOfResponse;
-			String responseTemplatePath;
+			String responseTemplatePath = "templates/index";
 			Map<String, String> map = new HashMap<>();
 			if(ex instanceof ControllerException) {
 				String textPath;
@@ -43,7 +43,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 				responseTemplatePath = "templates/index";
 			} else {
 				responseTemplatePath = "templates/placeholder";
-			}
+			} 
 			String pagePath = "templates/pages/error/error";
 			template = TemplateFactory.buildTemplate(pagePath, map);
 			PageTemplateData responseData = new PageTemplateData();

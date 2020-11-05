@@ -14,7 +14,7 @@ body {
 	padding-top: calc(90px + 35px);
 }
 
-.textDiv p, .textDiv .images{
+.textDiv p, .textDiv .images, .textDiv ul, .textDiv ol {
 	padding-right: 30vw;
 }
 
@@ -23,7 +23,7 @@ body {
 	text-align: left;
 }
 
-.textDiv h2 {
+.textDiv h2, .textDiv h3 {
 	font-weight: inherit;
 }
 
@@ -33,6 +33,7 @@ body {
 }
 
 .textDiv .note {
+	padding-right: 30vw;
 	font-weight: normal;
 	font-style: italic;
 	color: rgba(0,0,0,0.6);
@@ -40,24 +41,16 @@ body {
 
 .textDiv .images .imageNote {
 	text-align: center;
-	margin: 0px auto 7vw auto;
-	width: 80%;
 }
 
 .textDiv .images {
-	justify-content: center;
+	justify-content: left;
 	display: flex;
 	gap: 10px;
 }
 
 .textDiv .images img {
-	width: calc(100% - 10px);
-	/object-fit: cover;
-}
-
-.textDiv .image {
-	grid-template-rows: 1fr auto;
-	display: grid;
+	max-height: 45vh;
 }
 
 .textDiv .image h5 {
@@ -134,7 +127,7 @@ li {
 	margin: 2px;
 }
 
-li::marker {
+ul li::marker {
 	content: "-";
 }
 

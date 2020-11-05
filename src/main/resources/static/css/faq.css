@@ -1,0 +1,22 @@
+.faq .questions div:nth-child(2n+1):before, .faq .questions div:first-child:before  {
+	content: "Вопрос:";
+	margin-left: 0.35em;
+}
+
+.faq .questions p {
+	margin-top: 0.65em;
+	margin-left: 2em;
+}
+
+.faq .questions div:nth-child(2n):before, .faq .questions div:last-child:before {
+	content: "Ответ:";
+	margin-left: 0.35em;
+}
+
+.faq .questions div:nth-child(2n) {
+	padding-bottom: 2em;
+}
+
+.faq .questions div:last-child {
+	padding-bottom: 0;
+}

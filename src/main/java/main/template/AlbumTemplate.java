@@ -51,7 +51,7 @@ public class AlbumTemplate extends EssentialTemplate {
 		for(int x = count-1; x >= 0; x--) {
 			String url;
 			if(x >= imagesList.size()) {
-				url = "/img/placeholder.png";
+				url = "";
 			} else {
 				url = "/image/"+(imagesList.get(x).getId());
 			}

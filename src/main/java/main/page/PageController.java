@@ -3,6 +3,8 @@ package main.page;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,18 +93,21 @@ public class PageController {
 			throw exception;
     	}
     }
-	
-    @RequestMapping(value= {"/{page}", "/"}, method= RequestMethod.GET)
+    
+    @RequestMapping(value= {"/{page}", "/", "/tips/{tip}"}, method= RequestMethod.GET)
     public ModelAndView getPage(Device device, 
     		@RequestParam(required=false) String ver, 
-    		@PathVariable(required=false) Optional<String> page) 
+    		@PathVariable(required=false) Optional<String> page,
+    		@PathVariable(required=false) Optional<String> tip) 
     				throws ControllerException {
     	try {
     		String name;
     		if(page.isPresent()) {
     			name = page.get();
-    		} else {
+    		} else if(!tip.isPresent()) {
     			name = "main";
+    		} else {
+    			name = "tips/"+tip.get();
     		}
 	  		ModelAndView mav = new ModelAndView("index");
       		Map<String, String> data = getPageData(name, isMobile(device, ver));
@@ -159,8 +164,8 @@ public class PageController {
     	try {
 	    	Page page = new Page();
 	    	Album album = albumController.getAlbum(id);
-	    	Template template = new AlbumTemplate(album);	    	
-	    	page.setTitle(Util.toUpperCase(album.getName()));
+	    	Template template = new AlbumTemplate(album);
+	    	page.setTitle(album.getName());
 	    	page.setContent(template.compile());
 	    	return new ResponseEntity<Page>(page, HttpStatus.OK);
     	} catch(Exception e) {
@@ -181,7 +186,7 @@ public class PageController {
 	    	Album album = albumController.getAlbum(id);
 	    	Template template = new AlbumTemplate(album);
 	    	mav.getModel().put("name", album.getName());
-	        mav.getModel().put("title", Util.toUpperCase(album.getName()));
+	        mav.getModel().put("title", album.getName());
 			mav.getModel().put("page", template.compile());
 			mav.getModel().put("isMobile", isMobile(device, ver));
 			return mav;
@@ -202,6 +207,31 @@ public class PageController {
 				template = TemplateFactory.createImageListTemplate(dataList);
 				textData.put("latest", template.compile());
 			}
+			StringBuilder sinceCreated = new StringBuilder();
+			LocalDate creationDate = LocalDate.of(2019, 2, 8);
+			Period period = Period.between(creationDate, LocalDate.now());
+			int days = period.getDays();
+			if(period.getMonths() > 0) {
+				days += period.getMonths()*31;
+			}
+			if(period.getYears() > 0) {
+				days += period.getYears()*31;
+			}
+			sinceCreated.append(days);
+			switch(sinceCreated.toString().charAt(sinceCreated.length()-1)) {
+				case('1'):
+					sinceCreated.append(" день");
+					break;
+				case('2'):
+				case('3'):
+				case('4'):
+					sinceCreated.append(" дня");
+					break;
+				default:
+					sinceCreated.append(" дней");
+					break;
+			}
+			textData.put("sinceCreated", sinceCreated.toString());
     		template = TemplateFactory.buildTemplate(
     				"templates/text/ru/main", textData);
     		pageData.put("text", template.compile());

@@ -93,8 +93,9 @@
 
 .album .images img {
     margin: 0.5rem;	
- 	object-fit: cover;
-	width: calc(100vw/5 - 1rem);
+ 	object-fit: scale-down;
+	height: 35vh;
+	width: auto;
 }
 
 .page.album {

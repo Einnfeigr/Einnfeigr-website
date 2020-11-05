@@ -30,7 +30,7 @@ public class DriveImageController implements ImageController {
 
 	private Logger logger = LoggerFactory.getLogger(DriveImageController.class);
 	private Map<String, String> cache = new HashMap<>();
-	private static boolean isCachingAvailable = true;
+	private static boolean isCachingAvailable = false;
 	
 	public DriveImageController() throws FileNotFoundException, IOException {
 		//getImage(PortfolioDriveDao.getRootId());
@@ -79,7 +79,7 @@ public class DriveImageController implements ImageController {
 				logger.error(Util.EXCEPTION_LOG_MESSAGE, e);
 				response.sendRedirect(DriveUtils.getClientDownloadUrl(id));
 				return null;
-			}	
+			}
 		}
 		ModelAndView mav = new ModelAndView();
 		mav.getModel().put("body", content.toString());

@@ -10,10 +10,6 @@ html.expanded .nav {
 	left: 0;
 }
 
-html.expanded .title {
-	left: 250px;
-}
-
 html.expanded .main .title {
 	left: 0;
 }
@@ -40,35 +36,35 @@ html.expanded .main .title {
 }
 
 .background {
-	height: calc(var(--vh, 1vh) * 45);
+	height: 45vh;
 }
 
 .fullscreen .background {
-	height: calc(var(--vh, 1vh) * 100);
+	height: 100vh;
 }
 
 .backgroundImage {
 	position: absolute;
 	margin: 0;
 	min-width: 100vw;
-	min-height: calc(var(--vh, 1vh) * 45);
+	min-height: 45vh;
 	top: 0;
 	margin-top: 0;
 	max-width: auto;
 }
 
 .fullscreen .backgroundImage {
-	min-height: calc(var(--vh, 1vh) * 100);
+	min-height: 100vh;
 	margin-top: 0;
 	max-width: auto;
 }
 
 .fullscreen .backgroundImage img {
-	height: calc(var(--vh, 1vh) * 100);
+	height: 100vh;
 }
 
 .textDiv {
-	min-height: calc(var(--vh, 1vh) * 100);
+	min-height: 100vh;
 }
 
 .textDiv .images {
