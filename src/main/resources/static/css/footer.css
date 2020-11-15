@@ -1,11 +1,10 @@
 .footer {
-	flex-shrink: 0;
 	box-sizing: border-box;
 	padding: 15px;
 	color: white;
 	position: relative;
 	height: 130px;
-	width: 100vw;
+	max-width: 100vw;
 	background-color: rgb(35,35,35);
 	display: flex;
 	flex-flow: row;
