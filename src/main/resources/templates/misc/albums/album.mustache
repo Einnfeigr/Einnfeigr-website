@@ -1,4 +1,4 @@
-<div class="album {{^previews}}page{{/previews}}  {{^images}}{{name}}{{/images}}"
+<div class="album {{^previews}}page{{/previews}}  {{^images}}{{name}}{{/images}} fullscreen"
 		{{#previews}}
 			onclick="showPage('/portfolio/albums/{{id}}/')"
 		{{/previews}}
@@ -48,4 +48,7 @@
 			{{name}}
 		</div>
 	{{/previews}}
+	<div class="backgroundImage fixed">
+		<img src="/img/portfolio/background.jpg" />
+	</div>
 </div>

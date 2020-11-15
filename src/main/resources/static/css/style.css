@@ -10,7 +10,6 @@ body {
 	overflow-x: hidden;
 	-ms-overflow-style: none; 
 	scrollbar-width: none;
-	color: black;
 }
 
 html::-webkit-scrollbar {
@@ -42,6 +41,10 @@ html {
 	position: sticky;
 	height: 55vw;
 	z-index: -3;
+}
+
+.backgroundImage.fixed {
+	position: fixed;
 }
 
 .backgroundImage > img {

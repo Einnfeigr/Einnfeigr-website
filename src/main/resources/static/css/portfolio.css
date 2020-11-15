@@ -2,9 +2,13 @@
 	cursor: pointer;
 }
 
-.portfolio .textDiv {
+.portfolio, .albums, .album {
+	padding-top: 10vh;
+}
+
+.portfolio .textDiv, .albums .textDiv, .album .textDiv {
 	color: white;
-	background: rgb(83, 83, 83);
+	background: none;
 }
 
 .portfolio .title {
@@ -64,11 +68,6 @@
 	right: 15px;
 } 
 
-.album .textDiv {
-	background: none;
-	color: white;
-}
-
 .album .textDiv a {
 	border-bottom: 1px dotted white;
 }
@@ -96,8 +95,4 @@
  	object-fit: scale-down;
 	height: 35vh;
 	width: auto;
-}
-
-.page.album {
-	background: rgb(83, 83, 83);
 }
