@@ -58,11 +58,10 @@
 	height: 1.35em;
 }
 
-.footer div.navLinks {
+.footer .navLinks {
 	display: flex;
-	justify-content: flex-start;
-	flex-flow: column;
-	flex-wrap: wrap;
+	align-items: start;
+	flex-flow: row;
 	height: 100%;
 }
 
