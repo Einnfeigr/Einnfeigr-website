@@ -15,6 +15,6 @@ Terms of the first release are:
 * [x] latest downloads on main page
 * [ ] all pages filled with content
 * [ ] all main units covered with tests
-* [ ] work with google drive
+* [x] work with google drive
 * [x] images previews
 * [x] logging
