@@ -1,3 +1,6 @@
+# Disclaimer
+This project was something like my photography portfolio, and field for experiments in Java, Spring and GitHub. It was up and running for two years on Heroku, but then free hosting plans were cancelled. I've started to rewrite website from scratch (see https://github.com/Einnfeigr/Einnfeigr-website_v3), but then switched to other projects and started to learn Rust
+
 # Einnfeigr website
 This is a simple project of my website called 'Einnfeigr' <br />
 Main goal is to represent info about my services related to photography, examples of work <br />
